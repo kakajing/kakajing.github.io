@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hello huhu!," />
+  <meta name="keywords" content="spring" />
 
 
 
@@ -84,16 +84,39 @@
 
 
 
-<meta name="description" content="整理学习文档">
+<meta name="description" content="Installation or Setup
+第一次使用Spring Boot进行设置是相当快的，这要归功于Spring Community的辛勤工作。
+先决条件：
+
+Java安装
+Java IDE推荐不需要（Intellij，Eclipse，Netbeans等）
+
+你不需要安装Maven和/或Gradle。 Spring Initializr 生成的项目带有一个Maven包装器（命令mvnw）或G">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hello">
-<meta property="og:url" content="http://kakajing.github.io/2017/01/12/hello/index.html">
+<meta property="og:title" content="使用spring-boot">
+<meta property="og:url" content="http://kakajing.github.io/2017/01/16/使用spring-boot/index.html">
 <meta property="og:site_name" content="余鸢">
-<meta property="og:description" content="整理学习文档">
-<meta property="og:updated_time" content="2017-01-15T14:46:28.696Z">
+<meta property="og:description" content="Installation or Setup
+第一次使用Spring Boot进行设置是相当快的，这要归功于Spring Community的辛勤工作。
+先决条件：
+
+Java安装
+Java IDE推荐不需要（Intellij，Eclipse，Netbeans等）
+
+你不需要安装Maven和/或Gradle。 Spring Initializr 生成的项目带有一个Maven包装器（命令mvnw）或G">
+<meta property="og:image" content="http://kakajing.github.io/2017/01/16/使用spring-boot/C:/Users\Administrator\Desktop\1.png">
+<meta property="og:updated_time" content="2017-01-15T19:44:18.017Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hello">
-<meta name="twitter:description" content="整理学习文档">
+<meta name="twitter:title" content="使用spring-boot">
+<meta name="twitter:description" content="Installation or Setup
+第一次使用Spring Boot进行设置是相当快的，这要归功于Spring Community的辛勤工作。
+先决条件：
+
+Java安装
+Java IDE推荐不需要（Intellij，Eclipse，Netbeans等）
+
+你不需要安装Maven和/或Gradle。 Spring Initializr 生成的项目带有一个Maven包装器（命令mvnw）或G">
+<meta name="twitter:image" content="http://kakajing.github.io/2017/01/16/使用spring-boot/C:/Users\Administrator\Desktop\1.png">
 
 
 
@@ -121,13 +144,13 @@
 
 
 
-  <link rel="canonical" href="http://kakajing.github.io/2017/01/12/hello/"/>
+  <link rel="canonical" href="http://kakajing.github.io/2017/01/16/使用spring-boot/"/>
 
 
 
 
 
-  <title> hello | 余鸢 </title>
+  <title> 使用spring-boot | 余鸢 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -250,7 +273,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/01/12/hello/">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/01/16/使用spring-boot/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="余鸢">
@@ -274,7 +297,7 @@
             
             
               
-                hello
+                使用spring-boot
               
             
           </h1>
@@ -289,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-12T01:34:48+08:00">
-                2017-01-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-16T03:20:42+08:00">
+                2017-01-16
               </time>
             
 
@@ -325,7 +348,33 @@
       
 
       
-        
+        <p>Installation or Setup</p>
+<p>第一次使用Spring Boot进行设置是相当快的，这要归功于Spring Community的辛勤工作。</p>
+<p>先决条件：</p>
+<ol>
+<li>Java安装</li>
+<li>Java IDE推荐不需要（Intellij，Eclipse，Netbeans等）</li>
+</ol>
+<p>你不需要安装Maven和/或Gradle。 <a href="https://i.stack.imgur.com/tZRxs.png" target="_blank" rel="external">Spring Initializr</a> 生成的项目带有一个Maven包装器（命令<code>mvnw</code>）或Gradle包装器（命令<code>gradlew</code>）。</p>
+<p>打开您的Web浏览器到<a href="https://start.spring.io这是一个启动板，用于创建新的Spring" target="_blank" rel="external">https://start.spring.io这是一个启动板，用于创建新的Spring</a> Boot应用程序，现在我们将以最低限度使用。</p>
+<p>如果这是您首选的构建工具，请随意从Maven切换到Gradle。</p>
+<p>在“搜索依赖关系”下搜索“Web”并添加。</p>
+<p>单击Generate Project！</p>
+<p>这将下载一个zip文件名为demo Feel免费提取这个文件，无论你想在你的计算机上。</p>
+<p>如果选择maven，请导航到基本目录的命令提示符，并发出<code>mvn clean install</code>命令</p>
+<p>你应该得到一个构建成功输出：</p>
+<p> <img src="/2017/01/16/使用spring-boot/C:/Users\Administrator\Desktop\1.png" alt="1"></p>
+<p>运行应用程序：<code>mvn spring-boot:run</code></p>
+<p>现在你的Spring Boot应用程序启动。 将您的Web浏览器导航到localhost:8080</p>
+<p>恭喜！ 你刚刚得到你的第一个Spring启动应用程序并运行。 现在让我们添加一小段代码，这样你就可以看到它的工作。</p>
+<p>因此，使用ctrl + c退出当前运行的服务器。</p>
+<p>导航到：<code>src/main/java/com/example/DemoApplication.java</code>更新此类以具有控制器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">package com.example;</div><div class="line"></div><div class="line">import org.springframework.boot.SpringApplication;</div><div class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">@RestController</div><div class="line">@SpringBootApplication</div><div class="line">public class DemoApplication &#123;</div><div class="line"></div><div class="line">    @RequestMapping(&quot;/&quot;)</div><div class="line">    String home() &#123;</div><div class="line">        return &quot;Hello World!&quot;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        SpringApplication.run(DemoApplication.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在允许再次构建和运行项目<code>mvn clean install spring-boot:run</code>！</p>
+<p>现在浏览您的web浏览器到localhost:8080</p>
+<p>Hello World!</p>
+<p>恭喜！ 我们刚刚完成创建一个Spring Boot应用程序，并设置我们的第一个控制器返回“Hello World!“ 欢迎来到Spring Boot的世界！</p>
+
       
     </div>
 
@@ -345,12 +394,6 @@
 
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Hello-huhu/" rel="tag"># Hello huhu!</a>
-          
-        </div>
       
 
       
@@ -437,7 +480,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">1</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
