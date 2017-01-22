@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://kakajing.github.io/2017/01/19/bean scopes/index.html">
 <meta property="og:site_name" content="余鸢">
 <meta property="og:description" content="web-aware contexts中的其他范围">
-<meta property="og:updated_time" content="2017-01-19T15:38:53.501Z">
+<meta property="og:updated_time" content="2017-01-19T15:52:02.192Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bean的范围">
 <meta name="twitter:description" content="web-aware contexts中的其他范围">
@@ -365,7 +365,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">public class MyConfiguration &#123;</div><div class="line"></div><div class="line">    @Bean</div><div class="line">    @RequestScope</div><div class="line">    public OneClass myRequestBean() &#123;</div><div class="line">        return new OneClass();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Bean</div><div class="line">    @SessionScope</div><div class="line">    public AnotherClass mySessionBean() &#123;</div><div class="line">        return new AnotherClass();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Bean</div><div class="line">    @ApplicationScope</div><div class="line">    public YetAnotherClass myApplicationBean() &#123;</div><div class="line">        return new YetAnotherClass();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>Annotation-Driven Components</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">@Component</div><div class="line">@RequestScope</div><div class="line">public class OneClass &#123;</div><div class="line">    ...</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Component</div><div class="line">@SessionScope</div><div class="line">public class AnotherClass &#123;</div><div class="line">    ...</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Component</div><div class="line">@ApplicationScope</div><div class="line">public class YetAnotherClass &#123;</div><div class="line">    ...</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Component</div><div class="line">@Scope(scopeName = WebApplicationContext.SCOPE_GLOBAL_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)</div><div class="line">public class OneMoreClass &#123;</div><div class="line">    ...</div><div class="line">&#125;</div><div class="line"></div><div class="line">@Component</div><div class="line">@Scope(scopeName = &quot;websocket&quot;, proxyMode = ScopedProxyMode.TARGET_CLASS)</div><div class="line">public class AndOneMoreClass &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="prototype-scope-原型范围"><a href="#prototype-scope-原型范围" class="headerlink" title="prototype-scope 原型范围"></a>prototype-scope 原型范围</h4><p>原型范围的bean不是在Spring容器启动时预先创建的。 相反，每次将检索此bean的请求发送到容器时，将创建一个新的新实例。 对于有状态对象，建议使用此作用域，因为其状态不会被其他组件共享。</p>
+<h4 id="prototype-scope-原型范围"><a href="#prototype-scope-原型范围" class="headerlink" title="prototype-scope 原型范围"></a>prototype-scope 原型范围</h4><p>原型范围的bean不是在Spring容器启动时预先创建的。 相反，每次将检索此bean的请求发送到容器时，将创建一个新实例。 对于有状态对象，建议使用此作用域，因为其状态不会被其他组件共享。</p>
 <p>为了定义一个原型范围的bean，我们需要添加<code>@Scope</code>注释，指定我们想要的范围类型。</p>
 <p>给出以下MyBean类：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">public class MyBean &#123;</div><div class="line">    private static final Logger LOGGER = LoggerFactory.getLogger(MyBean.class);</div><div class="line">    private String property;</div><div class="line"></div><div class="line">    public MyBean(String property) &#123;</div><div class="line">        this.property = property;</div><div class="line">        LOGGER.info(&quot;Initializing &#123;&#125; bean...&quot;, property);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public String getProperty() &#123;</div><div class="line">        return this.property;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setProperty(String property) &#123;</div><div class="line">        this.property = property;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -433,6 +433,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/20/JPA-实体之间的关系/" rel="prev" title="JPA-实体之间的关系">
+                JPA-实体之间的关系 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -502,7 +506,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -520,7 +524,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
