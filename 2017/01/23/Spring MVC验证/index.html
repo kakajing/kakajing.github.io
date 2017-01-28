@@ -1,0 +1,711 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spring MVC," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Spring MVC Form Validation与Bean Validation API">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring MVC验证">
+<meta property="og:url" content="http://kakajing.github.io/2017/01/23/Spring MVC验证/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="Spring MVC Form Validation与Bean Validation API">
+<meta property="og:updated_time" content="2017-01-28T14:54:12.176Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring MVC验证">
+<meta name="twitter:description" content="Spring MVC Form Validation与Bean Validation API">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/01/23/Spring MVC验证/"/>
+
+
+
+
+
+  <title> Spring MVC验证 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/01/23/Spring MVC验证/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spring MVC验证
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-23T15:46:47+08:00">
+                2017-01-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原创/" itemprop="url" rel="index">
+                    <span itemprop="name">原创</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Spring-MVC-Form-Validation与Bean-Validation-API"><a href="#Spring-MVC-Form-Validation与Bean-Validation-API" class="headerlink" title="Spring MVC Form Validation与Bean Validation API"></a>Spring MVC Form Validation与Bean Validation API</h3><a id="more"></a>
+<p>此示例显示如何使用Java注释在没有任何<code>xml</code>的情况下使用<strong>Bean Validation API</strong>验证Spring MVC中的表单。 用户将被建议输入他们的注册数据，验证者将检查其有效性。</p>
+<p>首先在项目中添加以下依赖项：</p>
+<ul>
+<li><a href="http://mvnrepository.com/artifact/javax.validation/validation-api" target="_blank" rel="external">Bean Validation API</a></li>
+</ul>
+<ul>
+<li><a href="http://mvnrepository.com/artifact/org.hibernate/hibernate-validator" target="_blank" rel="external">Hibernate Validator Engine</a></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">    compile group: <span class="string">'javax.validation'</span>, name: <span class="string">'validation-api'</span>, version: <span class="string">'1.1.0.Final'</span></div><div class="line">    compile group: <span class="string">'org.hibernate'</span>, name: <span class="string">'hibernate-validator'</span>, version: <span class="string">'5.2.4.Final'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="创建模型类"><a href="#创建模型类" class="headerlink" title="创建模型类"></a>创建模型类</h4><p>创建模型类User如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.hibernate.validator.constraints.Email;</div><div class="line"><span class="keyword">import</span> org.springframework.format.annotation.DateTimeFormat;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.validation.constraints.Max;</div><div class="line"><span class="keyword">import</span> javax.validation.constraints.Min;</div><div class="line"><span class="keyword">import</span> javax.validation.constraints.NotNull;</div><div class="line"><span class="keyword">import</span> javax.validation.constraints.Past;</div><div class="line"><span class="keyword">import</span> javax.validation.constraints.Size;</div><div class="line"><span class="keyword">import</span> java.util.Date;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"Please input your email."</span>)</div><div class="line">    <span class="meta">@Email</span>(message = <span class="string">"Email format is wrong."</span>)</div><div class="line">    <span class="keyword">private</span> String email;</div><div class="line"></div><div class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"&#123;user.password.notNull&#125;"</span>)</div><div class="line">    <span class="meta">@Size</span>(min = <span class="number">8</span>, max = <span class="number">16</span>, message = <span class="string">"&#123;user.password.size&#125;"</span>)</div><div class="line">    <span class="keyword">private</span> String password;</div><div class="line"></div><div class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"&#123;user.age.notNull&#125;"</span>)</div><div class="line">    <span class="meta">@Min</span>(<span class="number">18</span>)</div><div class="line">    <span class="meta">@Max</span>(<span class="number">100</span>)</div><div class="line">    <span class="keyword">private</span> Integer age;</div><div class="line"></div><div class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"&#123;user.birthday.notNull&#125;"</span>)</div><div class="line">    <span class="meta">@DateTimeFormat</span>(pattern = <span class="string">"dd.MM.yyyy"</span>)</div><div class="line">    <span class="meta">@Past</span>(message = <span class="string">"&#123;user.birthday.past&#125;"</span>)</div><div class="line">    <span class="keyword">private</span> Date birthday;</div><div class="line"></div><div class="line">    <span class="comment">// getters, setters</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里使用一些JSR 303注释：<code>@NotNull</code>，<code>@Size</code>，<code>@Min</code>，<code>@Max</code>和<code>@Past</code>以及由hibernate验证器实现提供的一些附加注释：<code>@Email</code>，<code>@DateTimeFormat</code>。</p>
+<p>请注意，在其注释中指定了email 字段的错误消息。 而在messages.properties文件中指定password，age 和birthday 字段的错误消息，以便演示验证错误消息的外部化。 这个文件应放在<code>resources</code>文件夹下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">user.password.notNull = Password field cannot be empty.</div><div class="line">user.password.size = Password must be between &#123;min&#125; and &#123;max&#125; characters in length.</div><div class="line">user.age.notNull = Please enter your age.</div><div class="line">user.birthday.notNull = Please enter your birthday.</div><div class="line">user.birthday.past = That's impossible.</div><div class="line"></div><div class="line">typeMismatch=Please use dd.MM.yyyy format</div></pre></td></tr></table></figure>
+<p>对于<code>messageSource()</code>与<code>bean.setBasename(&quot;classpath:messages&quot;)</code>; 代码和<code>validator()</code> bean也必须配置以及注释：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="meta">@PropertySource</span>(<span class="string">"application.properties"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> <span class="keyword">extends</span> <span class="title">WebMvcConfigurerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="function"><span class="keyword">public</span> MessageSource <span class="title">messageSource</span><span class="params">()</span> </span>&#123;</div><div class="line">        ReloadableResourceBundleMessageSource bean = <span class="keyword">new</span> ReloadableResourceBundleMessageSource();</div><div class="line">        bean.setBasename(<span class="string">"classpath:messages"</span>);</div><div class="line">        bean.setDefaultEncoding(<span class="string">"UTF-8"</span>);</div><div class="line">        <span class="keyword">return</span> bean;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="function"><span class="keyword">public</span> LocalValidatorFactoryBean <span class="title">validator</span><span class="params">()</span> </span>&#123;</div><div class="line">        LocalValidatorFactoryBean bean = <span class="keyword">new</span> LocalValidatorFactoryBean();</div><div class="line">        bean.setValidationMessageSource(messageSource());</div><div class="line">        <span class="keyword">return</span> bean;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Validator <span class="title">getValidator</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> validator();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另外配置类mu使用<code>@PropertySource（“application.properties”）</code>注释，并且必须将<code>jsp</code>页面的路径添加到此文件，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">spring.mvc.view.prefix=/WEB-INF/jsp/</div><div class="line">spring.mvc.view.suffix=.jsp</div></pre></td></tr></table></figure>
+<h4 id="创建FormController类"><a href="#创建FormController类" class="headerlink" title="创建FormController类"></a>创建FormController类</h4><p>现在在controller 类中，通过<code>javax.validation</code>包中的<code>@Valid</code>注释注释正在备份表单的模型对象。</p>
+<p>Spring MVC将使用<code>@Valid</code>注释来验证模型对象，并将其属性与使用Spring的表单标签的JSP表单的输入绑定。 任何约束违反将暴露为<code>BindingResult</code>对象中的错误，因此我们可以在控制器的方法中检查违例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</div><div class="line"><span class="keyword">import</span> org.springframework.ui.Model;</div><div class="line"><span class="keyword">import</span> org.springframework.validation.BindingResult;</div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.validation.Valid;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="meta">@Controller</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FormController</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Map&lt;String, User&gt; users = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FormController</span><span class="params">()</span> </span>&#123;</div><div class="line">        users = <span class="keyword">new</span> HashMap&lt;String, User&gt;();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@RequestMapping</span>(value = <span class="string">"/"</span>, method = RequestMethod.GET)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">viewRegister</span><span class="params">(Map&lt;String, Object&gt; model)</span> </span>&#123;</div><div class="line">        User user = <span class="keyword">new</span> User();</div><div class="line">        model.put(<span class="string">"user"</span>, user);</div><div class="line">        <span class="keyword">return</span> <span class="string">"register"</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@RequestMapping</span>(value = <span class="string">"/register"</span>, method = RequestMethod.POST)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">doRegister</span><span class="params">(@Valid User user, BindingResult result, Model model)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (result.hasErrors()) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"register"</span>;</div><div class="line">        &#125;</div><div class="line">        model.addAttribute(<span class="string">"user"</span>, user);</div><div class="line">        users.put(user.getEmail(), user);</div><div class="line">        <span class="keyword">return</span> <span class="string">"registerSuccess"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="创建JSP输入表单"><a href="#创建JSP输入表单" class="headerlink" title="创建JSP输入表单"></a>创建JSP输入表单</h4><p>添加具有以下内容的<code>register.jsp</code>文件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">&lt;%@ page language=<span class="string">"java"</span> contentType=<span class="string">"text/html; charset=UTF-8"</span> pageEncoding=<span class="string">"UTF-8"</span>%&gt;</div><div class="line">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;</div><div class="line">&lt;%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;</div><div class="line">&lt;title&gt;User Form Page&lt;/title&gt;</div><div class="line">&lt;style&gt;</div><div class="line">.error &#123;</div><div class="line">    color: #ff0000;</div><div class="line">    font-weight: bold;</div><div class="line">&#125;</div><div class="line">&lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">    &lt;form:form method="POST" commandName="user" action="register"&gt;</div><div class="line">        &lt;table&gt;</div><div class="line">            &lt;tr&gt;</div><div class="line">                &lt;td&gt;Email:&lt;/td&gt;</div><div class="line">                &lt;td&gt;&lt;form:input path="email" placeholder="Email"/&gt;&lt;/td&gt;</div><div class="line">                &lt;td&gt;&lt;form:errors path="email" cssClass="error" /&gt;&lt;/td&gt;</div><div class="line">            &lt;/tr&gt;</div><div class="line">            &lt;tr&gt;</div><div class="line">                &lt;td&gt;Password:&lt;/td&gt;</div><div class="line">                &lt;td&gt;&lt;form:password path="password" placeholder="Password"/&gt;&lt;/td&gt;</div><div class="line">                &lt;td&gt;&lt;form:errors path="password" cssClass="error" /&gt;&lt;/td&gt;</div><div class="line">            &lt;/tr&gt;</div><div class="line">            &lt;tr&gt;</div><div class="line">                &lt;td&gt;Age:&lt;/td&gt;</div><div class="line">                &lt;td&gt;&lt;form:input path="age" placeholder="Age"/&gt;&lt;/td&gt;</div><div class="line">                &lt;td&gt;&lt;form:errors path="age" cssClass="error" /&gt;&lt;/td&gt;</div><div class="line">            &lt;/tr&gt;</div><div class="line">            &lt;tr&gt;</div><div class="line">                &lt;td&gt;Birthday:&lt;/td&gt;</div><div class="line">                &lt;td&gt;&lt;form:input path="birthday" placeholder="dd.MM.yyyy"/&gt;&lt;/td&gt;</div><div class="line">                &lt;td&gt;&lt;form:errors path="birthday" cssClass="error" /&gt;&lt;/td&gt;</div><div class="line">            &lt;/tr&gt;</div><div class="line">            &lt;tr&gt;</div><div class="line">                &lt;td colspan="3"&gt;&lt;input type="submit" value="Register"&gt;&lt;/td&gt;</div><div class="line">            &lt;/tr&gt;</div><div class="line">        &lt;/table&gt;</div><div class="line"></div><div class="line">    &lt;/form:form&gt;</div><div class="line"></div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>通常，当发生任何验证错误时，我们会将输入表单返回给用户。 在JSP表单中，我们可以使用Spring的形式错误标记（如 <form:errors path="email">）显示验证错误消息。</form:errors></p>
+<p>创建JSP Success页面</p>
+<p>将显示<code>registerSuccess.jsp</code>页面，以防用户输入所有数据有效。 这里是代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&lt;%@ taglib uri=<span class="string">"http://java.sun.com/jsp/jstl/core"</span> prefix=<span class="string">"c"</span> %&gt;</div><div class="line">&lt;%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %&gt;</div><div class="line"></div><div class="line">&lt;%@ page session="false" %&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;Success&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">&lt;h3&gt;User Registered Successfully.&lt;/h3&gt;</div><div class="line"></div><div class="line">&lt;strong&gt;User Email: $&#123;user.email&#125;&lt;/strong&gt;&lt;br&gt;</div><div class="line">&lt;strong&gt;User Age: $&#123;user.age&#125;&lt;/strong&gt;&lt;br&gt;</div><div class="line">&lt;strong&gt;User Birthday: &lt;fmt:formatDate value="$&#123;user.birthday&#125;" type="date" pattern="dd.MM.yyyy"/&gt;&lt;/strong&gt;&lt;br&gt;</div><div class="line"></div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>启动应用程序，转到<a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring-MVC/" rel="tag"># Spring MVC</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/22/File Upload/" rel="next" title="File Upload">
+                <i class="fa fa-chevron-left"></i> File Upload
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-MVC-Form-Validation与Bean-Validation-API"><span class="nav-number">1.</span> <span class="nav-text">Spring MVC Form Validation与Bean Validation API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建模型类"><span class="nav-number">1.1.</span> <span class="nav-text">创建模型类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建FormController类"><span class="nav-number">1.2.</span> <span class="nav-text">创建FormController类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建JSP输入表单"><span class="nav-number">1.3.</span> <span class="nav-text">创建JSP输入表单</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
