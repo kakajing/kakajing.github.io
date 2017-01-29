@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://kakajing.github.io/2017/01/24/Spring Session-HttpSession(快速开始)/index.html">
 <meta property="og:site_name" content="余鸢">
 <meta property="og:description" content="本指南介绍如何使用Spring Session透明地利用Redis来通过Java配置来回退Web应用程序的HttpSession。">
-<meta property="og:updated_time" content="2017-01-29T17:32:50.290Z">
+<meta property="og:updated_time" content="2017-01-29T17:51:46.687Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Session-HttpSession(快速入门)">
 <meta name="twitter:description" content="本指南介绍如何使用Spring Session透明地利用Redis来通过Java配置来回退Web应用程序的HttpSession。">
@@ -379,7 +379,7 @@
 </li>
 </ul>
 <p>现在单击<strong>Set Attribute</strong>按钮。 现在应该可以看到表中显示的值。</p>
-<h2 id="How-does-it-work"><a href="#How-does-it-work" class="headerlink" title="How does it work?"></a>How does it work?</h2><p>We interact with the standard <code>HttpSession</code> in the <code>SessionServlet</code> shown below:</p>
+<h2 id="How-does-it-work"><a href="#How-does-it-work" class="headerlink" title="How does it work?"></a>How does it work?</h2><p>我们在<code>SessionServlet</code>中与标准<code>HttpSession</code>进行交互，如下所示：</p>
 <p>src/main/java/sample/SessionServlet.java</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@WebServlet</span>(<span class="string">"/session"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SessionServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span></span></div><div class="line">                        <span class="keyword">throws</span> ServletException, IOException &#123;</div><div class="line">                String attributeName = req.getParameter(<span class="string">"attributeName"</span>);</div><div class="line">                String attributeValue = req.getParameter(<span class="string">"attributeValue"</span>);</div><div class="line">                req.getSession().setAttribute(attributeName, attributeValue);</div><div class="line">                resp.sendRedirect(req.getContextPath() + <span class="string">"/"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">2878267318695777395L</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>而不是使用Tomcat的<code>HttpSession</code>，我们实际上是在Redis中保留值。 Spring会在您的浏览器中创建一个名为SESSION的cookie，其中包含会话的ID。 继续并查看Cookie（点击获取Chrome或Firefox的帮助）。</p>
@@ -433,6 +433,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/30/Spring Session-REST/" rel="prev" title="Spring Session -REST">
+                Spring Session -REST <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -502,7 +506,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

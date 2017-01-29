@@ -1,0 +1,752 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spring Session," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本指南介绍如何使用Spring Session在使用REST端点时透明地利用Redis来回退Web应用程序的HttpSession。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Session -REST">
+<meta property="og:url" content="http://kakajing.github.io/2017/01/30/Spring Session-REST/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="本指南介绍如何使用Spring Session在使用REST端点时透明地利用Redis来回退Web应用程序的HttpSession。">
+<meta property="og:updated_time" content="2017-01-29T18:39:41.438Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Session -REST">
+<meta name="twitter:description" content="本指南介绍如何使用Spring Session在使用REST端点时透明地利用Redis来回退Web应用程序的HttpSession。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/01/30/Spring Session-REST/"/>
+
+
+
+
+
+  <title> Spring Session -REST | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/01/30/Spring Session-REST/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spring Session -REST
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-30T01:57:57+08:00">
+                2017-01-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原创/" itemprop="url" rel="index">
+                    <span itemprop="name">原创</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本指南介绍如何使用Spring Session在使用REST端点时透明地利用Redis来回退Web应用程序的HttpSession。</p>
+<a id="more"></a>
+<blockquote>
+<p>完成的指南可以在<a href="http://docs.spring.io/spring-session/docs/current/reference/html5/guides/rest.html#rest-sample" target="_blank" rel="external">rest sample application</a>中找到。</p>
+</blockquote>
+<h3 id="Updating-Dependencies"><a href="#Updating-Dependencies" class="headerlink" title="Updating Dependencies"></a>Updating Dependencies</h3><p>在使用Spring Session之前，必须确保更新依赖项。 如果您使用Maven，请确保添加以下依赖项：</p>
+<p>pom.xml</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;dependencies&gt;</div><div class="line">        &lt;!-- ... --&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">                &lt;groupId&gt;org.springframework.session&lt;/groupId&gt;</div><div class="line">                &lt;artifactId&gt;spring-session-data-redis&lt;/artifactId&gt;</div><div class="line">                &lt;version&gt;1.3.0.RELEASE&lt;/version&gt;</div><div class="line">                &lt;type&gt;pom&lt;/type&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">                &lt;groupId&gt;biz.paluch.redis&lt;/groupId&gt;</div><div class="line">                &lt;artifactId&gt;lettuce&lt;/artifactId&gt;</div><div class="line">                &lt;version&gt;3.5.0.Final&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">                &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">                &lt;artifactId&gt;spring-web&lt;/artifactId&gt;</div><div class="line">                &lt;version&gt;4.3.4.RELEASE&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure>
+<h3 id="Spring-Configuration"><a href="#Spring-Configuration" class="headerlink" title="Spring Configuration"></a>Spring Configuration</h3><p>添加所需的依赖项后，我们可以创建我们的Spring配置。 Spring配置负责创建一个Servlet过滤器，它用Spring Session支持的实现替换<code>HttpSession</code>实现。 添加以下Spring配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="meta">@EnableRedisHttpSession</span> </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpSessionConfig</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="meta">@Bean</span></div><div class="line">        <span class="function"><span class="keyword">public</span> LettuceConnectionFactory <span class="title">connectionFactory</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> LettuceConnectionFactory(); </div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Bean</span></div><div class="line">        <span class="function"><span class="keyword">public</span> HttpSessionStrategy <span class="title">httpSessionStrategy</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> HeaderHttpSessionStrategy(); </div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>@EnableRedisHttpSession</code>注释创建一个名为<code>springSessionRepositoryFilter</code>的Spring Bean，它实现了Filter。 过滤器是负责替换<code>HttpSession</code>实现由Spring会话支持。 在这个例子中，Spring Session由Redis支持。</p>
+<p>我们创建一个<code>RedisConnectionFactory</code>，将Spring Session连接到Redis服务器。 我们配置连接以连接到默认端口（6379）上的localhost有关配置Spring Data Redis的更多信息，请参考<a href="http://docs.spring.io/spring-data/data-redis/docs/current/reference/html/" target="_blank" rel="external">reference documentation</a>。</p>
+<p>我们定制Spring Session的HttpSession集成，使用HTTP头来传达当前会话信息，而不是Cookie。</p>
+<h3 id="Servlet容器初始化"><a href="#Servlet容器初始化" class="headerlink" title="Servlet容器初始化"></a>Servlet容器初始化</h3><p>我们的<a href="http://docs.spring.io/spring-session/docs/current/reference/html5/guides/rest.html#rest-spring-configuration" target="_blank" rel="external">Spring Configuration</a>创建了一个Spring Bean，名为<code>springSessionRepositoryFilter</code>，它实现了<code>Filter</code>。 <code>springSessionRepositoryFilter</code> bean负责用Spring Session支持的自定义实现替换<code>HttpSession</code>。</p>
+<p>为了使我们的<code>Filter</code>能够做到这一点，Spring需要加载我们的<code>Config</code>类。 我们在Spring <code>MvcInitializer</code>中提供配置如下所示：</p>
+<p>src/main/java/sample/mvc/MvcInitializer.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">protected</span> Class&lt;?&gt;[] getRootConfigClasses() &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Class[] &#123; SecurityConfig.class, HttpSessionConfig.class &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后，我们需要确保我们的Servlet容器（即Tomcat）对于每个请求使用我们的<code>springSessionRepositoryFilter</code>。 幸运的是，Spring Session提供了一个名为<code>AbstractHttpSessionApplicationInitializer</code>的实用程序类，使其非常容易。 只需使用默认构造函数扩展类，如下所示：</p>
+<p>src/main/java/sample/Initializer.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Initializer</span> <span class="keyword">extends</span> <span class="title">AbstractHttpSessionApplicationInitializer</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>我们的类的名字（Initializer）没关系。 重要的是我们扩展AbstractHttpSessionApplicationInitializer。</p>
+</blockquote>
+<h3 id="rest示例应用程序"><a href="#rest示例应用程序" class="headerlink" title="rest示例应用程序"></a>rest示例应用程序</h3><h4 id="运行rest-样本应用程序"><a href="#运行rest-样本应用程序" class="headerlink" title="运行rest 样本应用程序"></a>运行rest 样本应用程序</h4><p>您可以通过获取 <a href="https://github.com/spring-projects/spring-session/archive/1.3.0.RELEASE.zip" target="_blank" rel="external">source code</a>并调用以下命令来运行示例：</p>
+<blockquote>
+<p>要使样本工作，必须在localhost上安装<a href="http://redis.io/download" target="_blank" rel="external">install Redis 2.8+</a>，并使用默认端口（6379）运行它。 或者，您可以更新<code>LettuceConnectionFactory</code>以指向Redis服务器。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./gradlew :samples:rest:tomcatRun</div></pre></td></tr></table></figure>
+<h3 id="探索rest-样本应用程序"><a href="#探索rest-样本应用程序" class="headerlink" title="探索rest 样本应用程序"></a>探索rest 样本应用程序</h3><p>尝试使用应用程序。 使用你最喜欢的REST客户端请求<a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl -v http:<span class="comment">//localhost:8080/</span></div></pre></td></tr></table></figure>
+<p>观察到我们被提示进行基本认证。 提供用户名和密码的以下信息：</p>
+<ul>
+<li><strong>Username</strong> <strong>user</strong></li>
+<li><strong>Password</strong> <strong>password</strong></li>
+</ul>
+<p><code>$ curl -v http://localhost:8080/ -u user:password</code></p>
+<p>在输出中，您将注意到以下内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">...</div><div class="line">x-auth-token: <span class="number">0</span>dc1f6e1-c7f1-<span class="number">41</span>ac-<span class="number">8</span>ce2-<span class="number">32</span>b6b3e57aa3</div><div class="line"></div><div class="line">&#123;<span class="string">"username"</span>:<span class="string">"user"</span>&#125;</div></pre></td></tr></table></figure>
+<p>具体来说，我们注意到以下有关我们的反应：</p>
+<ul>
+<li>HTTP状态现在为200</li>
+<li><p>我们有一个包含<strong>x-auth-token</strong>名称的头，它包含一个新的会话id</p>
+</li>
+<li><p>显示当前用户名</p>
+</li>
+</ul>
+<p>我们现在可以使用<strong>x-auth-token</strong>再次提供另一个请求，而不再提供用户名和密码。 例如，以下输出用户名与之前一样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl -v http:<span class="comment">//localhost:8080/ -H "x-auth-token: 0dc1f6e1-c7f1-41ac-8ce2-32b6b3e57aa3"</span></div></pre></td></tr></table></figure>
+<p>唯一的区别是，<code>响应</code>头中没有提供会话ID，因为我们正在重用现有会话。</p>
+<p>如果我们使会话无效，则<strong>x-auth-token</strong>在响应中显示为空值。 例如，以下将使会话无效：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl -v http:<span class="comment">//localhost:8080/logout -H "x-auth-token: 0dc1f6e1-c7f1-41ac-8ce2-32b6b3e57aa3"</span></div></pre></td></tr></table></figure>
+<p>您将在输出中看到<strong>x-auth-token</strong>提供了一个空字符串，表示前一个会话已失效。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">HTTP/<span class="number">1.1</span> <span class="number">204</span> No Content</div><div class="line">...</div><div class="line">x-auth-token:</div></pre></td></tr></table></figure>
+<h3 id="How-does-it-work"><a href="#How-does-it-work" class="headerlink" title="How does it work?"></a>How does it work?</h3><p>Spring Security与<code>SecurityContextPersistenceFilter</code>中的标准<code>HttpSession</code>交互。</p>
+<p>Spring Security现在不是使用Tomcat的HttpSession，而是将值保存在Redis中。 Spring会在您的浏览器中创建一个名为x-auth-token的头，它包含会话的id。</p>
+<p>如果你喜欢，你可以很容易地看到会话是在Redis中创建的。 首先使用以下命令创建会话：</p>
+<p>$ curl -v <a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a> -u user:password</p>
+<p>在输出中，您将注意到以下内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">...</div><div class="line">x-auth-token: <span class="number">7e8383</span>a4-<span class="number">082</span>c-<span class="number">4f</span>fe-a4bc-c40fd3363c5e</div><div class="line"></div><div class="line">&#123;<span class="string">"username"</span>:<span class="string">"user"</span>&#125;</div></pre></td></tr></table></figure>
+<p>现在使用redis-cli删除会话。 例如，在基于Linux的系统上，您可以输入：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ redis-cli keys <span class="string">'*'</span> | xargs redis-cli del</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Redis文档中有关于<a href="http://redis.io/topics/quickstart" target="_blank" rel="external">installing redis-cli</a>的说明。</p>
+</blockquote>
+<p>或者，你也可以删除显式键。 在终端输入以下内容，确保用您的SESSION cookie的值替换<code>7e8383a4-082c-4ffe-a4bc-c40fd3363c5e</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ redis-cli del spring:session:sessions:7e8383a4-082c-4ffe-a4bc-c40fd3363c5e</div></pre></td></tr></table></figure>
+<p>我们现在可以使用<strong>x-auth-token</strong>来向我们删除的会话发出另一个请求，并观察我们是否被提示进行身份验证。 例如，以下内容返回HTTP 401：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl -v http:<span class="comment">//localhost:8080/ -H "x-auth-token: 0dc1f6e1-c7f1-41ac-8ce2-32b6b3e57aa3"</span></div></pre></td></tr></table></figure>
+<p>注：翻译自</p>
+<p><a href="http://docs.spring.io/spring-session/docs/current/reference/html5/guides/rest.html" target="_blank" rel="external">http://docs.spring.io/spring-session/docs/current/reference/html5/guides/rest.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring-Session/" rel="tag"># Spring Session</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/24/Spring Session-HttpSession(快速开始)/" rel="next" title="Spring Session-HttpSession(快速入门)">
+                <i class="fa fa-chevron-left"></i> Spring Session-HttpSession(快速入门)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Updating-Dependencies"><span class="nav-number">1.</span> <span class="nav-text">Updating Dependencies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Configuration"><span class="nav-number">2.</span> <span class="nav-text">Spring Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Servlet容器初始化"><span class="nav-number">3.</span> <span class="nav-text">Servlet容器初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rest示例应用程序"><span class="nav-number">4.</span> <span class="nav-text">rest示例应用程序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#运行rest-样本应用程序"><span class="nav-number">4.1.</span> <span class="nav-text">运行rest 样本应用程序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#探索rest-样本应用程序"><span class="nav-number">5.</span> <span class="nav-text">探索rest 样本应用程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-does-it-work"><span class="nav-number">6.</span> <span class="nav-text">How does it work?</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
