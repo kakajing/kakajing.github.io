@@ -1,0 +1,871 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="RabbitMQ," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在* nix系统上配置RabbitMQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Configuring RabbitMQ">
+<meta property="og:url" content="http://kakajing.github.io/2017/02/03/Configuring-RabbitMQ/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="在* nix系统上配置RabbitMQ">
+<meta property="og:updated_time" content="2017-02-02T19:50:30.359Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Configuring RabbitMQ">
+<meta name="twitter:description" content="在* nix系统上配置RabbitMQ">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/02/03/Configuring-RabbitMQ/"/>
+
+
+
+
+
+  <title> Configuring RabbitMQ | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/03/Configuring-RabbitMQ/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Configuring RabbitMQ
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-03T02:49:56+08:00">
+                2017-02-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/RabbitMQ/" itemprop="url" rel="index">
+                    <span itemprop="name">RabbitMQ</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="在-nix系统上配置RabbitMQ"><a href="#在-nix系统上配置RabbitMQ" class="headerlink" title="在* nix系统上配置RabbitMQ"></a>在* nix系统上配置RabbitMQ</h4><a id="more"></a>
+<p>配置环境</p>
+<p>RabbitMQ在<code>/etc/rabbitmq/rabbitmq-env.conf</code>中查找一组环境变量。 如果不存在，则采用默认值。 <code>rabbitmq-env.conf</code>中的所有值都将导出到RabbitMQ服务器以<code>RABBITMQ_</code>前缀运行的环境中; 此前缀不包括在配置文件中。 可以设置以下变量（在<code>key = value</code>语法中）：</p>
+<p><code>NODENAME</code>：设置RabbitMQ节点的名称。</p>
+<p><code>CONFIG_FILE</code>：设置RabbitMQ配置文件的位置（不是此环境文件）</p>
+<p><code>NODE_IP_ADDRESS</code>：设置要侦听的特定IP地址。</p>
+<p><code>NODE_PORT</code>：设置要侦听的端口</p>
+<p><code>DIST_PORT</code>：设置侦听的端口进行群集</p>
+<p><code>USE_LONGNAME</code>：指示是否使用完全限定名称来标识节点的布尔值。 在具有相同短名称的环境中有用。</p>
+<p><code>CTL_ERL_ARGS</code>：设置运行rabbitmqctl时调用的<code>erl</code>命令的参数。 用于调试。</p>
+<p><code>SERVER_ERL_ARGS</code>：设置启动RabbitMQ时调用的<code>erl</code>命令的参数。 设置此值将覆盖默认值（请参阅下面的示例配置）。</p>
+<p><code>SERVER_ADDITIONAL_ERL_ARGS</code>：为启动RabbitMQ时调用的<code>erl</code>命令设置其他参数。 设置此值将附加到<code>SERVER_ERL_ARG</code>S变量，默认情况下为空。</p>
+<p><code>SERVER_START_ARGS</code>：也为在启动RabbitMQ时调用的<code>erl</code>命令设置。</p>
+<p>示例配置文件（所有值实际上都是默认值）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">NODENAME=rabbit<span class="meta">@localhost</span>    </div><div class="line">CONFIG_FILE=/etc/rabbitmq/rabbitmq.config</div><div class="line">NODE_IP_ADDRESS=<span class="string">""</span></div><div class="line">NODE_PORT=<span class="number">5672</span></div><div class="line">DIST_PORT=<span class="number">25672</span></div><div class="line">USE_LONGNAME=<span class="keyword">false</span></div><div class="line">CTL_ERL_ARGS=<span class="string">""</span></div><div class="line">SERVER_ERL_ARGS=<span class="string">"+K true +A30 +P 1048576 -kernel inet_default_connect_options [&#123;nodelay,true&#125;]"</span></div><div class="line">SERVER_ADDITIONAL_ERL_ARGS=<span class="string">""</span></div><div class="line">SERVER_START_ARGS=<span class="string">""</span></div></pre></td></tr></table></figure>
+<h4 id="配置RabbitMQ"><a href="#配置RabbitMQ" class="headerlink" title="配置RabbitMQ"></a>配置RabbitMQ</h4><p>注意：RabbitMQ的配置文件是标准的Erlang配置语法。 如果你不熟悉Erlang，这可能会令人头疼。 它遵循以下格式：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    &#123;rabbit,</div><div class="line">        [</div><div class="line">            &#123;config_value_1, []&#125;,</div><div class="line">            &#123;config_value_2, []&#125;</div><div class="line">        ]</div><div class="line">    &#125;,</div><div class="line">    &#123;additional_rabbitmq_plugins,</div><div class="line">        [...]</div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>RabbitMQ的配置部分有以下keys （摘自<a href="https://www.rabbitmq.com/configure.html）：" target="_blank" rel="external">https://www.rabbitmq.com/configure.html）：</a></p>
+<ul>
+<li><p><code>tcp_listeners</code>：要侦听AMQP连接（不使用SSL）的端口列表。 可以包含整数（意为“侦听所有接口”）或元组（如{“127.0.0.1”，5672}）以监听一个或多个接口。</p>
+<p>默认值：[5672]</p>
+</li>
+<li><p><code>num_tcp_acceptors</code>：将接受TCP侦听器连接的Erlang进程数。</p>
+<p>默认值：10</p>
+</li>
+<li><p><code>handshake_timeout</code>：AMQP 0-8 / 0-9 / 0-9-1握手（套接字连接和SSL握手后）的最长时间，以毫秒为单位。</p>
+<p>默认值：10000</p>
+</li>
+<li><p><code>ssl_listeners</code>：如上，用于SSL连接。</p>
+<p>默认值：[]</p>
+</li>
+<li><p><code>num_ssl_acceptors</code>：将接受SSL侦听器连接的Erlang进程数。</p>
+<p>默认值：1</p>
+</li>
+<li><p><code>ssl_options</code>：SSL配置。</p>
+<p>默认值：[]</p>
+</li>
+<li><p><code>ssl_handshake_timeout</code>：SSL握手超时，以毫秒为单位。</p>
+<p>默认值：5000</p>
+</li>
+<li><p><code>vm_memory_high_watermark</code>：触发流量控制的内存阈值。 请参阅基于内存的流控制文档。</p>
+<p>默认值：0.4</p>
+</li>
+<li><p><code>vm_memory_high_watermark_paging_ratio</code>：队列开始将消息页面输出到磁盘以释放内存的高水位限制的分数。 请参阅基于内存的流控制文档。</p>
+<p>默认值：0.5</p>
+</li>
+<li><p><code>disk_free_limit</code>：RabbitMQ用于存储数据的分区的磁盘可用空间限制。 当可用磁盘空间低于此限制时，触发流量控制。 该值可以相对于RAM的总量（例如{mem_relative，1.0}）来设置。 该值也可以设置为整数字节。 或者，在信息单元（例如“50MB”）中。 默认情况下，可用磁盘空间必须超过50MB。 请参见Disk Alarms文档。</p>
+<p>默认值：50000000</p>
+</li>
+<li><p><code>log_levels</code>：控制日志记录的粒度。 该值是日志事件类别和日志级别对的列表。</p>
+<p>级别可以是<code>none</code>（无事件记录），<code>error</code>（仅记录错误），<code>warning</code>（仅记录错误和警告），<code>info</code>（错误，警告和信息性消息被记录）或<code>debug</code>（错误，警告 ，信息消息和调试消息被记录）。</p>
+<p>目前定义有四类。另外，目前其他类别的，events总是记录。</p>
+<p>类别：</p>
+<ul>
+<li>channel - 所有与AMQP通道相关的事件</li>
+<li>connection - 用于所有与网络连接相关的事件</li>
+<li>federation - 所有与联盟有关的事件</li>
+<li>mirroring - 所有与镜像队列相关的事件</li>
+</ul>
+<p>默认: <code>[{connection, info}]</code></p>
+</li>
+</ul>
+<ul>
+<li><p><code>frame_max</code>：与客户端协商的帧的最大允许大小（以字节为单位）。 设置为0意味着“无限制”，但会在一些QPid客户端触发一个错误。 设置较大的值可以提高吞吐量; 设置较小的值可以改善等待时间。</p>
+<p>默认值：<code>131072</code></p>
+</li>
+<li><p><code>channel_max</code>：与客户端协商的最大允许通道数。 设置为0表示“无限制”。 使用更多的通道增加了代理的内存占用。</p>
+<p>默认值：<code>0</code></p>
+</li>
+<li><p><code>channel_operation_timeout</code>：通道操作超时（以毫秒为单位）（由于消息传递协议差异和限制，内部使用，不直接暴露给客户端）。</p>
+<p>默认值：<code>15000</code></p>
+</li>
+<li><p><code>heartbeat</code>：表示服务器在connection.tune帧中发送的heartbeat 延迟（以秒为单位）的值。 如果设置为0，心跳将被禁用。 客户端可能不遵循服务器建议，有关详细信息，请参阅AMQP参考。 禁用检测信号可能会提高具有大量连接的情况下的性能，但可能会导致在关闭非活动连接的网络设备存在时连接断开。</p>
+<p>默认值：<code>60</code>（版本3.5.5之前的<code>580</code>）</p>
+</li>
+<li><p><code>default_vhost</code>：当RabbitMQ从头开始创建新数据库时要创建的虚拟主机。 交换<code>amq.rabbitmq.log</code>将存在于此虚拟主机中。</p>
+<p>默认值：<code>&lt;&lt;“/”&gt;&gt;</code></p>
+</li>
+<li><p><code>default_user</code>：当RabbitMQ从头开始创建新数据库时要创建的用户名。</p>
+<p>默认值：<code>&lt;&lt;“guest”&gt;&gt;</code></p>
+</li>
+<li><p><code>default_pass</code>：默认用户的密码。</p>
+<p>默认值：<code>&lt;&lt;“guest”&gt;&gt;</code></p>
+</li>
+<li><p><code>default_user_tags</code>：默认用户的标签。</p>
+<p>默认值：<code>[administrator]</code></p>
+</li>
+<li><p><code>default_permissions</code>：在创建默认用户时分配给它的权限。</p>
+<p>默认值：<code>[&lt;&lt;&quot;.*&quot;&gt;&gt;, &lt;&lt;&quot;.*&quot;&gt;&gt;, &lt;&lt;&quot;.*&quot;&gt;&gt;]</code></p>
+</li>
+<li><p><code>loopback_users</code>：只允许通过回送接口（即localhost）连接到代理的用户列表。</p>
+<p>如果你希望允许默认的访客用户远程连接，您需要将其更改为<code>[]</code>。</p>
+<p>默认值：<code>[&lt;&lt;“guest”&gt;&gt;]</code></p>
+</li>
+<li><p><code>cluster_nodes</code>：设置此选项，以便在节点第一次启动时自动执行群集。 元组的第一个元素是节点将尝试集群到的节点。 第二个元素是disc或ram并确定节点类型。</p>
+<p>默认值: <code>{[], disc}</code></p>
+</li>
+<li><p>server_properties：在连接时向客户端通知的键值对列表。</p>
+</li>
+<li><p>默认值：[]</p>
+</li>
+<li><p>collect_statistics：统计信息收集模式。 主要与管理插件相关。 选项包括：</p>
+<ul>
+<li>none（不发出统计信息事件）</li>
+<li>coarse（每队列发射/每通道/每连接统计）</li>
+<li>fine（也发射每消息统计）</li>
+</ul>
+<p>你可能不想自己改变这个。</p>
+<p>默认值：none</p>
+</li>
+<li><p><code>collect_statistics_interval</code>：统计信息收集间隔（以毫秒为单位）。 主要与管理插件相关。</p>
+<p>默认值：<code>5000</code></p>
+</li>
+<li><p><code>auth_mechanisms</code>：向客户端提供的SASL认证机制。</p>
+<p>默认值：<code>[&#39;PLAIN&#39;，&#39;AMQPLAIN&#39;]</code></p>
+</li>
+<li><p><code>auth_backends</code>：要使用的身份验证/授权后端列表。 该列表可以包含模块的名称（在这种情况下，相同的模块用于认证和授权）或2元组，如<code>{ModN，ModZ}</code>，在这种情况下，ModN用于认证，ModZ用于授权。</p>
+</li>
+<li><p>在2-tuple情况下，ModZ可以由列表替换，其中所有元素必须确认每个授权查询，例如， <code>{ModN，[ModZ1，ModZ2]}</code>。 这允许授权插件混合并提供额外的安全限制。</p>
+<p>除了<code>rabbit_auth_backend_internal</code>之外的其他数据库可通过插件使用。</p>
+<p>默认值：<code>[rabbit_auth_backend_internal]</code></p>
+</li>
+</ul>
+<ul>
+<li><p><code>reverse_dns_lookups</code>：设置为true以使RabbitMQ在客户端连接上执行反向DNS查找，并通过rabbitmqctl和管理插件提供该信息。</p>
+<p>默认值：<code>false</code></p>
+</li>
+<li><p><code>delegate_count</code>：用于集群内通信的委派进程数。 在具有大量核心并且也是集群的一部分的机器上，您可能希望增加此值。</p>
+<p>默认值：<code>16</code></p>
+</li>
+<li><p><code>trace_vhosts</code>：跟踪器在内部使用。 你不应该改变这个。</p>
+<p>默认值：<code>[]</code></p>
+</li>
+<li><p><code>tcp_listen_options</code>：默认套接字选项。 你可能不想改变这个。</p>
+<p>默认：</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[&#123;backlog,       <span class="number">128</span>&#125;,</div><div class="line"> &#123;nodelay,       true&#125;,</div><div class="line"> &#123;exit_on_close, false&#125;]</div></pre></td></tr></table></figure>
+<ul>
+<li><p><code>hipe_compile</code>：设置为true以使用HiPE预先编译RabbitMQ的部分，HiPE是Erlang的即时编译器。 这将以增加启动时间为代价增加服务器吞吐量。</p>
+<p>您可能会看到20-50％的性能提高，但是在启动时延迟几分钟。 这些数字是高度工作负载和硬件相关的。</p>
+<p>HiPE支持可能不会编译到您的Erlang安装。 如果不是，启用此选项将仅显示警告消息，并且启动将正常进行。 例如，Debian / Ubuntu用户需要安装<code>erlang-base-hipe</code>包。</p>
+<p>HiPE在某些平台上不可用，尤其包括Windows。</p>
+<p>HiPE在17.5之前的Erlang / OTP版本中存在已知问题。 强烈建议对HiPE使用最近的Erlang / OTP版本。</p>
+<p>默认值：<code>false</code></p>
+</li>
+</ul>
+<ul>
+<li><p><code>cluster_partition_handling</code>：如何处理网络分区。 可用模式有：</p>
+<ul>
+<li><code>ignore</code></li>
+<li><code>pause_minority</code></li>
+<li><code>{pause_if_all_down，[nodes], ignore| autoheal}</code>其中<code>[nodes]</code>是节点名称列表（例如：<code>[&#39;rabbit @ node1&#39;，&#39;rabbit @ node2&#39;]</code>）</li>
+<li><code>autoheal</code></li>
+</ul>
+<p>有关更多信息，请参阅分区文档。</p>
+<p>默认值：<code>ignore</code></p>
+</li>
+<li><p><code>cluster_keepalive_interval</code>：节点应如何频繁地向其他节点发送keepalive消息（以毫秒为单位）。 注意这和<code>net_ticktime</code>不一样; 错过保持活动消息不会导致节点被视为失败。</p>
+<p>默认：<code>10000</code></p>
+</li>
+<li><p><code>queue_index_embed_msgs_below</code>：消息以字节为单位的大小，在该消息之下，消息将直接嵌入队列索引中。 建议您在更改之前阅读持久性调优文档。</p>
+<p>默认值：<code>4096</code></p>
+</li>
+<li><p><code>msg_store_index_module</code>：用于队列索引的实现模块。 建议您在更改之前阅读持久性调优文档。</p>
+<p>默认值：<code>rabbit_msg_store_ets_index</code></p>
+</li>
+<li><p><code>backing_queue_module</code>：队列内容的实现模块。 你可能不想改变这个。</p>
+<p>默认值：<code>rabbit_variable_queue</code></p>
+</li>
+<li><p><code>msg_store_file_size_limit</code>：持久性的可调参数值。 你几乎肯定不应该改变这个。</p>
+<p>默认值：<code>16777216</code></p>
+</li>
+<li><p><code>mnesia_table_loading_timeout</code>：等待群集中的Mnesia表变为可用时使用的超时。</p>
+<p>默认值：<code>30000</code></p>
+</li>
+<li><p><code>queue_index_max_journal_entries</code>：持久性的可调参数值。 你几乎肯定不应该改变这个。</p>
+<p>默认值：<code>65536</code></p>
+</li>
+<li><p><code>queue_master_locator</code>：队列主机位置策略。 可用的策略有：</p>
+<ul>
+<li><code>&lt;&lt;“min-masters”&gt;&gt;</code></li>
+<li><code>&lt;&lt;“client-local”&gt;&gt;</code></li>
+<li><code>&lt;&lt;“random”&gt;&gt;</code></li>
+</ul>
+<p>有关详细信息，请参阅队列主机位置的文档。</p>
+<p>默认值：<code>&lt;&lt;“client-local”&gt;&gt;</code></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RabbitMQ/" rel="tag"># RabbitMQ</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/02/使用redis发布和订阅/" rel="next" title="使用redis发布和订阅">
+                <i class="fa fa-chevron-left"></i> 使用redis发布和订阅
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#在-nix系统上配置RabbitMQ"><span class="nav-number">1.</span> <span class="nav-text">在* nix系统上配置RabbitMQ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置RabbitMQ"><span class="nav-number">2.</span> <span class="nav-text">配置RabbitMQ</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
