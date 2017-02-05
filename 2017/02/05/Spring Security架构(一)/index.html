@@ -86,19 +86,19 @@
 
 <meta name="description" content="本指南是Spring Security的一个入门，介绍了框架的设计和基本构建块。 我们只介绍应用程序安全性的基础知识，但是这样做可以清除开发人员使用Spring Security时遇到的一些混乱。 为此，我们将了解在Web应用程序中应用安全性的方法使用过滤器以及更普遍地使用方法注解。使用本指南时，你需要了解在一个高层次的安全应用程序如何工作，以及如何可以定制，或者如果你只需要学习如何考虑应用程序的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring Security架构(一)">
-<meta property="og:url" content="http://kakajing.github.io/2017/02/05/Spring-Security-Architecture/index.html">
+<meta property="og:title" content="Spring Security 架构(一)">
+<meta property="og:url" content="http://kakajing.github.io/2017/02/05/Spring Security架构(一)/index.html">
 <meta property="og:site_name" content="余鸢">
 <meta property="og:description" content="本指南是Spring Security的一个入门，介绍了框架的设计和基本构建块。 我们只介绍应用程序安全性的基础知识，但是这样做可以清除开发人员使用Spring Security时遇到的一些混乱。 为此，我们将了解在Web应用程序中应用安全性的方法使用过滤器以及更普遍地使用方法注解。使用本指南时，你需要了解在一个高层次的安全应用程序如何工作，以及如何可以定制，或者如果你只需要学习如何考虑应用程序的">
-<meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring-Security-Architecture/C:/Users\Administrator\Desktop\2.png">
-<meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring-Security-Architecture/C:/Users\Administrator\Desktop\3.png">
-<meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring-Security-Architecture/C:/Users\Administrator\Desktop\4.png">
-<meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring-Security-Architecture/C:/Users\Administrator\Desktop\5.png">
-<meta property="og:updated_time" content="2017-02-05T16:20:48.325Z">
+<meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring Security架构(一)/C:/Users\Administrator\Desktop\2.png">
+<meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring Security架构(一)/C:/Users\Administrator\Desktop\3.png">
+<meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring Security架构(一)/C:/Users\Administrator\Desktop\4.png">
+<meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring Security架构(一)/C:/Users\Administrator\Desktop\5.png">
+<meta property="og:updated_time" content="2017-02-05T16:18:33.840Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring Security架构(一)">
+<meta name="twitter:title" content="Spring Security 架构(一)">
 <meta name="twitter:description" content="本指南是Spring Security的一个入门，介绍了框架的设计和基本构建块。 我们只介绍应用程序安全性的基础知识，但是这样做可以清除开发人员使用Spring Security时遇到的一些混乱。 为此，我们将了解在Web应用程序中应用安全性的方法使用过滤器以及更普遍地使用方法注解。使用本指南时，你需要了解在一个高层次的安全应用程序如何工作，以及如何可以定制，或者如果你只需要学习如何考虑应用程序的">
-<meta name="twitter:image" content="http://kakajing.github.io/2017/02/05/Spring-Security-Architecture/C:/Users\Administrator\Desktop\2.png">
+<meta name="twitter:image" content="http://kakajing.github.io/2017/02/05/Spring Security架构(一)/C:/Users\Administrator\Desktop\2.png">
 
 
 
@@ -126,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://kakajing.github.io/2017/02/05/Spring-Security-Architecture/"/>
+  <link rel="canonical" href="http://kakajing.github.io/2017/02/05/Spring Security架构(一)/"/>
 
 
 
 
 
-  <title> Spring Security架构(一) | 余鸢 </title>
+  <title> Spring Security 架构(一) | 余鸢 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -255,7 +255,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/05/Spring-Security-Architecture/">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/05/Spring Security架构(一)/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="余鸢">
@@ -279,7 +279,7 @@
             
             
               
-                Spring Security架构(一)
+                Spring Security 架构(一)
               
             
           </h1>
@@ -372,7 +372,7 @@
 <p><code>supports()</code>方法中的<code>Class&lt;?&gt;</code>参数实际上是<code>Class&lt;? extends Authentication&gt;</code>（它将只被询问是否支持将被传递到<code>authenticate()</code>方法）。 <code>ProviderManager</code>可以通过代理一个<code>AuthenticationProviders</code>链在同一个应用程序中支持多种不同的认证机制。 如果<code>ProviderManager</code>不能识别特定的<code>Authentication</code> 实例类型，它将被跳过。</p>
 <p><code>ProviderManager</code>具有可选父级，如果所有提供程序都返回<code>null</code>，它可以查询。 如果parent 不可用，那么<code>null Authentication</code>将导致<code>AuthenticationException</code>。</p>
 <p>有时，应用程序具有受保护资源的逻辑组（例如，匹配路径模式<code>/ api / **</code>的所有Web资源），并且每个组可以具有其自己的专用<code>AuthenticationManager</code>。 通常，每个都是一个<code>ProviderManager</code>，他们共享一个parent 。 parent 则是一种“全球性”的资源，充当所有提供商的后备。</p>
-<p> <img src="/2017/02/05/Spring-Security-Architecture/C:/Users\Administrator\Desktop\2.png" alt="2"></p>
+<p> <img src="/2017/02/05/Spring Security架构(一)/C:/Users\Administrator\Desktop\2.png" alt="2"></p>
 <p> 图1.使用<code>ProviderManager</code>的<code>AuthenticationManager</code>层次结构</p>
 <h4 id="自定义身份验证管理器"><a href="#自定义身份验证管理器" class="headerlink" title="自定义身份验证管理器"></a>自定义身份验证管理器</h4><p>Spring Security提供了一些配置帮助，以便快速获得在应用程序中设置的常见身份验证管理器功能。 最常用的助手是<code>AuthenticationManagerBuilder</code>，它非常适合设置内存，JDBC或LDAP用户详细信息或添加自定义<code>UserDetailsService</code>。 下面是配置全局 (parent)  <code>AuthenticationManager</code>的应用程序的示例：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationSecurity</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">   ... <span class="comment">// web stuff here</span></div><div class="line"></div><div class="line">  <span class="meta">@Autowired</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">initialize</span><span class="params">(AuthenticationManagerBuilder builder, DataSource dataSource)</span> </span>&#123;</div><div class="line">    builder.jdbcAuthentication().dataSource(dataSource).withUser(<span class="string">"dave"</span>)</div><div class="line">      .password(<span class="string">"secret"</span>).roles(<span class="string">"USER"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -384,13 +384,13 @@
 <p>大多数人只是使用默认的<code>AccessDecisionManager</code>是<code>AffirmativeBased</code>（如果没有voters拒绝然后访问被授予）。 任何定制都倾向于在voters中发生，或者添加新的定制，或者修改现有的定制方式。</p>
 <p>使用作为Spring表达式语言（Spel）表达式的<code>ConfigAttributes</code>是非常常见的，例如<code>isFullyAuthenticated() &amp;&amp; hasRole(&#39;FOO&#39;)</code>。 这由<code>DecisionVoter</code>支持，它可以处理表达式并为其创建上下文。 要扩展可处理的表达式的范围，需要自定义实现<code>SecurityExpressionRoot</code>，有时还需要<code>SecurityExpressionHandler</code>。</p>
 <h4 id="Web-Security"><a href="#Web-Security" class="headerlink" title="Web Security"></a>Web Security</h4><p>Web层中的Spring Security（对于UI和HTTP后端）是基于Servlet <code>Filters</code>的，所以一般先查看一下<code>Filters</code>的作用是很有帮助的。 下图显示了单个HTTP请求的处理程序的典型分层。</p>
-<p> <img src="/2017/02/05/Spring-Security-Architecture/C:/Users\Administrator\Desktop\3.png" alt="3"></p>
+<p> <img src="/2017/02/05/Spring Security架构(一)/C:/Users\Administrator\Desktop\3.png" alt="3"></p>
 <p>客户端向应用程序发送请求，容器根据请求URI的路径决定应用哪个filters和哪个servlet。最多只有一个servlet可以处理一个请求，但filters 形成产业链，所以他们是有序的，而事实上，如果要处理该请求本身的filters 可以否决链的其余部分。filters还可以修改下游过滤器和servlet中使用的请求和/或响应。过滤器链的顺序非常重要，Spring Boot通过两种机制来管理它：一个是<code>@Beans</code>类型<code>Filter</code>可以有一个<code>@Order</code>或者实现<code>Ordered</code>，另一个是它们可以是<code>FilterRegistrationBean</code>的一部分，作为其API的一部分本身具有顺序。一些现成的过滤器定义他们自己的常量，以帮助指示他们喜欢相对于彼此的顺序（例如，来自Spring Session的<code>SessionRepositoryFilter</code>具有一个为<code>Integer.MIN_VALUE + 50</code>的<code>DEFAULT_ORDER</code>，它告诉我们它喜欢在早期的链，但不排除其他过滤器之前）。</p>
 <p>Spring Security作为单个过滤器安装在链中。 在Spring Boot应用程序中，安全过滤器是ApplicationContext中的一个@Bean，默认情况下会安装它，以便将其应用于每个请求。 它安装在由SecurityProperties.DEFAULT_FILTER_ORDER定义的位置，该位置又由FilterRegistrationBean.REQUEST_WRAPPER_FILTER_MAX_ORDER（Spring Boot应用程序期望过滤器在包装请求时修改其行为的最大顺序）锚定。 还有更多的东西：从容器的角度来看Spring Security是一个单一的过滤器，但里面有额外的过滤器，每个扮演一个特殊的角色。 这里是一张图片：</p>
-<p> <img src="/2017/02/05/Spring-Security-Architecture/C:/Users\Administrator\Desktop\4.png" alt="4"></p>
+<p> <img src="/2017/02/05/Spring Security架构(一)/C:/Users\Administrator\Desktop\4.png" alt="4"></p>
 <p>图2. Spring Security是一个单一的物理过滤器，但将处理委托给一系列内部过滤器<br>实际上，在安全过滤器中甚至还有一层间接：它通常作为<code>DelegatingFilterProxy</code>安装在容器中。 代理委托给一个<code>FilterChainProxy</code>，它本身是一个<code>@Bean</code>，通常有一个固定名称的<code>springSecurityFilterChain</code>。 它是<code>FilterChainProxy</code>，它包含所有安全逻辑内部排列为一个链（或链）。 所有的过滤器都有相同的API（它们都实现了Servlet规范中的<code>Filter</code>接口），并且它们都有机会否决链的其余部分。</p>
 <p>可以由Spring Security和所有未知的容器管理多个过滤链。 Spring Security过滤器包含过滤器链的列表，并将每个请求分派给匹配的第一个链。 下图显示了基于匹配请求路径（<code>/foo/**</code> 匹配<code>/**</code> ）之前发生的分派。 这是非常常见的，但不是匹配请求的唯一方法。 这个分派进程的最重要的特征是只有一个链处理请求。</p>
-<p> <img src="/2017/02/05/Spring-Security-Architecture/C:/Users\Administrator\Desktop\5.png" alt="5"></p>
+<p> <img src="/2017/02/05/Spring Security架构(一)/C:/Users\Administrator\Desktop\5.png" alt="5"></p>
 <p>图3. Spring Security <code>FilterChainProxy</code>将请求分派给匹配的第一个链。<br>没有自定义安全配置的Spring Boot应用程序有几个（称为n）过滤器链，其中通常n = 6。 第一个（n-1）链在那里只是忽略静态资源模式，如<code>/css/**</code>和<code>/images/**</code>和错误视图<code>/error</code>（路径可以由用户使用<code>SecurityProperties</code>的<code>security.ignored</code>配置bean）。 最后一个链匹配catch所有路径<code>/**</code>，并且更活跃，包含用于认证，授权，异常处理，会话处理，头部写入等的逻辑。默认情况下，这个链中总共有11个过滤器，但通常 对于用户来说不需要关心使用哪个过滤器以及什么时候。</p>
 <blockquote>
 <p>注意：事实上，Spring Security内部的所有过滤器对于容器都是未知的，这一点很重要，尤其是在Spring Boot应用程序中，默认情况下所有<code>Filter</code>类型的<code>@Beans</code>都会自动注册到容器中。 因此，如果要向安全链添加自定义过滤器，则需要不将其作为<code>@Bean</code>或将其包装在明确禁用容器注册的<code>FilterRegistrationBean</code>中。</p>
@@ -462,8 +462,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/05/Spring Security架构(一)/" rel="next" title="Spring Security 架构(一)">
-                <i class="fa fa-chevron-left"></i> Spring Security 架构(一)
+              <a href="/2017/02/03/Configuring-RabbitMQ/" rel="next" title="Configuring RabbitMQ">
+                <i class="fa fa-chevron-left"></i> Configuring RabbitMQ
               </a>
             
           </div>
@@ -472,8 +472,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/02/06/Spring Security架构(二)/" rel="prev" title="Spring Security架构(二)">
-                Spring Security架构(二) <i class="fa fa-chevron-right"></i>
+              <a href="/2017/02/05/Spring-Security-Architecture/" rel="prev" title="Spring Security架构(一)">
+                Spring Security架构(一) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
