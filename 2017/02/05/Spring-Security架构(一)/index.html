@@ -94,7 +94,7 @@
 <meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring-Security架构(一)/C:/Users\Administrator\Desktop\3.png">
 <meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring-Security架构(一)/C:/Users\Administrator\Desktop\4.png">
 <meta property="og:image" content="http://kakajing.github.io/2017/02/05/Spring-Security架构(一)/C:/Users\Administrator\Desktop\5.png">
-<meta property="og:updated_time" content="2017-02-05T16:28:41.798Z">
+<meta property="og:updated_time" content="2017-02-05T17:53:02.547Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Security架构(一)">
 <meta name="twitter:description" content="本指南是Spring Security的一个入门，介绍了框架的设计和基本构建块。 我们只介绍应用程序安全性的基础知识，但是这样做可以清除开发人员使用Spring Security时遇到的一些混乱。 为此，我们将了解在Web应用程序中应用安全性的方法使用过滤器以及更普遍地使用方法注解。使用本指南时，你需要了解在一个高层次的安全应用程序如何工作，以及如何可以定制，或者如果你只需要学习如何考虑应用程序的">
@@ -140,6 +140,16 @@
   
 
 
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -354,34 +364,34 @@
       
         <p>本指南是Spring Security的一个入门，介绍了框架的设计和基本构建块。 我们只介绍应用程序安全性的基础知识，但是这样做可以清除开发人员使用Spring Security时遇到的一些混乱。 为此，我们将了解在Web应用程序中应用安全性的方法使用过滤器以及更普遍地使用方法注解。使用本指南时，你需要了解在一个高层次的安全应用程序如何工作，以及如何可以定制，或者如果你只需要学习如何考虑应用程序的安全性。</p>
 <a id="more"></a>
-<p>本指南不是作为解决比最基本的问题（有其他来源的那些）的手册或食谱，但它可能对初学者和专家都很有用。Spring Boot 也提到了很多，因为它提供了一个安全的应用程序的一些默认的行为，它是有用的，以了解如何与整体架构结合使用。 所有这些原则同样适用于不使用Spring Boot的应用程序。</p>
+<p>本指南不是作为解决比最基本的问题（有其他来源的那些）的手册或谱方，但它可能对初学者和专家都很有用。Spring Boot 也提到了很多，因为它提供了一个安全的应用程序的一些默认的行为，它是有用的，以了解如何与整体架构结合使用。 所有这些原则同样适用于不使用Spring Boot的应用程序。</p>
 <h3 id="认证和访问控制"><a href="#认证和访问控制" class="headerlink" title="认证和访问控制"></a>认证和访问控制</h3><p>应用程序安全归结为两个或多或少独立的问题：authentication（你是谁？）和authorization（你允许做什么？）。 有时人们会说“访问控制”而不是“authorization”，这可能会让人困惑，但是，因为“authorization”对于在其他地方超载很有帮助。 Spring Security具有一种架构，旨在将身份验证与授权分开，并为两者提供策略和扩展点。</p>
 <h4 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a>Authentication</h4><p>验证的主要策略接口是<code>AuthenticationManager</code>，它只有一个方法：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AuthenticationManager</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="function">Authentication <span class="title">authenticate</span><span class="params">(Authentication authentication)</span></span></div><div class="line">    <span class="keyword">throws</span> AuthenticationException;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>AuthenticationManager可以在其<code>authenticate()</code>方法中做3件事之一：</p>
 <ol>
-<li>返回一个<code>Authentication</code>（通常与<code>authenticated = true</code>），如果它可以验证该输入表示有效主体。</li>
-<li><p>如果它认为输入表示无效的主体，则抛出<code>AuthenticationException</code>。</p>
+<li>返回一个<code>Authentication</code>（通常与<code>authenticated = true</code>），如果它可以验证该输入表示为有效主体。</li>
+<li><p>如果它认为输入表示为无效的主体，则抛出<code>AuthenticationException</code>。</p>
 </li>
-<li><p>如果它不能判断返回<code>null</code>。</p>
+<li><p>如果它不能判断则返回<code>null</code>。</p>
 </li>
 </ol>
 <p><code>AuthenticationException</code>是一个运行时异常。 它通常由应用程序以通用方式处理，这取决于应用程序的风格或目的。 换句话说，用户代码通常不希望捕获和处理它。 例如，Web UI将呈现表示认证失败的页面，并且后端HTTP服务将发送401响应，具有或不具有取决于上下文的<code>WWW-Authenticate</code> header。</p>
 <p>最常用的<code>AuthenticationManager</code>实现是<code>ProviderManager</code>，它委托一个<code>AuthenticationProvider</code>实例链。 <code>AuthenticationProvider</code>有点像<code>AuthenticationManager</code>，但它有一个额外的方法允许调用者查询它是否支持给定的<code>Authentication</code>类型：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AuthenticationProvider</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function">Authentication <span class="title">authenticate</span><span class="params">(Authentication authentication)</span></span></div><div class="line">			<span class="keyword">throws</span> AuthenticationException;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class&lt;?&gt; authentication)</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><code>supports()</code>方法中的<code>Class&lt;?&gt;</code>参数实际上是<code>Class&lt;? extends Authentication&gt;</code>（它将只被询问是否支持将被传递到<code>authenticate()</code>方法）。 <code>ProviderManager</code>可以通过代理一个<code>AuthenticationProviders</code>链在同一个应用程序中支持多种不同的认证机制。 如果<code>ProviderManager</code>不能识别特定的<code>Authentication</code> 实例类型，它将被跳过。</p>
-<p><code>ProviderManager</code>具有可选父级，如果所有提供程序都返回<code>null</code>，它可以查询。 如果parent 不可用，那么<code>null Authentication</code>将导致<code>AuthenticationException</code>。</p>
-<p>有时，应用程序具有受保护资源的逻辑组（例如，匹配路径模式<code>/ api / **</code>的所有Web资源），并且每个组可以具有其自己的专用<code>AuthenticationManager</code>。 通常，每个都是一个<code>ProviderManager</code>，他们共享一个parent 。 parent 则是一种“全球性”的资源，充当所有提供商的后备。</p>
+<p><code>ProviderManager</code>具有可选父级，如果所有提供程序都返回<code>null</code>，它可以查询。 如果父级 不可用，那么<code>null Authentication</code>将导致<code>AuthenticationException</code>。</p>
+<p>有时，应用程序具有受保护资源的逻辑组（例如，匹配路径模式<code>/ api / **</code>的所有Web资源），并且每个组可以具有其自己的专用<code>AuthenticationManager</code>。 通常，每个都是一个<code>ProviderManager</code>，他们共享一个父级 。 父级则是一种“全球性”的资源，充当所有提供商的后端。</p>
 <p> <img src="/2017/02/05/Spring-Security架构(一)/C:/Users\Administrator\Desktop\2.png" alt="2"></p>
 <p> 图1.使用<code>ProviderManager</code>的<code>AuthenticationManager</code>层次结构</p>
-<h4 id="自定义身份验证管理器"><a href="#自定义身份验证管理器" class="headerlink" title="自定义身份验证管理器"></a>自定义身份验证管理器</h4><p>Spring Security提供了一些配置帮助，以便快速获得在应用程序中设置的常见身份验证管理器功能。 最常用的助手是<code>AuthenticationManagerBuilder</code>，它非常适合设置内存，JDBC或LDAP用户详细信息或添加自定义<code>UserDetailsService</code>。 下面是配置全局 (parent)  <code>AuthenticationManager</code>的应用程序的示例：</p>
+<h4 id="自定义身份验证管理器"><a href="#自定义身份验证管理器" class="headerlink" title="自定义身份验证管理器"></a>自定义身份验证管理器</h4><p>Spring Security提供了一些配置帮助，以便快速获得在应用程序中设置的常见身份验证管理器功能。 最常用的助手是<code>AuthenticationManagerBuilder</code>，它非常适合设置内存，JDBC或LDAP用户详细信息或添加自定义<code>UserDetailsService</code>。 下面是配置全局 (父级)  <code>AuthenticationManager</code>的应用程序的示例：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationSecurity</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">   ... <span class="comment">// web stuff here</span></div><div class="line"></div><div class="line">  <span class="meta">@Autowired</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">initialize</span><span class="params">(AuthenticationManagerBuilder builder, DataSource dataSource)</span> </span>&#123;</div><div class="line">    builder.jdbcAuthentication().dataSource(dataSource).withUser(<span class="string">"dave"</span>)</div><div class="line">      .password(<span class="string">"secret"</span>).roles(<span class="string">"USER"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>此示例涉及Web应用程序，但<code>AuthenticationManagerBuilder</code>的用法更广泛适用（有关如何实施Web应用程序安全性的更多详细信息，请参见下文）。 注意，<code>AuthenticationManagerBuilder</code>是<code>@Autowired</code>在<code>@Bean</code>中的一个方法 - 这是什么使它构建全局 (parent)  <code>AuthenticationManager</code>。 相反，如果我们这样做：</p>
+<p>此示例涉及Web应用程序，但<code>AuthenticationManagerBuilder</code>的用法更广泛适用（有关如何实施Web应用程序安全性的更多详细信息，请参见下文）。 注意，<code>AuthenticationManagerBuilder</code>是<code>@Autowired</code>在<code>@Bean</code>中的一个方法 - 这是什么使它构建全局 (父级)  <code>AuthenticationManager</code>。 相反，如果我们这样做：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationSecurity</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="meta">@Autowired</span></div><div class="line">  DataSource dataSource;</div><div class="line"></div><div class="line">   ... <span class="comment">// web stuff here</span></div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">configure</span><span class="params">(AuthenticationManagerBuilder builder)</span> </span>&#123;</div><div class="line">    builder.jdbcAuthentication().dataSource(dataSource).withUser(<span class="string">"dave"</span>)</div><div class="line">      .password(<span class="string">"secret"</span>).roles(<span class="string">"USER"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>（使用configurer中的<code>@Override</code>方法），那么<code>AuthenticationManagerBuilder</code>仅用于构建一个“local”<code>AuthenticationManager</code>，它是全局子节点的子节点。 在Spring Boot应用程序中，你可以<code>@Autowired</code>全局的一个到另一个bean，但是你不能用本地的，除非你显式地暴露它自己。</p>
+<p>（使用configurer中的<code>@Override</code>方法），那么<code>AuthenticationManagerBuilder</code>仅用于构建一个“local”<code>AuthenticationManager</code>，它是全局子节点的子节点。 在Spring Boot应用程序中，<code>@Autowired</code>全局的一个到另一个bean，但是你不能用本地的，除非你显式地暴露它自己。</p>
 <p>Spring Boot提供了一个默认的全局<code>AuthenticationManager</code>（只有一个用户），除非你通过提供自己的<code>AuthenticationManager</code>类型bean来预先处理它。 默认是足够安全的，它自己你不必担心它，除非你主动需要一个自定义的全局<code>AuthenticationManager</code>。 如果你构建任何AuthenticationManager的配置，通常可以在本地保护您的资源，而不必担心全局默认。</p>
-<h4 id="授权或访问控制"><a href="#授权或访问控制" class="headerlink" title="授权或访问控制"></a>授权或访问控制</h4><p>一旦认证成功，我们可以继续授权，这里的核心策略是<code>AccessDecisionManager</code>。有三个实现提供的框架和三个委托到一个<code>DecisionVoter</code>链，有点像<code>ProviderManager</code>委托给<code>AuthenticationProviders</code>。 <code>DecisionVoter</code>认为<code>Authentication</code>（代表主体）和用<code>ConfigAttributes</code>装饰的安全对象。对象在<code>AccessDecisionManager</code>和<code>DecisionVoter</code>的签名中是完全通用的 - 它表示用户可能想要访问的任何内容（Web类或Java类中的方法是两种最常见的情况）。 <code>ConfigAttributes</code>也是相当通用的，表示安全<code>Object</code>的装饰，其中一些元数据确定访问它所需的权限级别。 <code>ConfigAttribute</code>是一个接口，但它只有一个方法是非常通用的，并返回一个<code>String</code>，所以这些字符串以某种方式编码资源所有者的作用，表示有关谁被允许访问它的规则。典型的<code>ConfigAttribute</code>是用户角色的名称（如<code>ROLE_ADMIN</code>或<code>ROLE_AUDIT</code>），它们通常具有特殊格式（如<code>ROLE_</code>prefix）或表示需要计算的表达式。</p>
-<p>大多数人只是使用默认的<code>AccessDecisionManager</code>是<code>AffirmativeBased</code>（如果没有voters拒绝然后访问被授予）。 任何定制都倾向于在voters中发生，或者添加新的定制，或者修改现有的定制方式。</p>
+<h4 id="授权或访问控制"><a href="#授权或访问控制" class="headerlink" title="授权或访问控制"></a>授权或访问控制</h4><p>一旦认证成功，我们可以继续授权，这里的核心策略是<code>AccessDecisionManager</code>。有三个实现提供的框架和三个委托到一个<code>DecisionVoter</code>链，有点像<code>ProviderManager</code>委托给<code>AuthenticationProviders</code>。<code>DecisionVoter</code>认为<code>Authentication</code>（代表主体）和用<code>ConfigAttributes</code>装饰的安全对象，对象在<code>AccessDecisionManager</code>和<code>DecisionVoter</code>的签名中是完全通用的 - 它表示用户可能想要访问的任何内容（Web类或Java类中的方法是两种最常见的情况）。 <code>ConfigAttributes</code>也是相当通用的，表示安全<code>Object</code>的装饰，其中一些元数据确定访问它所需的权限级别。 <code>ConfigAttribute</code>是一个接口，但它只有一个方法是非常通用的，并返回一个<code>String</code>，所以这些字符串以某种方式编码资源所有者的作用，表示有关谁被允许访问它的规则。典型的<code>ConfigAttribute</code>是用户角色的名称（如<code>ROLE_ADMIN</code>或<code>ROLE_AUDIT</code>），它们通常具有特殊格式（如<code>ROLE_</code>prefix）或表示需要计算的表达式。</p>
+<p>大多数人只是使用默认的<code>AccessDecisionManager</code>是<code>AffirmativeBased</code>（如果没有voters拒绝访问会被授予）。 任何定制都倾向于在voters中发生，或者添加新的定制，或者修改现有的定制方式。</p>
 <p>使用作为Spring表达式语言（Spel）表达式的<code>ConfigAttributes</code>是非常常见的，例如<code>isFullyAuthenticated() &amp;&amp; hasRole(&#39;FOO&#39;)</code>。 这由<code>DecisionVoter</code>支持，它可以处理表达式并为其创建上下文。 要扩展可处理的表达式的范围，需要自定义实现<code>SecurityExpressionRoot</code>，有时还需要<code>SecurityExpressionHandler</code>。</p>
 <h4 id="Web-Security"><a href="#Web-Security" class="headerlink" title="Web Security"></a>Web Security</h4><p>Web层中的Spring Security（对于UI和HTTP后端）是基于Servlet <code>Filters</code>的，所以一般先查看一下<code>Filters</code>的作用是很有帮助的。 下图显示了单个HTTP请求的处理程序的典型分层。</p>
 <p> <img src="/2017/02/05/Spring-Security架构(一)/C:/Users\Administrator\Desktop\3.png" alt="3"></p>
