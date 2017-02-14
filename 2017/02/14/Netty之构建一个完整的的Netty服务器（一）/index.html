@@ -1,0 +1,764 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Netty," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="echo（ 回声） 客户端和服务器之间的交互是很简单的;客户端后，建立一个连接发送一个或多个消息发送到服务器，其中每相呼应消息返回给客户端。诚然，这个应用程序并不是非常有用。但这项工作是为了更好的理解请求 - 响应交互本身，这是一个基本的模式的客户端/服务器系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty之构建一个完整的的Netty服务器（一）">
+<meta property="og:url" content="http://kakajing.github.io/2017/02/14/Netty之构建一个完整的的Netty服务器（一）/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="echo（ 回声） 客户端和服务器之间的交互是很简单的;客户端后，建立一个连接发送一个或多个消息发送到服务器，其中每相呼应消息返回给客户端。诚然，这个应用程序并不是非常有用。但这项工作是为了更好的理解请求 - 响应交互本身，这是一个基本的模式的客户端/服务器系统。">
+<meta property="og:updated_time" content="2017-02-14T15:46:27.491Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty之构建一个完整的的Netty服务器（一）">
+<meta name="twitter:description" content="echo（ 回声） 客户端和服务器之间的交互是很简单的;客户端后，建立一个连接发送一个或多个消息发送到服务器，其中每相呼应消息返回给客户端。诚然，这个应用程序并不是非常有用。但这项工作是为了更好的理解请求 - 响应交互本身，这是一个基本的模式的客户端/服务器系统。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/02/14/Netty之构建一个完整的的Netty服务器（一）/"/>
+
+
+
+
+
+  <title> Netty之构建一个完整的的Netty服务器（一） | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/14/Netty之构建一个完整的的Netty服务器（一）/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Netty之构建一个完整的的Netty服务器（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-14T22:45:07+08:00">
+                2017-02-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Netty/" itemprop="url" rel="index">
+                    <span itemprop="name">Netty</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>echo（ 回声） 客户端和服务器之间的交互是很简单的;客户端后，建立一个连接发送一个或多个消息发送到服务器，其中每相呼应消息返回给客户端。诚然，这个应用程序并不是非常有用。但这项工作是为了更好的理解请求 - 响应交互本身，这是一个基本的模式的客户端/服务器系统。</p>
+<a id="more"></a>
+<p>我们将通过检查服务器端代码开始。</p>
+<h3 id="写一个-echo-服务器"><a href="#写一个-echo-服务器" class="headerlink" title="写一个 echo 服务器"></a>写一个 <strong>echo </strong>服务器</h3><p>Netty 实现的 echo 服务器都需要下面这些：</p>
+<ul>
+<li><p>一个服务器 handler：这个组件实现了服务器的业务逻辑，决定了连接创建后和接收到信息后该如何处理</p>
+</li>
+<li><p>Bootstrapping： 这个是配置服务器的启动代码。最少需要设置服务器绑定的端口，用来监听连接请求。</p>
+</li>
+</ul>
+<h4 id="通过-ChannelHandler-来实现服务器的逻辑"><a href="#通过-ChannelHandler-来实现服务器的逻辑" class="headerlink" title="通过 ChannelHandler 来实现服务器的逻辑"></a>通过 ChannelHandler 来实现服务器的逻辑</h4><p>Echo Server 将会将接受到的数据的拷贝发送给客户端。因此，我们需要实现<code>ChannelInboundHandler</code> 接口，用来定义处理入站事件的方法。由于我们的应用很简单，只需要继承 <code>ChannelInboundHandlerAdapter</code> 就行了。这个类 提供了默认<code>ChannelInboundHandler</code> 的实现，所以只需要覆盖下面的方法：</p>
+<ul>
+<li><code>channelRead()</code> - 每个信息入站都会调用</li>
+<li><code>channelReadComplete()</code> - 通知处理器最后的 channelread() 是当前批处理中的最后一条消息时调用</li>
+<li><code>exceptionCaught()</code>- 读操作时捕获到异常时调用</li>
+</ul>
+<p>2.1 EchoServerHandler 代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Sharable</span> <span class="comment">//1</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EchoServerHandler</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123;</div><div class="line">  </div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123;</div><div class="line">    ByteBuf in = (ByteBuf) msg;</div><div class="line">    System.out.println(<span class="string">"Server received: "</span> + in.toString(CharsetUtil.UTF_8)); <span class="comment">//2</span></div><div class="line">    ctx.write(in); <span class="comment">//3</span></div><div class="line">  &#125; </div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelReadComplete</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE); <span class="comment">//4</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> </span>&#123;</div><div class="line">    cause.printStackTrace(); <span class="comment">//5</span></div><div class="line">    ctx.close(); <span class="comment">//6</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li><code>@Sharable</code> 标识这类的实例之间可以在 channel 里面共享</li>
+<li>日志消息输出到控制台</li>
+<li>将所接收的消息返回给发送者。注意，这还没有冲刷数据</li>
+<li>冲刷所有待审消息到远程节点。关闭通道后，操作完成</li>
+<li>打印异常堆栈跟踪</li>
+<li>关闭通道</li>
+</ol>
+<p>这种使用 <code>ChannelHandler</code> 的方式体现了关注点分离的设计原则，并简化业务逻辑的迭代开发的要求。处理程序很简单;它的每一个方法可以覆盖到“hook（ 钩子） ”在活动周期适当的点。很显然，我们覆盖 <code>channelRead</code>因为我们需要处理所有接收到的数据。</p>
+<p>覆盖 <code>exceptionCaught</code> 使我们能够应对任何 Throwable 的子类型。在这种情况下我们记录，并关闭所有可能处于未知状态的连接。它通常是难以从连接错误中恢复，所以干脆关闭远程连接。当然，也有可能的情况是可以从错误中恢复的，所以可以用一个更复杂的措施来尝试识别和处理 这样的情况。</p>
+<p>如果异常没有被捕获，会发生什么？</p>
+<p>每个 <code>Channel</code>都有一个关联的 <code>ChannelPipeline</code>，它代表了<code>ChannelHandler</code>实例的链。适配器处理的实现只是将一个处理方法调用转发到链中的下一个处理器。因此，如果一个 Netty应用程序不覆盖<code>exceptionCaught</code> ，那么这些错误将最终到达 <code>ChannelPipeline</code>，并且结束警告将被记录。出于这个原因，你应该提供至少一个 实现 <code>exceptionCaught</code>的 <code>ChannelHandler</code>。</p>
+<p>关键点要牢记：</p>
+<ul>
+<li><code>ChannelHandler</code> 是给不同类型的事件调用</li>
+<li>应用程序实现或扩展 <code>ChannelHandler</code> 挂接到事件生命周期和 提供自定义应用逻辑。</li>
+</ul>
+<h4 id="引导服务器"><a href="#引导服务器" class="headerlink" title="引导服务器"></a>引导服务器</h4><p>了解到业务核心处理逻辑 EchoServerHandler 后，下面要引导服务器自身了。</p>
+<ul>
+<li>监听和接收进来的连接请求</li>
+<li>配置 Channel 来通知一个关于入站消息的 EchoServerHandler 实例</li>
+</ul>
+<h5 id="Transport-传输）"><a href="#Transport-传输）" class="headerlink" title="Transport(传输）"></a>Transport(传输）</h5><p>在网络的多层视图协议里面，传输层提供了用于端至端或主机到主机的通信服务。互联网通信的基础是TCP传输。当我们使用术语“NIOtransport”我们指的是一个传输的实现，它是大多等同于TCP，除了一些由Java NIO的实现提供了服务器端的性能增强。</p>
+<p>2.2 EchoServer<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EchoServer</span> </span>&#123;</div><div class="line">  </div><div class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> port;</div><div class="line">  </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">EchoServer</span><span class="params">(<span class="keyword">int</span> port)</span> </span>&#123;</div><div class="line">  	<span class="keyword">this</span>.port = port;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">if</span> (args.length != <span class="number">1</span>) &#123;</div><div class="line">      System.err.println(<span class="string">"Usage: "</span> + EchoServer.class.getSimpleName() + <span class="string">" &lt;port&gt;"</span>);</div><div class="line">      <span class="keyword">return</span>;</div><div class="line">    &#125; </div><div class="line">    <span class="keyword">int</span> port = Integer.parseInt(args[<span class="number">0</span>]); <span class="comment">//1</span></div><div class="line">    <span class="keyword">new</span> EchoServer(port).start(); <span class="comment">//2</span></div><div class="line">  &#125; </div><div class="line">  </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    NioEventLoopGroup group = <span class="keyword">new</span> NioEventLoopGroup(); <span class="comment">//3</span></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      ServerBootstrap b = <span class="keyword">new</span> ServerBootstrap();</div><div class="line">      b.group(group) <span class="comment">//4</span></div><div class="line">        .channel(NioServerSocketChannel.class) <span class="comment">//5</span></div><div class="line">        .localAddress(<span class="keyword">new</span> InetSocketAddress(port)) <span class="comment">//6</span></div><div class="line">        .childHandler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123; <span class="comment">//7</span></div><div class="line">          <span class="meta">@Override</span></div><div class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">          	ch.pipeline().addLast(<span class="keyword">new</span> EchoServerHandler());</div><div class="line">          &#125;</div><div class="line">  		&#125;);</div><div class="line">      ChannelFuture f = b.bind().sync(); <span class="comment">//8</span></div><div class="line">      System.out.println(EchoServer.class.getName() + <span class="string">" started and listen on "</span> + f.channel().localAddress());</div><div class="line">  		f.channel().closeFuture().sync(); <span class="comment">//9</span></div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">    	group.shutdownGracefully().sync(); <span class="comment">//10</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>1.设置端口值（ 抛出一个 NumberFormatException 如果该端口参数的格式不正确）</p>
+<p>2.呼叫服务器的 <code>start()</code> 方法</p>
+<p>3.创建 <code>EventLoopGroup</code></p>
+<p>4.创建 <code>ServerBootstrap</code></p>
+<p>5.指定使用 NIO 的传输 Channel</p>
+<p>6.设置 socket 地址使用所选的端口</p>
+<p>7.添加 EchoServerHandler 到 Channel 的 <code>ChannelPipeline</code></p>
+<p>8.绑定的服务器;sync 等待服务器关闭</p>
+<p>9.关闭 channel 和 块，直到它被关闭</p>
+<p>10.关机的 EventLoopGroup，释放所有资源。</p>
+<p>在这个例子中，代码创建 <code>ServerBootstrap</code> 实例（ 步骤4） 。由于我们使用在 NIO 传输，我们已指定 <code>NioEventLoopGroup</code>（ 3） 接受和处理新连接，指定 <code>NioServerSocketChannel</code>（ 5）为信道类型。在此之后，我们设置本地地址是 <code>InetSocketAddress</code> 与所选择的端口（ 6）。服务器将绑定到此地址来监听新的连接请求。</p>
+<p>第7步是关键：在这里我们使用一个特殊的类，<code>ChannelInitializer</code> 。当一个新的连接被接受，一个新的子 Channel 将被创建， <code>ChannelInitializer</code> 会添加我们EchoServerHandler 的实例到Channel 的 <code>ChannelPipeline</code>。正如我们如前所述，如果有入站信息，这个处理器将被通知。</p>
+<p>虽然 NIO 是可扩展性，但它的正确配置是不简单的。特别是多线程，要正确处理也非易事。幸运的是，Netty 的设计封装了大部分复杂性，尤其是通过抽象，例如 <code>EventLoopGroup</code>，<code>SocketChannel</code> 和 <code>ChannelInitializer</code>。</p>
+<p>在步骤8，我们绑定的服务器，等待绑定完成。 （ 调用 sync() 的原因是当前线程阻塞） 在第9步的应用程序将等待服务器 Channel 关闭（ 因为我们 在 Channel 的 <code>CloseFuture</code> 上调用<code>sync()</code>） 。现在，我们可以关闭下 <code>EventLoopGroup</code> 并释放所有资源，包括所有创建的线程（ 10） 。</p>
+<p>NIO 用于在本实施例，因为它是目前最广泛使用的传输，归功于它的可扩展性和彻底的不同步。但不同的传输的实现是也是可能的。例如，如果本实施例中使用的 OIO 传输，我们将指定 <code>OioServerSocketChannel</code> 和 <code>OioEventLoopGroup</code>。 Netty 的架构，包括更关于传输信息。</p>
+<p>服务器的主代码组件是</p>
+<ul>
+<li>EchoServerHandler 实现了的业务逻辑</li>
+<li>在 <code>main()</code> 方法，引导了服务器</li>
+</ul>
+<p>执行后者所需的步骤是：</p>
+<ul>
+<li>创建 <code>ServerBootstrap</code> 实例来引导服务器并随后绑定</li>
+<li>创建并分配一个 <code>NioEventLoopGroup</code> 实例来处理事件的处理，如接受新的连接和读/写数据。</li>
+</ul>
+<ul>
+<li>指定本地 <code>InetSocketAddress</code> 给服务器绑定</li>
+<li>通过 EchoServerHandler 实例给每一个新的 <code>Channel</code> 初始化</li>
+<li>最后调用 <code>ServerBootstrap.bind()</code> 绑定服务器</li>
+</ul>
+<p>这样服务器初始化完成，可以被使用了。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Netty/" rel="tag"># Netty</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/09/Spring Core简介/" rel="next" title="Spring Core简介">
+                <i class="fa fa-chevron-left"></i> Spring Core简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#写一个-echo-服务器"><span class="nav-number">1.</span> <span class="nav-text">写一个 echo 服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过-ChannelHandler-来实现服务器的逻辑"><span class="nav-number">1.1.</span> <span class="nav-text">通过 ChannelHandler 来实现服务器的逻辑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引导服务器"><span class="nav-number">1.2.</span> <span class="nav-text">引导服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Transport-传输）"><span class="nav-number">1.2.1.</span> <span class="nav-text">Transport(传输）</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
