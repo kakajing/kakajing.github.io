@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="redis," />
+  <meta name="keywords" content="Netty," />
 
 
 
@@ -84,16 +84,19 @@
 
 
 
-<meta name="description" content="Redis已publish/subscribe发送消息。 这是通过订阅频道并发布到频道来处理的。订阅者将订阅一个或多个频道。 发布商不需要知道谁是所有订阅者。 相反，发布商会发布到特定频道。 订阅该频道的所有订阅者都会收到该消息。 发布者和订阅者的这种解耦可以允许更大的可伸缩性和更动态的网络拓扑。">
+<meta name="description" content="ChannelHandler和 ChannelPipeline">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用redis发布和订阅">
-<meta property="og:url" content="http://kakajing.github.io/2017/02/02/使用redis发布和订阅/index.html">
+<meta property="og:title" content="对ChannelHandler概念的理解与阐述">
+<meta property="og:url" content="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/index.html">
 <meta property="og:site_name" content="余鸢">
-<meta property="og:description" content="Redis已publish/subscribe发送消息。 这是通过订阅频道并发布到频道来处理的。订阅者将订阅一个或多个频道。 发布商不需要知道谁是所有订阅者。 相反，发布商会发布到特定频道。 订阅该频道的所有订阅者都会收到该消息。 发布者和订阅者的这种解耦可以允许更大的可伸缩性和更动态的网络拓扑。">
-<meta property="og:updated_time" content="2017-02-02T18:03:48.939Z">
+<meta property="og:description" content="ChannelHandler和 ChannelPipeline">
+<meta property="og:image" content="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\7.png">
+<meta property="og:image" content="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\8.png">
+<meta property="og:updated_time" content="2017-02-16T16:21:05.189Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用redis发布和订阅">
-<meta name="twitter:description" content="Redis已publish/subscribe发送消息。 这是通过订阅频道并发布到频道来处理的。订阅者将订阅一个或多个频道。 发布商不需要知道谁是所有订阅者。 相反，发布商会发布到特定频道。 订阅该频道的所有订阅者都会收到该消息。 发布者和订阅者的这种解耦可以允许更大的可伸缩性和更动态的网络拓扑。">
+<meta name="twitter:title" content="对ChannelHandler概念的理解与阐述">
+<meta name="twitter:description" content="ChannelHandler和 ChannelPipeline">
+<meta name="twitter:image" content="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\7.png">
 
 
 
@@ -121,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://kakajing.github.io/2017/02/02/使用redis发布和订阅/"/>
+  <link rel="canonical" href="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/"/>
 
 
 
 
 
-  <title> 使用redis发布和订阅 | 余鸢 </title>
+  <title> 对ChannelHandler概念的理解与阐述 | 余鸢 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -260,7 +263,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/02/使用redis发布和订阅/">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="余鸢">
@@ -284,7 +287,7 @@
             
             
               
-                使用redis发布和订阅
+                对ChannelHandler概念的理解与阐述
               
             
           </h1>
@@ -299,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T23:14:42+08:00">
-                2017-02-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-17T00:12:18+08:00">
+                2017-02-17
               </time>
             
 
@@ -357,29 +360,32 @@
       
 
       
-        <p>Redis已publish/subscribe发送消息。 这是通过订阅频道并发布到频道来处理的。订阅者将订阅一个或多个频道。 发布商不需要知道谁是所有订阅者。 相反，发布商会发布到特定频道。 订阅该频道的所有订阅者都会收到该消息。 发布者和订阅者的这种解耦可以允许更大的可伸缩性和更动态的网络拓扑。</p>
-<a id="more"></a>
-<p><strong>示例</strong>：用户订阅2个频道说foo＆boo</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SUBSCRIBE foo boo</div></pre></td></tr></table></figure>
-<p>在控制台的redis-client1：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="number">127.0</span>.0.1:<span class="number">6379</span>&gt; SUBSCRIBE foo boo</div><div class="line">Reading messages... (press Ctrl-C to quit)</div><div class="line"><span class="number">1</span>) <span class="string">"subscribe"</span></div><div class="line"><span class="number">2</span>) <span class="string">"foo"</span></div><div class="line"><span class="number">3</span>) (integer) <span class="number">1</span></div><div class="line"><span class="number">1</span>) <span class="string">"subscribe"</span></div><div class="line"><span class="number">2</span>) <span class="string">"boo"</span></div><div class="line"><span class="number">3</span>) (integer) <span class="number">2</span></div></pre></td></tr></table></figure>
-<p>它将开始侦听消息。 发布时将获取相应通道的数据。</p>
-<p>例如：当想要与boo连接的所有订阅者发送消息时，需要发布到该频道。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">PUBLISH boo <span class="string">"Hello Boo"</span></div></pre></td></tr></table></figure>
-<p>在控制台的redis-client1：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>) <span class="string">"message"</span></div><div class="line"><span class="number">2</span>) <span class="string">"boo"</span> <span class="comment">//频道名称</span></div><div class="line"><span class="number">3</span>) <span class="string">"Hello Boo"</span> <span class="comment">//实际数据</span></div></pre></td></tr></table></figure>
-<p>要在任何时候取消订阅频道，请使用：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UNSUBSCRIBE <span class="comment">// 取消订阅所有频道</span></div><div class="line">UNSUBSCRIBE foo <span class="comment">// 取消订阅特定频道</span></div></pre></td></tr></table></figure>
-<p>可以根据模式订阅。 当频道名称不确定/想基于模式使用PSUBSCRIBE订阅。</p>
-<p>同样退订基于模式使用PUNSUBSCRIBE。</p>
-<h5 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h5><ul>
-<li><code>SUBSCRIBE channel [channel ...]</code></li>
-<li><code>UNSUBSCRIBE [channel [channel ...]]</code></li>
-<li><code>PUBLISH channel message</code></li>
-<li><code>PSUBSCRIBE pattern [pattern ...]</code></li>
-<li><code>PUNSUBSCRIBE [pattern [pattern ...]]</code></li>
-</ul>
-<p>要处理redis中的pub / sub，需要有一个客户端用于订阅和不同的客户端以进行发布。 两者不能由同一客户端处理。 虽然所有其他命令仍然可以用同一客户端处理。</p>
+        <h3 id="ChannelHandler和-ChannelPipeline"><a href="#ChannelHandler和-ChannelPipeline" class="headerlink" title="ChannelHandler和 ChannelPipeline"></a>ChannelHandler和 ChannelPipeline</h3><a id="more"></a>
+<p>ChannelPipeline 是 ChannelHandler 链的容器。</p>
+<p>在许多方面的 ChannelHandler 是在您的应用程序的核心，尽管有时它 可能并不明显。<br>ChannelHandler 支持广泛的用途，使它难以界定。因此，最好是把它当作一个通用的容器， 处理进来的事件（ 包括数据） 并且通过ChannelPipeline。</p>
+<p>下图展示了ChannelInboundHandler 和 ChannelOutboundHandler 继承自父接口 ChannelHandler。</p>
+<p> <img src="/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\7.png" alt="7"></p>
+<p>Netty 中有两个方向的数据流，下图展示了入站(ChannelInboundHandler)和出站(ChannelOutboundHandler)之间有一个明显的区别：若数据是从用户应用程序到远程主机则是“出站(outbound)”，相反若数据时从远程主机到用户应用程序则是“入站(inbound)”。</p>
+<p>为了使数据从一端到达另一端，一个或多个 ChannelHandler 将以某种方式操作数据。这些ChannelHandler 会在程序的“引导”阶段被添加ChannelPipeline中，并且被添加的顺序将决定处理数据的顺序。</p>
+<p> <img src="/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\8.png" alt="8"></p>
+<p>同样展示了进站和出站的处理器都可以被安装在相同的 pipeline 。如果消息或任何其他入站事件被读到，将从 pipeline 头部开始，传递到第一个ChannelInboundHandler。该处理器可能会或可能不会实际修改数据，取决于其特定的功能，在这之后 该数据将被传递到链中的下一个 ChannelInboundHandler。最后，将数据 到达pipeline 的尾部，此时所有处理结束。</p>
+<p>数据的出站运动（ 即，数据被“写入”） 在概念上是相同的。在这种情况下的数据从尾部流过ChannelOutboundHandlers 的链，直到它到达头部。超过这点，出站数据将到达的网络传输，在这里显示为一个 socket。通常，这将触发一个写入操作。</p>
+<h4 id="更多Inbound、Outbound-Handler"><a href="#更多Inbound、Outbound-Handler" class="headerlink" title="更多Inbound、Outbound Handler"></a>更多Inbound、Outbound Handler</h4><p>在当前的链（ <em>chain</em>） 中，事件可以通过 ChanneHandlerContext 传递给下一个 handler。Netty 为此提供了抽象基类ChannelInboundHandlerAdapter和hannelOutboundHandlerAdapter，用来处理你想要的事件。 这些类提供的方法的实现，可以简单地通过调用ChannelHandlerContext上的相应方法将事件传递给下一个handler。在实际应用中，您可以按需覆盖相应的方法即可。</p>
+<p>所以，如果出站和入站操作是不同的，当 ChannelPipeline 中有混合处理器时将发生什么？虽然入站和出站处理器都扩展了 ChannelHandler，Netty 的 ChannelInboundHandler 的实现 和ChannelOutboundHandler 之间的是有区别的，从而保证数据传递只从一个处理器到下一个处理器保证正确的类型。</p>
+<p>当 ChannelHandler 被添加到的 ChannelPipeline 它得到一个 ChannelHandlerContext，它代表一个ChannelHandler 和 ChannelPipeline 之间的“绑定”。它通常是安全保存对此对象的引用，除了当协议中的使用的是不面向连接（ 例如，UDP） 。而该对象可以被用来获得 底层Channel,它主要是用来写出站数据。</p>
+<p>还有，实际上，在 Netty 发送消息有两种方式。您可以直接写消息给 Channel 或写入ChannelHandlerContext 对象。主要的区别是， 前一种方法会导致消息从 ChannelPipeline的尾部开始，而 后者导致消息从ChannelPipeline 下一个处理器开始。</p>
+<h3 id="细节化ChannelHandler"><a href="#细节化ChannelHandler" class="headerlink" title="细节化ChannelHandler"></a>细节化ChannelHandler</h3><p>正如我们之前所说，有很多不同类型的 ChannelHandler 。每个 ChannelHandler 做什么取决于其超类。 Netty 提供了一些默认的处理程序实现形式的“adapter（ 适配器） ”类。这些旨在简化开发处理逻辑。我们已经看到，在 pipeline 中每个的 ChannelHandler 负责转发事件到链中的下一个处理器。这些适配器类（ 及其子类） 会自动帮你实现，所以你只需要实现该特定的方法和事件。</p>
+<h4 id="为什么用适配器？"><a href="#为什么用适配器？" class="headerlink" title="为什么用适配器？"></a>为什么用适配器？</h4><p>有几个适配器类，可以减少编写自定义 ChannelHandlers，因为他们提供对应接口的所有方法的默认实现。（ 也有类似的适配器，用于创建编码器和解码器）这些都是创建自定义处理器时，会经常调用的适配器：ChannelHandlerAdapter、ChannelInboundHandlerAdapter、ChannelOutboundHandlerAdapter、</p>
+<p>ChannelDuplexHandlerAdapter</p>
+<p>下面解释下三个 ChannelHandler 的子类型：编码器、解码器以及ChannelInboundHandlerAdapter 的子类SimpleChannelInboundHandler</p>
+<h4 id="编码器、解码器"><a href="#编码器、解码器" class="headerlink" title="编码器、解码器"></a>编码器、解码器</h4><p>当你发送或接收消息时，Netty 数据转换就发生了。入站消息将从字节转为一个Java对象;也就是说，“解码”。如果该消息是出站相反会发生：“编码”，从一个Java对象转为字节。其原因是简单的：网络数据是一系列字节，因此需要从那类型进行转换。</p>
+<p>不同类型的抽象类用于提供编码器和解码器的，这取决于手头的任务。例如，应用程序可能并不需要马上将消息转为字节。相反，该消息将被转换 一些其他格式。一个编码器将仍然可以使用，但它也将衍生自不同的超类，在一般情况下，基类将有一个名字类似 ByteToMessageDecoder 或MessageToByteEncoder。在一种特殊类型的情况下，你可能会发现类似 ProtobufEncoder 和ProtobufDecoder，用于支持谷歌的 protocol buffer。</p>
+<p>严格地说，其他处理器可以做编码器和解码器能做的事。但正如适配器类简化创建通道处理器，所有的编码器/解码器适配器类 都实现自 ChannelInboundHandler 或ChannelOutboundHandler。</p>
+<p>对于入站数据，channelRead 方法/事件被覆盖。这种方法在每个消息从入站 Channel 读入时调用。该方法将调用特定解码器的“解码”方法，并将解码后的消息转发到管道中下个的ChannelInboundHandler。</p>
+<p>出站消息是类似的。编码器将消息转为字节，转发到下个的 ChannelOutboundHandler。</p>
+<h3 id="SimpleChannelHandler"><a href="#SimpleChannelHandler" class="headerlink" title="SimpleChannelHandler"></a>SimpleChannelHandler</h3><p>也许最常见的处理器是接收到解码后的消息并应用一些业务逻辑到这些数据。要创建这样一个 ChannelHandler，你只需要扩展基类SimpleChannelInboundHandler 其中 T 是想要进行处理的类型。对这样的处理器，你将覆盖基类的一个或多个方法，获得被作为输入参数传递所有方法的 ChannelHandlerContext 的引用。</p>
+<p>在这种类型的处理器方法中的最重要是 channelRead0(ChannelHandlerContext，T)。在这个调用中，T 是将要处理的消息。 你怎么做，完全取决于你，但无论如何你不能阻塞 I/O线程，因为这可能是不利于高性能。</p>
+<h4 id="阻塞操作"><a href="#阻塞操作" class="headerlink" title="阻塞操作"></a>阻塞操作</h4><p>I/O线程一定不能完全阻塞，因此禁止任何直接阻塞操作在你的 <em>ChannelHandler</em>， 有一种方法来实现这一要求。你可以指定一个EventExecutorGroup当添加ChannelHandler到ChannelPipeline。此EventExecutorGroup将用于获得EventExecutor，将执行所有的ChannelHandler的方法。这EventExecutor将从I/O线程使用不同的线程，从而释放EventLoop。</p>
 
       
     </div>
@@ -403,7 +409,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/redis/" rel="tag"># redis</a>
+            <a href="/tags/Netty/" rel="tag"># Netty</a>
           
         </div>
       
@@ -412,8 +418,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/01/RabbitMQ/" rel="next" title="RabbitMQ">
-                <i class="fa fa-chevron-left"></i> RabbitMQ
+              <a href="/2017/02/15/Netty之构建一个完整的的Netty客户端（二）/" rel="next" title="Netty之构建一个完整的的Netty客户端（二）">
+                <i class="fa fa-chevron-left"></i> Netty之构建一个完整的的Netty客户端（二）
               </a>
             
           </div>
@@ -421,10 +427,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/03/Configuring-RabbitMQ/" rel="prev" title="Configuring RabbitMQ">
-                Configuring RabbitMQ <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -547,7 +549,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#语法："><span class="nav-number">1.</span> <span class="nav-text">语法：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ChannelHandler和-ChannelPipeline"><span class="nav-number">1.</span> <span class="nav-text">ChannelHandler和 ChannelPipeline</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#更多Inbound、Outbound-Handler"><span class="nav-number">1.1.</span> <span class="nav-text">更多Inbound、Outbound Handler</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#细节化ChannelHandler"><span class="nav-number">2.</span> <span class="nav-text">细节化ChannelHandler</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么用适配器？"><span class="nav-number">2.1.</span> <span class="nav-text">为什么用适配器？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编码器、解码器"><span class="nav-number">2.2.</span> <span class="nav-text">编码器、解码器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SimpleChannelHandler"><span class="nav-number">3.</span> <span class="nav-text">SimpleChannelHandler</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#阻塞操作"><span class="nav-number">3.1.</span> <span class="nav-text">阻塞操作</span></a></li></ol></li></ol></div>
             
 
           </div>
