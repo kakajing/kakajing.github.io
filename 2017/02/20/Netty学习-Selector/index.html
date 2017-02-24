@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="ChannelFuture的作用是用来保存Channel异步操作的结果。">
+<meta name="description" content="Selector的基本概念Selector充当一个注册表，当（注册的）一个Channel状态变化时，你的应用可以通过selector被通知到。可能的状态变化包括：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ChannelFuture的作用">
-<meta property="og:url" content="http://kakajing.github.io/2017/02/18/ChannelFuture的作用/index.html">
+<meta property="og:title" content="Netty学习-Selector">
+<meta property="og:url" content="http://kakajing.github.io/2017/02/20/Netty学习-Selector/index.html">
 <meta property="og:site_name" content="余鸢">
-<meta property="og:description" content="ChannelFuture的作用是用来保存Channel异步操作的结果。">
-<meta property="og:updated_time" content="2017-02-18T16:31:08.317Z">
+<meta property="og:description" content="Selector的基本概念Selector充当一个注册表，当（注册的）一个Channel状态变化时，你的应用可以通过selector被通知到。可能的状态变化包括：">
+<meta property="og:updated_time" content="2017-02-24T15:22:05.112Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ChannelFuture的作用">
-<meta name="twitter:description" content="ChannelFuture的作用是用来保存Channel异步操作的结果。">
+<meta name="twitter:title" content="Netty学习-Selector">
+<meta name="twitter:description" content="Selector的基本概念Selector充当一个注册表，当（注册的）一个Channel状态变化时，你的应用可以通过selector被通知到。可能的状态变化包括：">
 
 
 
@@ -121,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://kakajing.github.io/2017/02/18/ChannelFuture的作用/"/>
+  <link rel="canonical" href="http://kakajing.github.io/2017/02/20/Netty学习-Selector/"/>
 
 
 
 
 
-  <title> ChannelFuture的作用 | 余鸢 </title>
+  <title> Netty学习-Selector | 余鸢 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -260,7 +260,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/18/ChannelFuture的作用/">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/20/Netty学习-Selector/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="余鸢">
@@ -284,7 +284,7 @@
             
             
               
-                ChannelFuture的作用
+                Netty学习-Selector
               
             
           </h1>
@@ -299,8 +299,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-18T23:58:42+08:00">
-                2017-02-18
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-20T22:17:52+08:00">
+                2017-02-20
               </time>
             
 
@@ -357,20 +357,50 @@
       
 
       
-        <p>ChannelFuture的作用是用来保存Channel异步操作的结果。</p>
+        <h3 id="Selector的基本概念"><a href="#Selector的基本概念" class="headerlink" title="Selector的基本概念"></a>Selector的基本概念</h3><p>Selector充当一个注册表，当（注册的）一个Channel状态变化时，你的应用可以通过selector被通知到。可能的状态变化包括：</p>
 <a id="more"></a>
-<p>我们知道，在Netty中所有的I/O操作都是异步的。这意味着任何的I/O调用都将立即返回，而不保证这些被请求的I/O操作在调用结束的时候已经完成。取而代之地，你会得到一个返回的ChannelFuture实例，这个实例将给你一些关于I/O操作结果或者状态的信息。</p>
-<p>对于一个ChannelFuture可能已经完成，也可能未完成。当一个I/O操作开始的时候，一个新的future对象就会被创建。在开始的时候，新的future是未完成的状态－－它既非<code>成功</code>、<code>失败</code>，也非<code>被取消</code>，因为I/O操作还没有结束。如果I/O操作以<code>成功</code>、<code>失败</code>或者<code>被取消</code>中的任何一种状态结束了，那么这个future将会被标记为<code>已完成</code>，并包含更多详细的信息（例如：失败的原因）。请注意，即使是<code>失败</code>和<code>被取消</code>的状态，也是属于<code>已完成</code>的状态。</p>
-<p>各种各样的方法被提供，用来检查I/O操作是否已完成、等待完成，并寻回I/O操作的结果。它同样允许你添加ChannelFutureListener，以便于在I/O操作完成的时候，你能够获得通知。</p>
-<h3 id="addListener-GenericFutureListener-与await"><a href="#addListener-GenericFutureListener-与await" class="headerlink" title="addListener(GenericFutureListener)与await()"></a>addListener(GenericFutureListener)与await()</h3><p>优先使用addListener(GenericFutureListener)，而非await()</p>
-<p>当做了一个I/O操作并有任何后续任务的时候，推荐优先使用addListener(GenericFutureListener)的方式来获得通知，而非await()。</p>
-<p>addListener(GenericFutureListener)是非阻塞的。它会把特定的ChannelFutureListener添加到ChannelFuture中，然后I/O线程会在I/O操作相关的future完成的时候通知监听器。ChannelFutureListener会利于最佳的性能和资源的利用，因为它一点阻塞都没有。然而，如果你不使用基于事件驱动的编程方式，去实现一个后续式的逻辑会变得诡异和难于理解。</p>
-<p>对比来看，await()是一个阻塞的操作。一旦被调用，调用者线程会阻塞，直到操作完成。使用await()来实现一个后续式的逻辑会更容易，但是调用者线程会非常没必要的阻塞直到I/O操作完成，并且内部的线程通知是相对来说代价昂贵的。更有甚者，在一些特定的情况下会产生死锁，下面是对这种情况的描述：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// BAD - NEVER DO THIS</span></div><div class="line"> <span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, GoodByeMessage msg)</span> </span>&#123;</div><div class="line">     ChannelFuture future = ctx.channel().close();</div><div class="line">     future.awaitUninterruptibly();</div><div class="line">     <span class="comment">// Perform post-closure operation</span></div><div class="line">     <span class="comment">// ...</span></div><div class="line"> &#125;</div><div class="line"></div><div class="line"> <span class="comment">// GOOD</span></div><div class="line"> <span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx,  GoodByeMessage msg)</span> </span>&#123;</div><div class="line">     ChannelFuture future = ctx.channel().close();</div><div class="line">     future.addListener(<span class="keyword">new</span> ChannelFutureListener() &#123;</div><div class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operationComplete</span><span class="params">(ChannelFuture future)</span> </span>&#123;</div><div class="line">             <span class="comment">// Perform post-closure operation</span></div><div class="line">             <span class="comment">// ...</span></div><div class="line">         &#125;</div><div class="line">     &#125;);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>撇开上面提到的缺点不谈，确实还是有一些情况在调用await()的时候会更方便的。在这种情况下，请确保你不是在一个I/O线程中调用的await()。否则，为了避免死锁的情况，BlockingOperationException将被提出。</p>
-<h3 id="不要混淆I-O-timeout和await-timeout"><a href="#不要混淆I-O-timeout和await-timeout" class="headerlink" title="不要混淆I/O timeout和await timeout"></a>不要混淆I/O timeout和await timeout</h3><p>你在使用Future.await(long)， Future.await(long, TimeUnit)，Future.awaitUninterruptibly(long)，或者Future.awaitUninterruptibly(long, TimeUnit)的时候，指定的timeout的值和I/O timeout一点关系都没有。如果一个操作超时了，future将会被标记为<code>已完成－失败</code>，就像上面的图中描述的那样。例如，连接超时应当通过一个传输特定的选项来配置：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// BAD - NEVER DO THIS</span></div><div class="line"> Bootstrap b = ...;</div><div class="line"> ChannelFuture f = b.connect(...);</div><div class="line"> f.awaitUninterruptibly(<span class="number">10</span>, TimeUnit.SECONDS);</div><div class="line"> <span class="keyword">if</span> (f.isCancelled()) &#123;</div><div class="line">     <span class="comment">// Connection attempt cancelled by user</span></div><div class="line"> &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!f.isSuccess()) &#123;</div><div class="line">     <span class="comment">// You might get a NullPointerException here because the future</span></div><div class="line">     <span class="comment">// might not be completed yet.</span></div><div class="line">     f.cause().printStackTrace();</div><div class="line"> &#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="comment">// Connection established successfully</span></div><div class="line"> &#125;</div><div class="line"></div><div class="line"> <span class="comment">// GOOD</span></div><div class="line"> Bootstrap b = ...;</div><div class="line"> <span class="comment">// Configure the connect timeout option.</span></div><div class="line"> b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, <span class="number">10000</span>);</div><div class="line"> ChannelFuture f = b.connect(...);</div><div class="line"> f.awaitUninterruptibly();</div><div class="line"></div><div class="line"> <span class="comment">// Now we are sure the future is completed.</span></div><div class="line"> <span class="keyword">assert</span> f.isDone();</div><div class="line"></div><div class="line"> <span class="keyword">if</span> (f.isCancelled()) &#123;</div><div class="line">     <span class="comment">// Connection attempt cancelled by user</span></div><div class="line"> &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!f.isSuccess()) &#123;</div><div class="line">     f.cause().printStackTrace();</div><div class="line"> &#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="comment">// Connection established successfully</span></div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>参考自原文：<a href="http://www.jianshu.com/p/4835eb4e91ab" target="_blank" rel="external">http://www.jianshu.com/p/4835eb4e91ab</a></p>
+<ul>
+<li>一个新的Channel被接受，准备好（读写）</li>
+<li>一个Channel连接完成</li>
+<li>一个Channel有待读取的数据</li>
+<li>一个Channel可被写入数据</li>
+</ul>
+<p>应用程序响应了这个状态变化后，selector被重置，然后这个过程再不断重复，整个过程就是跑在一个线程上不断检查状态变化并作出响应。</p>
+<p>下表列出的常量是类java.nio.channels.SelectionKey定义的位模式(bit pattern)。这些模式可以合起来使用，表明应用程序需要收到哪些状态变化的通知。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OP_ACCEPT</td>
+<td>当一个新的连接被接受，一个Channel创建时请求收到通知</td>
+</tr>
+<tr>
+<td>OP_CONNECT</td>
+<td>当一个连接建立时请求收到通知</td>
+</tr>
+<tr>
+<td>OP_READ</td>
+<td>当数据已准备好从Channel中被读取时请求收到通知</td>
+</tr>
+<tr>
+<td>OP_WRITE</td>
+<td>当可以往一个Channel中写入更多数据时请求收到通知。这个用在socket缓冲完全满的情况下，通常发生在当数据传送比远端处理快很多的时候。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Selector：java-nio无阻塞io实现的关键。"><a href="#Selector：java-nio无阻塞io实现的关键。" class="headerlink" title="Selector：java nio无阻塞io实现的关键。"></a>Selector：java nio无阻塞io实现的关键。</h3><h4 id="阻塞io和无阻塞io："><a href="#阻塞io和无阻塞io：" class="headerlink" title="阻塞io和无阻塞io："></a>阻塞io和无阻塞io：</h4><p><strong>阻塞io是</strong>指jdk1.4之前版本面向流的io，服务端需要对每个请求建立一堆线程等待请求，而客户端发送请求后，先咨询服务端是否有线程相应，如果没有则会一直等待或者遭到拒 绝请求，如果有的话，客户端会线程会等待请求结束后才继续执行。</p>
+<p>当并发量大，而后端服务或客户端处理数据慢时就会产生产生大量线程处于等待中，即上述的阻塞。</p>
+<p><strong>无阻塞io</strong>是使用单线程或者只使用少量的多线程，每个连接共用一个线程，当处于等待（没有事件）的时候线程资源可以释放出来处理别的请求，通过事件驱动模型当有accept/read/write等事件发生后通知（唤醒）主线程分配资源来处理相关事件。java.nio.channels.Selector就是在该模型中事件的观察者，可以将多个SocketChannel的事件注册到一个Selector上，当没有事件发生时Selector处于阻塞状态，当SocketChannel有accept/read/write等事件发生时唤醒Selector。</p>
+<p>Selector是使用了单线程模型，主要用来描述事件驱动模型。</p>
+<p>代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">selector = Selector.open();  </div><div class="line">  </div><div class="line">ServerSocketChannel ssc = ServerSocketChannel.open();  </div><div class="line">ssc.configureBlocking(<span class="keyword">false</span>);  </div><div class="line">ssc.socket().bind(<span class="keyword">new</span> InetSocketAddress(port));  </div><div class="line">  </div><div class="line">ssc.register(selector, SelectionKey.OP_ACCEPT);  </div><div class="line">  </div><div class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;  </div><div class="line">  </div><div class="line">    <span class="comment">// select()阻塞，等待有事件发生唤醒  </span></div><div class="line">    <span class="keyword">int</span> selected = selector.select();  </div><div class="line">  </div><div class="line">    <span class="keyword">if</span> (selected &gt; <span class="number">0</span>) &#123;  </div><div class="line">        Iterator&lt;SelectionKey&gt; selectedKeys = selector.selectedKeys().iterator();  </div><div class="line">        <span class="keyword">while</span> (selectedKeys.hasNext()) &#123;  </div><div class="line">            SelectionKey key = selectedKeys.next();  </div><div class="line">            <span class="keyword">if</span> ((key.readyOps() &amp; SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT) &#123;  </div><div class="line">                <span class="comment">// 处理 accept 事件  </span></div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((key.readyOps() &amp; SelectionKey.OP_READ) == SelectionKey.OP_READ) &#123;  </div><div class="line">                <span class="comment">// 处理 read 事件  </span></div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((key.readyOps() &amp; SelectionKey.OP_WRITE) == SelectionKey.OP_WRITE) &#123;  </div><div class="line">                <span class="comment">// 处理 write 事件  </span></div><div class="line">            &#125;  </div><div class="line">            selectedKeys.remove();  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码中关键的几个点在：<br>Selector.open();<br>selector.select();<br>阻塞后唤醒可以通过注册在selector上的socket有事件发生 或者 selector.select(timeOut)超时 或者 selector.wakeup()主动唤醒；</p>
+<p>源码分析参考地址：<a href="http://zhhphappy.iteye.com/blog/2032893" target="_blank" rel="external">http://zhhphappy.iteye.com/blog/2032893</a></p>
 
       
     </div>
@@ -403,8 +433,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/17/对ChannelHandler概念的理解与阐述/" rel="next" title="对ChannelHandler概念的理解与阐述">
-                <i class="fa fa-chevron-left"></i> 对ChannelHandler概念的理解与阐述
+              <a href="/2017/02/18/Netty学习-ChannelFuture的作用/" rel="next" title="Netty学习-ChannelFuture的作用">
+                <i class="fa fa-chevron-left"></i> Netty学习-ChannelFuture的作用
               </a>
             
           </div>
@@ -481,7 +511,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -534,7 +564,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#addListener-GenericFutureListener-与await"><span class="nav-number">1.</span> <span class="nav-text">addListener(GenericFutureListener)与await()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不要混淆I-O-timeout和await-timeout"><span class="nav-number">2.</span> <span class="nav-text">不要混淆I/O timeout和await timeout</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Selector的基本概念"><span class="nav-number">1.</span> <span class="nav-text">Selector的基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selector：java-nio无阻塞io实现的关键。"><span class="nav-number">2.</span> <span class="nav-text">Selector：java nio无阻塞io实现的关键。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#阻塞io和无阻塞io："><span class="nav-number">2.1.</span> <span class="nav-text">阻塞io和无阻塞io：</span></a></li></ol></li></ol></div>
             
 
           </div>

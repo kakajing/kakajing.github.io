@@ -84,19 +84,16 @@
 
 
 
-<meta name="description" content="ChannelHandler和 ChannelPipeline">
+<meta name="description" content="ChannelFuture的作用是用来保存Channel异步操作的结果。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="对ChannelHandler概念的理解与阐述">
-<meta property="og:url" content="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/index.html">
+<meta property="og:title" content="Netty学习-ChannelFuture的作用">
+<meta property="og:url" content="http://kakajing.github.io/2017/02/18/Netty学习-ChannelFuture的作用/index.html">
 <meta property="og:site_name" content="余鸢">
-<meta property="og:description" content="ChannelHandler和 ChannelPipeline">
-<meta property="og:image" content="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\7.png">
-<meta property="og:image" content="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\8.png">
-<meta property="og:updated_time" content="2017-02-16T16:31:32.815Z">
+<meta property="og:description" content="ChannelFuture的作用是用来保存Channel异步操作的结果。">
+<meta property="og:updated_time" content="2017-02-24T15:23:27.985Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="对ChannelHandler概念的理解与阐述">
-<meta name="twitter:description" content="ChannelHandler和 ChannelPipeline">
-<meta name="twitter:image" content="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\7.png">
+<meta name="twitter:title" content="Netty学习-ChannelFuture的作用">
+<meta name="twitter:description" content="ChannelFuture的作用是用来保存Channel异步操作的结果。">
 
 
 
@@ -124,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/"/>
+  <link rel="canonical" href="http://kakajing.github.io/2017/02/18/Netty学习-ChannelFuture的作用/"/>
 
 
 
 
 
-  <title> 对ChannelHandler概念的理解与阐述 | 余鸢 </title>
+  <title> Netty学习-ChannelFuture的作用 | 余鸢 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -263,7 +260,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/17/对ChannelHandler概念的理解与阐述/">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/18/Netty学习-ChannelFuture的作用/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="余鸢">
@@ -287,7 +284,7 @@
             
             
               
-                对ChannelHandler概念的理解与阐述
+                Netty学习-ChannelFuture的作用
               
             
           </h1>
@@ -302,8 +299,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-17T00:12:18+08:00">
-                2017-02-17
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-18T23:58:42+08:00">
+                2017-02-18
               </time>
             
 
@@ -325,8 +322,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/原创/" itemprop="url" rel="index">
-                    <span itemprop="name">原创</span>
+                  <a href="/categories/Netty/" itemprop="url" rel="index">
+                    <span itemprop="name">Netty</span>
                   </a>
                 </span>
 
@@ -360,31 +357,20 @@
       
 
       
-        <h3 id="ChannelHandler和-ChannelPipeline"><a href="#ChannelHandler和-ChannelPipeline" class="headerlink" title="ChannelHandler和 ChannelPipeline"></a>ChannelHandler和 ChannelPipeline</h3><a id="more"></a>
-<p>ChannelPipeline是ChannelHandler链的容器。</p>
-<p>在许多方面的ChannelHandler是在你的应用程序的核心，尽管有时它可能并不明显。<br>ChannelHandler支持广泛的用途，使它难以界定。因此，最好是把它当作一个通用的容器， 处理进来的事件（ 包括数据）并且通过ChannelPipeline。</p>
-<p>下图展示了ChannelInboundHandler和ChannelOutboundHandler继承自父接口 ChannelHandler。</p>
-<p> <img src="/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\7.png" alt="7"></p>
-<p>Netty中有两个方向的数据流，下图展示了入站(ChannelInboundHandler)和出站(ChannelOutboundHandler)之间有一个明显的区别：若数据是从用户应用程序到远程主机则是“出站(outbound)”，相反若数据时从远程主机到用户应用程序则是“入站(inbound)”。</p>
-<p>为了使数据从一端到达另一端，一个或多个ChannelHandler将以某种方式操作数据。这些ChannelHandler会在程序的“引导”阶段被添加ChannelPipeline中，并且被添加的顺序将决定处理数据的顺序。</p>
-<p> <img src="/2017/02/17/对ChannelHandler概念的理解与阐述/C:/Users\Administrator\Desktop\新建文件夹\md图片\8.png" alt="8"></p>
-<p>同样展示了进站和出站的处理器都可以被安装在相同的pipeline。如果消息或任何其他入站事件被读到，将从 pipeline头部开始，传递到第一个ChannelInboundHandler。该处理器可能会或可能不会实际修改数据，取决于其特定的功能，在这之后 该数据将被传递到链中的下一个ChannelInboundHandler。最后，将数据 到达pipeline 的尾部，此时所有处理结束。</p>
-<p>数据的出站运动（ 即，数据被“写入”） 在概念上是相同的。在这种情况下的数据从尾部流过ChannelOutboundHandlers的链，直到它到达头部。超过这点，出站数据将到达的网络传输，在这里显示为一个 socket。通常，这将触发一个写入操作。</p>
-<h4 id="更多Inbound、Outbound-Handler"><a href="#更多Inbound、Outbound-Handler" class="headerlink" title="更多Inbound、Outbound Handler"></a>更多Inbound、Outbound Handler</h4><p>在当前的链（ <em>chain</em>）中，事件可以通过ChanneHandlerContext传递给下一个handler。Netty为此提供了抽象基类ChannelInboundHandlerAdapter和hannelOutboundHandlerAdapter，用来处理你想要的事件。这些类提供的方法的实现，可以简单地通过调用ChannelHandlerContext上的相应方法将事件传递给下一个handler。在实际应用中，您可以按需覆盖相应的方法即可。</p>
-<p>所以，如果出站和入站操作是不同的，当ChannelPipeline中有混合处理器时将发生什么？虽然入站和出站处理器都扩展了ChannelHandler，Netty的ChannelInboundHandler的实现 和ChannelOutboundHandler之间的是有区别的，从而保证数据传递只从一个处理器到下一个处理器保证正确的类型。</p>
-<p>当ChannelHandler被添加到的ChannelPipeline 它得到一个ChannelHandlerContext，它代表一个ChannelHandler和ChannelPipeline之间的“绑定”。它通常是安全保存对此对象的引用，除了当协议中的使用的是不面向连接（ 例如，UDP）。而该对象可以被用来获得 底层Channel,它主要是用来写出站数据。</p>
-<p>还有，实际上，在 Netty 发送消息有两种方式。您可以直接写消息给Channel或写入ChannelHandlerContext对象。主要的区别是，前一种方法会导致消息从ChannelPipeline的尾部开始，而 后者导致消息从ChannelPipeline 下一个处理器开始。</p>
-<h3 id="细节化ChannelHandler"><a href="#细节化ChannelHandler" class="headerlink" title="细节化ChannelHandler"></a>细节化ChannelHandler</h3><p>正如我们之前所说，有很多不同类型的 ChannelHandler。每个ChannelHandler做什么取决于其超类。Netty提供了一些默认的处理程序实现形式的“adapter（ 适配器）”类。这些旨在简化开发处理逻辑。我们已经看到，在 pipeline中每个的 ChannelHandler负责转发事件到链中的下一个处理器。这些适配器类（ 及其子类）会自动帮你实现，所以你只需要实现该特定的方法和事件。</p>
-<h4 id="为什么用适配器？"><a href="#为什么用适配器？" class="headerlink" title="为什么用适配器？"></a>为什么用适配器？</h4><p>有几个适配器类，可以减少编写自定义 ChannelHandlers，因为他们提供对应接口的所有方法的默认实现。（ 也有类似的适配器，用于创建编码器和解码器）这些都是创建自定义处理器时，会经常调用的适配器：ChannelHandlerAdapter、ChannelInboundHandlerAdapter、ChannelOutboundHandlerAdapter、ChannelDuplexHandlerAdapter</p>
-<p>下面解释下三个 ChannelHandler 的子类型：编码器、解码器以及ChannelInboundHandlerAdapter 的子类SimpleChannelInboundHandler</p>
-<h4 id="编码器、解码器"><a href="#编码器、解码器" class="headerlink" title="编码器、解码器"></a>编码器、解码器</h4><p>当你发送或接收消息时，Netty 数据转换就发生了。入站消息将从字节转为一个Java对象;也就是说，“解码”。如果该消息是出站相反会发生：“编码”，从一个Java对象转为字节。其原因是简单的：网络数据是一系列字节，因此需要从那类型进行转换。</p>
-<p>不同类型的抽象类用于提供编码器和解码器的，这取决于手头的任务。例如，应用程序可能并不需要马上将消息转为字节。相反，该消息将被转换 一些其他格式。一个编码器将仍然可以使用，但它也将衍生自不同的超类，在一般情况下，基类将有一个名字类似 ByteToMessageDecoder 或MessageToByteEncoder。在一种特殊类型的情况下，你可能会发现类似 ProtobufEncoder 和ProtobufDecoder，用于支持谷歌的 protocol buffer。</p>
-<p>严格地说，其他处理器可以做编码器和解码器能做的事。但正如适配器类简化创建通道处理器，所有的编码器/解码器适配器类 都实现自 ChannelInboundHandler 或ChannelOutboundHandler。</p>
-<p>对于入站数据，channelRead 方法/事件被覆盖。这种方法在每个消息从入站 Channel 读入时调用。该方法将调用特定解码器的“解码”方法，并将解码后的消息转发到管道中下个的ChannelInboundHandler。</p>
-<p>出站消息是类似的。编码器将消息转为字节，转发到下个的 ChannelOutboundHandler。</p>
-<h3 id="SimpleChannelHandler"><a href="#SimpleChannelHandler" class="headerlink" title="SimpleChannelHandler"></a>SimpleChannelHandler</h3><p>也许最常见的处理器是接收到解码后的消息并应用一些业务逻辑到这些数据。要创建这样一个 ChannelHandler，你只需要扩展基类SimpleChannelInboundHandler 其中 T 是想要进行处理的类型。对这样的处理器，你将覆盖基类的一个或多个方法，获得被作为输入参数传递所有方法的 ChannelHandlerContext 的引用。</p>
-<p>在这种类型的处理器方法中的最重要是 channelRead0(ChannelHandlerContext，T)。在这个调用中，T 是将要处理的消息。 你怎么做，完全取决于你，但无论如何你不能阻塞 I/O线程，因为这可能是不利于高性能。</p>
-<h4 id="阻塞操作"><a href="#阻塞操作" class="headerlink" title="阻塞操作"></a>阻塞操作</h4><p>I/O线程一定不能完全阻塞，因此禁止任何直接阻塞操作在你的ChannelHandler，有一种方法来实现这一要求。你可以指定一个EventExecutorGroup当添加ChannelHandler到ChannelPipeline。此EventExecutorGroup将用于获得EventExecutor，将执行所有的ChannelHandler的方法。这EventExecutor将从I/O线程使用不同的线程，从而释放EventLoop。</p>
+        <p>ChannelFuture的作用是用来保存Channel异步操作的结果。</p>
+<a id="more"></a>
+<p>我们知道，在Netty中所有的I/O操作都是异步的。这意味着任何的I/O调用都将立即返回，而不保证这些被请求的I/O操作在调用结束的时候已经完成。取而代之地，你会得到一个返回的ChannelFuture实例，这个实例将给你一些关于I/O操作结果或者状态的信息。</p>
+<p>对于一个ChannelFuture可能已经完成，也可能未完成。当一个I/O操作开始的时候，一个新的future对象就会被创建。在开始的时候，新的future是未完成的状态－－它既非<code>成功</code>、<code>失败</code>，也非<code>被取消</code>，因为I/O操作还没有结束。如果I/O操作以<code>成功</code>、<code>失败</code>或者<code>被取消</code>中的任何一种状态结束了，那么这个future将会被标记为<code>已完成</code>，并包含更多详细的信息（例如：失败的原因）。请注意，即使是<code>失败</code>和<code>被取消</code>的状态，也是属于<code>已完成</code>的状态。</p>
+<p>各种各样的方法被提供，用来检查I/O操作是否已完成、等待完成，并寻回I/O操作的结果。它同样允许你添加ChannelFutureListener，以便于在I/O操作完成的时候，你能够获得通知。</p>
+<h3 id="addListener-GenericFutureListener-与await"><a href="#addListener-GenericFutureListener-与await" class="headerlink" title="addListener(GenericFutureListener)与await()"></a>addListener(GenericFutureListener)与await()</h3><p>优先使用addListener(GenericFutureListener)，而非await()</p>
+<p>当做了一个I/O操作并有任何后续任务的时候，推荐优先使用addListener(GenericFutureListener)的方式来获得通知，而非await()。</p>
+<p>addListener(GenericFutureListener)是非阻塞的。它会把特定的ChannelFutureListener添加到ChannelFuture中，然后I/O线程会在I/O操作相关的future完成的时候通知监听器。ChannelFutureListener会利于最佳的性能和资源的利用，因为它一点阻塞都没有。然而，如果你不使用基于事件驱动的编程方式，去实现一个后续式的逻辑会变得诡异和难于理解。</p>
+<p>对比来看，await()是一个阻塞的操作。一旦被调用，调用者线程会阻塞，直到操作完成。使用await()来实现一个后续式的逻辑会更容易，但是调用者线程会非常没必要的阻塞直到I/O操作完成，并且内部的线程通知是相对来说代价昂贵的。更有甚者，在一些特定的情况下会产生死锁，下面是对这种情况的描述：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// BAD - NEVER DO THIS</span></div><div class="line"> <span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, GoodByeMessage msg)</span> </span>&#123;</div><div class="line">     ChannelFuture future = ctx.channel().close();</div><div class="line">     future.awaitUninterruptibly();</div><div class="line">     <span class="comment">// Perform post-closure operation</span></div><div class="line">     <span class="comment">// ...</span></div><div class="line"> &#125;</div><div class="line"></div><div class="line"> <span class="comment">// GOOD</span></div><div class="line"> <span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx,  GoodByeMessage msg)</span> </span>&#123;</div><div class="line">     ChannelFuture future = ctx.channel().close();</div><div class="line">     future.addListener(<span class="keyword">new</span> ChannelFutureListener() &#123;</div><div class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operationComplete</span><span class="params">(ChannelFuture future)</span> </span>&#123;</div><div class="line">             <span class="comment">// Perform post-closure operation</span></div><div class="line">             <span class="comment">// ...</span></div><div class="line">         &#125;</div><div class="line">     &#125;);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>撇开上面提到的缺点不谈，确实还是有一些情况在调用await()的时候会更方便的。在这种情况下，请确保你不是在一个I/O线程中调用的await()。否则，为了避免死锁的情况，BlockingOperationException将被提出。</p>
+<h3 id="不要混淆I-O-timeout和await-timeout"><a href="#不要混淆I-O-timeout和await-timeout" class="headerlink" title="不要混淆I/O timeout和await timeout"></a>不要混淆I/O timeout和await timeout</h3><p>你在使用Future.await(long)， Future.await(long, TimeUnit)，Future.awaitUninterruptibly(long)，或者Future.awaitUninterruptibly(long, TimeUnit)的时候，指定的timeout的值和I/O timeout一点关系都没有。如果一个操作超时了，future将会被标记为<code>已完成－失败</code>，就像上面的图中描述的那样。例如，连接超时应当通过一个传输特定的选项来配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// BAD - NEVER DO THIS</span></div><div class="line"> Bootstrap b = ...;</div><div class="line"> ChannelFuture f = b.connect(...);</div><div class="line"> f.awaitUninterruptibly(<span class="number">10</span>, TimeUnit.SECONDS);</div><div class="line"> <span class="keyword">if</span> (f.isCancelled()) &#123;</div><div class="line">     <span class="comment">// Connection attempt cancelled by user</span></div><div class="line"> &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!f.isSuccess()) &#123;</div><div class="line">     <span class="comment">// You might get a NullPointerException here because the future</span></div><div class="line">     <span class="comment">// might not be completed yet.</span></div><div class="line">     f.cause().printStackTrace();</div><div class="line"> &#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="comment">// Connection established successfully</span></div><div class="line"> &#125;</div><div class="line"></div><div class="line"> <span class="comment">// GOOD</span></div><div class="line"> Bootstrap b = ...;</div><div class="line"> <span class="comment">// Configure the connect timeout option.</span></div><div class="line"> b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, <span class="number">10000</span>);</div><div class="line"> ChannelFuture f = b.connect(...);</div><div class="line"> f.awaitUninterruptibly();</div><div class="line"></div><div class="line"> <span class="comment">// Now we are sure the future is completed.</span></div><div class="line"> <span class="keyword">assert</span> f.isDone();</div><div class="line"></div><div class="line"> <span class="keyword">if</span> (f.isCancelled()) &#123;</div><div class="line">     <span class="comment">// Connection attempt cancelled by user</span></div><div class="line"> &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!f.isSuccess()) &#123;</div><div class="line">     f.cause().printStackTrace();</div><div class="line"> &#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="comment">// Connection established successfully</span></div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>参考自原文：<a href="http://www.jianshu.com/p/4835eb4e91ab" target="_blank" rel="external">http://www.jianshu.com/p/4835eb4e91ab</a></p>
 
       
     </div>
@@ -417,8 +403,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/15/Netty之构建一个完整的的Netty客户端（二）/" rel="next" title="Netty之构建一个完整的的Netty客户端（二）">
-                <i class="fa fa-chevron-left"></i> Netty之构建一个完整的的Netty客户端（二）
+              <a href="/2017/02/17/Netty学习-对ChannelHandler概念的理解与阐述/" rel="next" title="Netty学习-对ChannelHandler概念的理解与阐述">
+                <i class="fa fa-chevron-left"></i> Netty学习-对ChannelHandler概念的理解与阐述
               </a>
             
           </div>
@@ -427,8 +413,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/02/18/ChannelFuture的作用/" rel="prev" title="ChannelFuture的作用">
-                ChannelFuture的作用 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/02/20/Netty学习-Selector/" rel="prev" title="Netty学习-Selector">
+                Netty学习-Selector <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -499,7 +485,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -552,7 +538,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ChannelHandler和-ChannelPipeline"><span class="nav-number">1.</span> <span class="nav-text">ChannelHandler和 ChannelPipeline</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#更多Inbound、Outbound-Handler"><span class="nav-number">1.1.</span> <span class="nav-text">更多Inbound、Outbound Handler</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#细节化ChannelHandler"><span class="nav-number">2.</span> <span class="nav-text">细节化ChannelHandler</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么用适配器？"><span class="nav-number">2.1.</span> <span class="nav-text">为什么用适配器？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编码器、解码器"><span class="nav-number">2.2.</span> <span class="nav-text">编码器、解码器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SimpleChannelHandler"><span class="nav-number">3.</span> <span class="nav-text">SimpleChannelHandler</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#阻塞操作"><span class="nav-number">3.1.</span> <span class="nav-text">阻塞操作</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#addListener-GenericFutureListener-与await"><span class="nav-number">1.</span> <span class="nav-text">addListener(GenericFutureListener)与await()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不要混淆I-O-timeout和await-timeout"><span class="nav-number">2.</span> <span class="nav-text">不要混淆I/O timeout和await timeout</span></a></li></ol></div>
             
 
           </div>
