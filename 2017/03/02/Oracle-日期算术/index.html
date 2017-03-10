@@ -86,13 +86,13 @@
 
 <meta name="description" content="日期算术 - 日期之间的差异，以日期，小时，分钟和/或秒为单位">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Oracle日期算术">
-<meta property="og:url" content="http://kakajing.github.io/2017/03/02/Oracle日期算术/index.html">
+<meta property="og:title" content="Oracle-日期算术">
+<meta property="og:url" content="http://kakajing.github.io/2017/03/02/Oracle-日期算术/index.html">
 <meta property="og:site_name" content="余鸢">
 <meta property="og:description" content="日期算术 - 日期之间的差异，以日期，小时，分钟和/或秒为单位">
-<meta property="og:updated_time" content="2017-03-09T14:10:59.013Z">
+<meta property="og:updated_time" content="2017-03-10T14:48:45.923Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Oracle日期算术">
+<meta name="twitter:title" content="Oracle-日期算术">
 <meta name="twitter:description" content="日期算术 - 日期之间的差异，以日期，小时，分钟和/或秒为单位">
 
 
@@ -121,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://kakajing.github.io/2017/03/02/Oracle日期算术/"/>
+  <link rel="canonical" href="http://kakajing.github.io/2017/03/02/Oracle-日期算术/"/>
 
 
 
 
 
-  <title> Oracle日期算术 | 余鸢 </title>
+  <title> Oracle-日期算术 | 余鸢 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -260,7 +260,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/03/02/Oracle日期算术/">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/03/02/Oracle-日期算术/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="余鸢">
@@ -284,7 +284,7 @@
             
             
               
-                Oracle日期算术
+                Oracle-日期算术
               
             
           </h1>
@@ -366,7 +366,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function">SELECT <span class="title">TO_DATE</span><span class="params">( <span class="string">'2016-01-02 01:01:12'</span>, <span class="string">'YYYY-MM-DD HH24:MI:SS'</span> )</span></span></div><div class="line">         - <span class="title">TO_DATE</span><span class="params">( <span class="string">'2016-01-01 00:00:00'</span>, <span class="string">'YYYY-MM-DD HH24:MI:SS'</span> )</span></div><div class="line">         AS difference</div><div class="line">FROM   DUAL</div></pre></td></tr></table></figure>
 <p>输出两个日期之间的天数分数：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">DIFFERENCE</div><div class="line">----------</div><div class="line">    <span class="number">1.0425</span></div></pre></td></tr></table></figure>
-<p>通过将该数字乘以24，24 <em> 60或24 </em> 60 * 60可以得到小时，分钟或秒的差异。</p>
+<p>通过将该数字乘以24，<code>24 * 60</code>或<code>24 * 60 * 60</code>可以得到小时，分钟或秒的差异。</p>
 <p>可以更改上一个示例，以获取两个日期之间的日期，小时，分钟和秒数：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function">SELECT <span class="title">TRUNC</span><span class="params">( difference                       )</span> AS days,</span></div><div class="line">       <span class="title">TRUNC</span><span class="params">( MOD( difference * <span class="number">24</span>,       <span class="number">24</span> )</span> ) AS hours,</div><div class="line">       <span class="title">TRUNC</span><span class="params">( MOD( difference * <span class="number">24</span>*<span class="number">60</span>,    <span class="number">60</span> )</span> ) AS minutes,</div><div class="line">       <span class="title">TRUNC</span><span class="params">( MOD( difference * <span class="number">24</span>*<span class="number">60</span>*<span class="number">60</span>, <span class="number">60</span> )</span> ) AS seconds</div><div class="line"><span class="title">FROM</span>   <span class="params">(</span></div><div class="line">  SELECT TO_DATE( <span class="string">'2016-01-02 01:01:12'</span>, <span class="string">'YYYY-MM-DD HH24:MI:SS'</span> )</div><div class="line">         - <span class="title">TO_DATE</span><span class="params">( <span class="string">'2016-01-01 00:00:00'</span>, <span class="string">'YYYY-MM-DD HH24:MI:SS'</span> )</span></div><div class="line">         AS difference</div><div class="line">  FROM   DUAL</div><div class="line">);</div></pre></td></tr></table></figure>
 <p>（注意：使用<code>TRUNC()</code>而不是<code>FLOOR()</code>来正确处理负差异。）</p>
@@ -494,6 +494,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/03/03/Oracle-JOINS/" rel="prev" title="Oracle-JOINS">
+                Oracle-JOINS <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -562,7 +566,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

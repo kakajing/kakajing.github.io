@@ -1,0 +1,783 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Oracle," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="CROSS JOIN(交叉连接)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle-JOINS">
+<meta property="og:url" content="http://kakajing.github.io/2017/03/03/Oracle-JOINS/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="CROSS JOIN(交叉连接)">
+<meta property="og:updated_time" content="2017-03-10T14:47:52.329Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Oracle-JOINS">
+<meta name="twitter:description" content="CROSS JOIN(交叉连接)">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/03/03/Oracle-JOINS/"/>
+
+
+
+
+
+  <title> Oracle-JOINS | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/03/03/Oracle-JOINS/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Oracle-JOINS
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-03T21:46:49+08:00">
+                2017-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Oracle/" itemprop="url" rel="index">
+                    <span itemprop="name">Oracle</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="CROSS-JOIN-交叉连接"><a href="#CROSS-JOIN-交叉连接" class="headerlink" title="CROSS JOIN(交叉连接)"></a>CROSS JOIN(交叉连接)</h3><a id="more"></a>
+<p><code>CROSS JOIN</code>在不使用显式连接子句的两个表之间执行连接，并产生两个表的笛卡尔积。 笛卡尔积表示一个表的每一行与连接中的第二个表的每一行组合。 例如，如果<code>TABLEA</code>有20行，<code>TABLEB</code>有20行，结果将是<code>20 * 20 = 400</code>个输出行。</p>
+<p>例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">SELECT * </div><div class="line">FROM TABLEA CROSS JOIN TABLEB;</div></pre></td></tr></table></figure>
+<p>也可以写成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">SELECT *</div><div class="line">FROM TABLEA, TABLEB;</div></pre></td></tr></table></figure>
+<p>下面是两个表之间的SQL中的cross join的示例：</p>
+<p><strong>Sample Table:</strong> TABLEA</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">+-------+---------+</div><div class="line">| VALUE |   NAME  |</div><div class="line">+-------+---------+</div><div class="line">|   <span class="number">1</span>   |   ONE   |</div><div class="line">|   <span class="number">2</span>   |   TWO   |</div><div class="line">+-------+---------+</div></pre></td></tr></table></figure>
+<p>现在，如果执行查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">SELECT *</div><div class="line">FROM TABLEA CROSS JOIN TABLEB;</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+-------+--------+-------+--------+</div><div class="line">| VALUE |  NAME  | VALUE |  NAME  |</div><div class="line">+-------+--------+-------+--------+</div><div class="line">|   <span class="number">1</span>   |   ONE  |   <span class="number">3</span>   |  THREE |</div><div class="line">|   <span class="number">1</span>   |   ONE  |   <span class="number">4</span>   |  FOUR  |</div><div class="line">|   <span class="number">2</span>   |   TWO  |   <span class="number">3</span>   |  THREE |</div><div class="line">|   <span class="number">2</span>   |   TWO  |   <span class="number">4</span>   |  FOUR  |</div><div class="line">+-------+--------+-------+--------+</div></pre></td></tr></table></figure>
+<h4 id="LEFT-OUTER-JOIN-左外连接"><a href="#LEFT-OUTER-JOIN-左外连接" class="headerlink" title="LEFT OUTER JOIN(左外连接)"></a>LEFT OUTER JOIN(左外连接)</h4><p><code>LEFT OUTER JOIN</code>在需要显式连接子句的两个表之间执行连接，但不会从第一个表中排除不匹配的行。</p>
+<p>例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">SELECT                                      </div><div class="line">      ENAME,                                </div><div class="line">      DNAME,                                </div><div class="line">      EMP.DEPTNO,                           </div><div class="line">      DEPT.DEPTNO                           </div><div class="line">FROM                                        </div><div class="line">      SCOTT.EMP LEFT OUTER JOIN SCOTT.DEPT  </div><div class="line">      ON EMP.DEPTNO = DEPT.DEPTNO;</div></pre></td></tr></table></figure>
+<p>即使ANSI语法是推荐的方法，它很可能会经常遇到传统语法。 在条件内使用<code>(+)</code>确定等式的哪一侧被认为是外侧。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">SELECT                                      </div><div class="line">      ENAME,                                </div><div class="line">      DNAME,                                </div><div class="line">      EMP.DEPTNO,                           </div><div class="line">      DEPT.DEPTNO                           </div><div class="line">FROM                                        </div><div class="line">      SCOTT.EMP, </div><div class="line">      SCOTT.DEPT  </div><div class="line">WHERE</div><div class="line">      EMP.DEPTNO = DEPT.DEPTNO(+);</div></pre></td></tr></table></figure>
+<p>下面是两个表之间的Left Outer Join的示例：</p>
+<p><strong>Sample Table:</strong> EMPLOYEE</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">+-----------+---------+</div><div class="line">|    NAME   |  DEPTNO |</div><div class="line">+-----------+---------+</div><div class="line">|     A     |    <span class="number">2</span>    |</div><div class="line">|     B     |    <span class="number">1</span>    |</div><div class="line">|     C     |    <span class="number">3</span>    |</div><div class="line">|     D     |    <span class="number">2</span>    |</div><div class="line">|     E     |    <span class="number">1</span>    |</div><div class="line">|     F     |    <span class="number">1</span>    |</div><div class="line">|     G     |    <span class="number">4</span>    |</div><div class="line">|     H     |    <span class="number">4</span>    |</div><div class="line">+-----------+---------+</div></pre></td></tr></table></figure>
+<p><strong>Sample Table:</strong> DEPT</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+---------+--------------+</div><div class="line">|  DEPTNO |   DEPTNAME   |</div><div class="line">+---------+--------------+</div><div class="line">|    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|    <span class="number">5</span>    |   MARKETING  |</div><div class="line">|    <span class="number">6</span>    |      HR      |</div><div class="line">+---------+--------------+</div></pre></td></tr></table></figure>
+<p>现在，如果执行查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SELECT</div><div class="line">      *</div><div class="line">FROM</div><div class="line">      EMPLOYEE LEFT OUTER JOIN DEPT</div><div class="line">      ON EMPLOYEE.DEPTNO = DEPT.DEPTNO;</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">+-----------+---------+---------+--------------+</div><div class="line">|    NAME   |  DEPTNO |  DEPTNO |   DEPTNAME   |</div><div class="line">+-----------+---------+---------+--------------+</div><div class="line">|     F     |    <span class="number">1</span>    |    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|     E     |    <span class="number">1</span>    |    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|     B     |    <span class="number">1</span>    |    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|     D     |    <span class="number">2</span>    |    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|     A     |    <span class="number">2</span>    |    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|     C     |    <span class="number">3</span>    |         |              |</div><div class="line">|     H     |    <span class="number">4</span>    |         |              |</div><div class="line">|     G     |    <span class="number">4</span>    |         |              |</div><div class="line">+-----------+---------+---------+--------------+</div></pre></td></tr></table></figure>
+<h3 id="ANTIJOIN-反连接"><a href="#ANTIJOIN-反连接" class="headerlink" title="ANTIJOIN(反连接)"></a>ANTIJOIN(反连接)</h3><p>antijoin从谓词的左侧返回行，在谓词的右侧没有对应的行。 它返回不匹配（NOT IN）右侧子查询的行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SELECT * <span class="function">FROM employees </span></div><div class="line">   WHERE department_id NOT <span class="title">IN</span> </div><div class="line">   <span class="params">(SELECT department_id FROM departments </span></div><div class="line">       WHERE location_id = <span class="number">1700</span>)</div><div class="line">   ORDER BY last_name;</div></pre></td></tr></table></figure>
+<p>下面是两个表之间的反连接示例：</p>
+<p><strong>Sample Table:</strong> EMPLOYEE</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">+-----------+---------+</div><div class="line">|    NAME   |  DEPTNO |</div><div class="line">+-----------+---------+</div><div class="line">|     A     |    <span class="number">2</span>    |</div><div class="line">|     B     |    <span class="number">1</span>    |</div><div class="line">|     C     |    <span class="number">3</span>    |</div><div class="line">|     D     |    <span class="number">2</span>    |</div><div class="line">|     E     |    <span class="number">1</span>    |</div><div class="line">|     F     |    <span class="number">1</span>    |</div><div class="line">|     G     |    <span class="number">4</span>    |</div><div class="line">|     H     |    <span class="number">4</span>    |</div><div class="line">+-----------+---------+</div></pre></td></tr></table></figure>
+<p><strong>Sample Table:</strong> DEPT</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+---------+--------------+</div><div class="line">|  DEPTNO |   DEPTNAME   |</div><div class="line">+---------+--------------+</div><div class="line">|    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|    <span class="number">5</span>    |   MARKETING  |</div><div class="line">|    <span class="number">6</span>    |      HR      |</div><div class="line">+---------+--------------+</div></pre></td></tr></table></figure>
+<p>现在，如果执行查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SELECT</div><div class="line">      *</div><div class="line"><span class="function">FROM</span></div><div class="line">      EMPLOYEE WHERE DEPTNO NOT <span class="title">IN</span></div><div class="line">      <span class="params">(SELECT DEPTNO FROM DEPT)</span>;</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">+-----------+---------+</div><div class="line">|    NAME   |  DEPTNO |</div><div class="line">+-----------+---------+</div><div class="line">|     C     |    <span class="number">3</span>    |</div><div class="line">|     H     |    <span class="number">4</span>    |</div><div class="line">|     G     |    <span class="number">4</span>    |</div><div class="line">+-----------+---------+</div></pre></td></tr></table></figure>
+<h3 id="RIGHT-OUTER-JOIN-右外部接合"><a href="#RIGHT-OUTER-JOIN-右外部接合" class="headerlink" title="RIGHT OUTER JOIN(右外部接合)"></a>RIGHT OUTER JOIN(右外部接合)</h3><p><code>RIGHT OUTER JOIN</code>在需要显式连接子句的两个表之间执行联接，但不会从第二个表中排除不匹配的行。</p>
+<p>例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">SELECT                                      </div><div class="line">      ENAME,                                </div><div class="line">      DNAME,                                </div><div class="line">      EMP.DEPTNO,                           </div><div class="line">      DEPT.DEPTNO                           </div><div class="line">FROM                                        </div><div class="line">      SCOTT.EMP RIGHT OUTER JOIN SCOTT.DEPT  </div><div class="line">      ON EMP.DEPTNO = DEPT.DEPTNO;</div></pre></td></tr></table></figure>
+<p>由于包括<code>SCOTT.DEPT</code>的不匹配行，但不包括<code>SCOTT.EMP</code>的不匹配行，上述等价于使用<code>LEFT OUTER JOIN</code>的以下语句。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">SELECT                                      </div><div class="line">      ENAME,                                </div><div class="line">      DNAME,                                </div><div class="line">      EMP.DEPTNO,                           </div><div class="line">      DEPT.DEPTNO                           </div><div class="line">FROM                                        </div><div class="line">      SCOTT.DEPT RIGHT OUTER JOIN SCOTT.EMP  </div><div class="line">      ON DEPT.DEPTNO = EMP.DEPTNO;</div></pre></td></tr></table></figure>
+<p>下面是两个表之间的Right Outer Join的示例：</p>
+<p><strong>Sample Table:</strong> EMPLOYEE</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">+-----------+---------+</div><div class="line">|    NAME   |  DEPTNO |</div><div class="line">+-----------+---------+</div><div class="line">|     A     |    <span class="number">2</span>    |</div><div class="line">|     B     |    <span class="number">1</span>    |</div><div class="line">|     C     |    <span class="number">3</span>    |</div><div class="line">|     D     |    <span class="number">2</span>    |</div><div class="line">|     E     |    <span class="number">1</span>    |</div><div class="line">|     F     |    <span class="number">1</span>    |</div><div class="line">|     G     |    <span class="number">4</span>    |</div><div class="line">|     H     |    <span class="number">4</span>    |</div><div class="line">+-----------+---------+</div></pre></td></tr></table></figure>
+<p><strong>Sample Table:</strong> DEPT</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+---------+--------------+</div><div class="line">|  DEPTNO |   DEPTNAME   |</div><div class="line">+---------+--------------+</div><div class="line">|    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|    <span class="number">5</span>    |   MARKETING  |</div><div class="line">|    <span class="number">6</span>    |      HR      |</div><div class="line">+---------+--------------+</div></pre></td></tr></table></figure>
+<p>现在，如果执行查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SELECT</div><div class="line">      *</div><div class="line">FROM</div><div class="line">      EMPLOYEE RIGHT OUTER JOIN DEPT</div><div class="line">      ON EMPLOYEE.DEPTNO = DEPT.DEPTNO;</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">+-----------+---------+---------+--------------+</div><div class="line">|    NAME   |  DEPTNO |  DEPTNO |   DEPTNAME   |</div><div class="line">+-----------+---------+---------+--------------+</div><div class="line">|     A     |    <span class="number">2</span>    |    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|     B     |    <span class="number">1</span>    |    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|     D     |    <span class="number">2</span>    |    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|     E     |    <span class="number">1</span>    |    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|     F     |    <span class="number">1</span>    |    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|           |         |    <span class="number">5</span>    |   MARKETING  |</div><div class="line">|           |         |    <span class="number">6</span>    |      HR      |</div><div class="line">+-----------+---------+---------+--------------+</div></pre></td></tr></table></figure>
+<h3 id="FULL-OUTER-JOIN-完全外部联接"><a href="#FULL-OUTER-JOIN-完全外部联接" class="headerlink" title="FULL OUTER JOIN(完全外部联接)"></a>FULL OUTER JOIN(完全外部联接)</h3><p><code>FULL OUTER JOIN</code>在需要显式连接子句的两个表之间执行连接，但不排除任一表中的不匹配行。 换句话说，它返回每个表中的所有行。</p>
+<p>例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SELECT                                     </div><div class="line">      *                                    </div><div class="line">FROM                                       </div><div class="line">      EMPLOYEE FULL OUTER JOIN DEPT </div><div class="line">      ON EMPLOYEE.DEPTNO = DEPT.DEPTNO;</div></pre></td></tr></table></figure>
+<p>下面是两个表之间的完全外部联接的示例：</p>
+<p><strong>Sample Table:</strong> EMPLOYEE</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">+-----------+---------+</div><div class="line">|    NAME   |  DEPTNO |</div><div class="line">+-----------+---------+</div><div class="line">|     A     |    <span class="number">2</span>    |</div><div class="line">|     B     |    <span class="number">1</span>    |</div><div class="line">|     C     |    <span class="number">3</span>    |</div><div class="line">|     D     |    <span class="number">2</span>    |</div><div class="line">|     E     |    <span class="number">1</span>    |</div><div class="line">|     F     |    <span class="number">1</span>    |</div><div class="line">|     G     |    <span class="number">4</span>    |</div><div class="line">|     H     |    <span class="number">4</span>    |</div><div class="line">+-----------+---------+</div></pre></td></tr></table></figure>
+<p><strong>Sample Table:</strong> DEPT</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+---------+--------------+</div><div class="line">|  DEPTNO |   DEPTNAME   |</div><div class="line">+---------+--------------+</div><div class="line">|    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|    <span class="number">5</span>    |   MARKETING  |</div><div class="line">|    <span class="number">6</span>    |      HR      |</div><div class="line">+---------+--------------+</div></pre></td></tr></table></figure>
+<p>现在，如果执行查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SELECT</div><div class="line">      *</div><div class="line">FROM</div><div class="line">      EMPLOYEE FULL OUTER JOIN DEPT</div><div class="line">      ON EMPLOYEE.DEPTNO = DEPT.DEPTNO;</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">+-----------+---------+---------+--------------+</div><div class="line">|    NAME   |  DEPTNO |  DEPTNO |   DEPTNAME   |</div><div class="line">+-----------+---------+---------+--------------+</div><div class="line">|     A     |    <span class="number">2</span>    |    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|     B     |    <span class="number">1</span>    |    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|     C     |    <span class="number">3</span>    |         |              |</div><div class="line">|     D     |    <span class="number">2</span>    |    <span class="number">2</span>    |    FINANCE   |</div><div class="line">|     E     |    <span class="number">1</span>    |    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|     F     |    <span class="number">1</span>    |    <span class="number">1</span>    |  ACCOUNTING  |</div><div class="line">|     G     |    <span class="number">4</span>    |         |              |</div><div class="line">|     H     |    <span class="number">4</span>    |         |              |</div><div class="line">|           |         |    <span class="number">6</span>    |      HR      |</div><div class="line">|           |         |    <span class="number">5</span>    |   MARKETING  |</div><div class="line">+-----------+---------+---------+--------------+</div></pre></td></tr></table></figure>
+<p>这里，不匹配的列保持为NULL。</p>
+<h3 id="INNER-JOIN-内部联接"><a href="#INNER-JOIN-内部联接" class="headerlink" title="INNER JOIN(内部联接)"></a>INNER JOIN(内部联接)</h3><p>INNER JOIN是一个JOIN操作，允许你指定显式连接子句。</p>
+<p>句法：</p>
+<p><code>TableExpression [ INNER ] JOIN TableExpression { ON booleanExpression | USING clause }</code></p>
+<p>可以通过使用布尔表达式指定ON来指定连接子句。</p>
+<p>ON子句中的表达式的范围包括当前表和外部查询块中到当前SELECT的任何表。 在以下示例中，ON子句引用当前表：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">-- Join the EMP_ACT and EMPLOYEE tables</div><div class="line">-- select all the columns from the EMP_ACT table and </div><div class="line">-- add the employee's surname (LASTNAME) from the EMPLOYEE table</div><div class="line">-- to each row of the result</div><div class="line">SELECT SAMP.EMP_ACT.*, LASTNAME</div><div class="line"> FROM SAMP.EMP_ACT JOIN SAMP.EMPLOYEE</div><div class="line"> ON EMP_ACT.EMPNO = EMPLOYEE.EMPNO</div><div class="line">-- Join the EMPLOYEE and DEPARTMENT tables, </div><div class="line">-- select the employee number (EMPNO),  </div><div class="line">-- employee surname (LASTNAME), </div><div class="line">-- department number (WORKDEPT in the EMPLOYEE table and DEPTNO in the</div><div class="line">-- DEPARTMENT table) </div><div class="line">-- and department name (DEPTNAME) </div><div class="line">-- of all employees who were born (BIRTHDATE) earlier than 1930.</div><div class="line">SELECT EMPNO, LASTNAME, WORKDEPT, DEPTNAME </div><div class="line"> FROM SAMP.EMPLOYEE JOIN SAMP.DEPARTMENT </div><div class="line"> ON WORKDEPT = DEPTNO </div><div class="line"> AND YEAR(BIRTHDATE) &lt; 1930</div><div class="line"></div><div class="line">-- Another example of "generating" new data values, </div><div class="line">-- using a query which selects from a VALUES clause (which is an </div><div class="line">-- alternate form of a fullselect). </div><div class="line">-- This query shows how a table can be derived called "X"</div><div class="line">-- having 2 columns "R1" and "R2" and 1 row of data</div><div class="line">SELECT *</div><div class="line">FROM (VALUES (3, 4), (1, 5), (2, 6))</div><div class="line">AS VALUESTABLE1(C1, C2)</div><div class="line">JOIN (VALUES (3, 2), (1, 2),</div><div class="line">(0, 3)) AS VALUESTABLE2(c1, c2)</div><div class="line">ON VALUESTABLE1.c1 = VALUESTABLE2.c1</div><div class="line">-- This results in:</div><div class="line">-- C1         |C2         |C1         |2</div><div class="line">-- -----------------------------------------------</div><div class="line">-- 3          |4          |3          |2</div><div class="line">-- 1          |5          |1          |2 </div><div class="line"></div><div class="line"></div><div class="line">-- List every department with the employee number and </div><div class="line">-- last name of the manager</div><div class="line"></div><div class="line">SELECT DEPTNO, DEPTNAME, EMPNO, LASTNAME</div><div class="line">FROM DEPARTMENT INNER JOIN EMPLOYEE</div><div class="line">ON MGRNO = EMPNO</div><div class="line"></div><div class="line">-- List every employee number and last name </div><div class="line">-- with the employee number and last name of their manager</div><div class="line">SELECT E.EMPNO, E.LASTNAME, M.EMPNO, M.LASTNAME    </div><div class="line">FROM EMPLOYEE E INNER JOIN    </div><div class="line">DEPARTMENT INNER JOIN EMPLOYEE M </div><div class="line">    ON MGRNO = M.EMPNO</div><div class="line">    ON E.WORKDEPT = DEPTNO</div></pre></td></tr></table></figure>
+<h3 id="JOIN"><a href="#JOIN" class="headerlink" title="JOIN"></a>JOIN</h3><p><code>JOIN</code>操作在两个表之间执行联接，排除第一个表中的任何不匹配的行。 从Oracle 9i向前，<code>JOIN</code>在功能上等同于<code>INNER JOIN</code>。 此操作需要一个显式连接子句，而不是<code>CROSS JOIN</code>和<code>NATURAL JOIN</code>运算符。</p>
+<p>例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">select t1.*,</div><div class="line">       t2.DeptId</div><div class="line">  from table_1 t1</div><div class="line">  join table_2 t2 on t2.DeptNo = t1.DeptNo</div></pre></td></tr></table></figure>
+<p>Oracle文档：</p>
+<ul>
+<li><a href="http://docs.oracle.com/javadb/10.6.2.1/ref/rrefsqlj29840.html#rrefsqlj29840" target="_blank" rel="external">10g</a></li>
+<li><a href="https://docs.oracle.com/cd/B28359_01/server.111/b28286/queries006.htm" target="_blank" rel="external">11g</a></li>
+<li><a href="https://docs.oracle.com/database/121/SQLRF/queries006.htm#SQLRF30046" target="_blank" rel="external">12g</a></li>
+</ul>
+<h3 id="NATURAL-JOIN-自然加入"><a href="#NATURAL-JOIN-自然加入" class="headerlink" title="NATURAL JOIN(自然加入)"></a>NATURAL JOIN(自然加入)</h3><p>NATURAL JOIN不需要显式连接条件; 它将基于连接表中具有相同名称的所有字段构建一个。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function">create table <span class="title">tab1</span><span class="params">(id number,  descr varchar2(<span class="number">100</span>)</span>)</span>;</div><div class="line"><span class="function">create table <span class="title">tab2</span><span class="params">(id number,  descr varchar2(<span class="number">100</span>)</span>)</span>;</div><div class="line"><span class="function">insert into tab1 <span class="title">values</span><span class="params">(<span class="number">1</span>, <span class="string">'one'</span>)</span></span>;</div><div class="line"><span class="function">insert into tab1 <span class="title">values</span><span class="params">(<span class="number">2</span>, <span class="string">'two'</span>)</span></span>;</div><div class="line"><span class="function">insert into tab1 <span class="title">values</span><span class="params">(<span class="number">3</span>, <span class="string">'three'</span>)</span></span>;</div><div class="line"><span class="function">insert into tab2 <span class="title">values</span><span class="params">(<span class="number">1</span>, <span class="string">'ONE'</span>)</span></span>;</div><div class="line"><span class="function">insert into tab2 <span class="title">values</span><span class="params">(<span class="number">3</span>, <span class="string">'three'</span>)</span></span>;</div></pre></td></tr></table></figure>
+<p>连接将在两个表共用的字段ID和DESCR上完成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">SQL&gt; select *</div><div class="line">  <span class="number">2</span>  from tab1</div><div class="line">  <span class="number">3</span>        natural join</div><div class="line">  <span class="number">4</span>       tab2;</div><div class="line"></div><div class="line">        ID DESCR</div><div class="line">---------- ----------</div><div class="line">         <span class="number">3</span> three</div></pre></td></tr></table></figure>
+<p>具有不同名称的列将不会在JOIN条件中使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">SQL&gt; select *</div><div class="line">  <span class="number">2</span>  from (select id as id, descr as descr1 from tab1)</div><div class="line">  <span class="number">3</span>       natural join</div><div class="line">  <span class="number">4</span>       (select id as id, descr as descr2 from tab2);</div><div class="line"></div><div class="line">        ID DESCR1     DESCR2</div><div class="line">---------- ---------- ----------</div><div class="line">         <span class="number">1</span> one        ONE</div><div class="line">         <span class="number">3</span> three      three</div></pre></td></tr></table></figure>
+<p>如果连接的表没有公共列，则将执行没有条件的JOIN：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">SQL&gt; select *</div><div class="line">  <span class="number">2</span>  from (select id as id1, descr as descr1 from tab1)</div><div class="line">  <span class="number">3</span>       natural join</div><div class="line">  <span class="number">4</span>       (select id as id2, descr as descr2 from tab2);</div><div class="line"></div><div class="line">       ID1 DESCR1            ID2 DESCR2</div><div class="line">---------- ---------- ---------- ----------</div><div class="line">         <span class="number">1</span> one                 <span class="number">1</span> ONE</div><div class="line">         <span class="number">2</span> two                 <span class="number">1</span> ONE</div><div class="line">         <span class="number">3</span> three               <span class="number">1</span> ONE</div><div class="line">         <span class="number">1</span> one                 <span class="number">3</span> three</div><div class="line">         <span class="number">2</span> two                 <span class="number">3</span> three</div><div class="line">         <span class="number">3</span> three               <span class="number">3</span> three</div></pre></td></tr></table></figure>
+<h3 id="SEMI-JOIN-半连接"><a href="#SEMI-JOIN-半连接" class="headerlink" title="SEMI JOIN(半连接)"></a>SEMI JOIN(半连接)</h3><p>例如，可以使用semijoin 查询查找具有至少一个员工的工资超过2500的所有部门。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">SELECT * <span class="function">FROM departments </span></div><div class="line">   WHERE <span class="title">EXISTS</span> </div><div class="line">   <span class="params">(SELECT <span class="number">1</span> FROM employees </span></div><div class="line">       WHERE departments.department_id = employees.department_id </div><div class="line">       AND employees.salary &gt; <span class="number">2500</span>)</div><div class="line">   ORDER BY department_name;</div></pre></td></tr></table></figure>
+<p>这比完整的联接替代方案更有效率，因为内部加入员工，然后给出一个where子句，详细说明工资必须大于2500可以多次返回相同的部门。 说如果消防部门有<code>n</code>个员工都有工资3000，<code>select * from departments，employees</code>有必要加入的员工在id和我们的where子句将返回消防部门<code>n</code>次。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/02/Oracle-日期算术/" rel="next" title="Oracle-日期算术">
+                <i class="fa fa-chevron-left"></i> Oracle-日期算术
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#CROSS-JOIN-交叉连接"><span class="nav-number">1.</span> <span class="nav-text">CROSS JOIN(交叉连接)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LEFT-OUTER-JOIN-左外连接"><span class="nav-number">1.1.</span> <span class="nav-text">LEFT OUTER JOIN(左外连接)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ANTIJOIN-反连接"><span class="nav-number">2.</span> <span class="nav-text">ANTIJOIN(反连接)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RIGHT-OUTER-JOIN-右外部接合"><span class="nav-number">3.</span> <span class="nav-text">RIGHT OUTER JOIN(右外部接合)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FULL-OUTER-JOIN-完全外部联接"><span class="nav-number">4.</span> <span class="nav-text">FULL OUTER JOIN(完全外部联接)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INNER-JOIN-内部联接"><span class="nav-number">5.</span> <span class="nav-text">INNER JOIN(内部联接)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JOIN"><span class="nav-number">6.</span> <span class="nav-text">JOIN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NATURAL-JOIN-自然加入"><span class="nav-number">7.</span> <span class="nav-text">NATURAL JOIN(自然加入)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEMI-JOIN-半连接"><span class="nav-number">8.</span> <span class="nav-text">SEMI JOIN(半连接)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
