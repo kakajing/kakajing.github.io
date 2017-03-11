@@ -1,0 +1,738 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Oracle," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="使用分层查询拆分字符串">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle-拆分字符串">
+<meta property="og:url" content="http://kakajing.github.io/2017/03/05/Oracle-拆分字符串/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="使用分层查询拆分字符串">
+<meta property="og:updated_time" content="2017-03-11T14:29:55.130Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Oracle-拆分字符串">
+<meta name="twitter:description" content="使用分层查询拆分字符串">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/03/05/Oracle-拆分字符串/"/>
+
+
+
+
+
+  <title> Oracle-拆分字符串 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/03/05/Oracle-拆分字符串/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Oracle-拆分字符串
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-05T21:56:34+08:00">
+                2017-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Oracle/" itemprop="url" rel="index">
+                    <span itemprop="name">Oracle</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="使用分层查询拆分字符串"><a href="#使用分层查询拆分字符串" class="headerlink" title="使用分层查询拆分字符串"></a>使用分层查询拆分字符串</h3><a id="more"></a>
+<p>示例数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">CREATE TABLE <span class="title">table_name</span> <span class="params">( id, list )</span> AS</span></div><div class="line">SELECT 1, 'a,b,c,d' FROM DUAL UNION ALL -- Multiple items in the list</div><div class="line">SELECT 2, 'e'       FROM DUAL UNION ALL -- Single item in the list</div><div class="line">SELECT 3, NULL      FROM DUAL UNION ALL -- NULL list</div><div class="line">SELECT 4, 'f,,g'    FROM DUAL;          -- NULL item in the list</div></pre></td></tr></table></figure>
+<p>查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">SELECT t.id,</div><div class="line">       REGEXP_SUBSTR( list, <span class="string">'([^,]*)(,|$)'</span>, <span class="number">1</span>, LEVEL, NULL, <span class="number">1</span> ) AS value,</div><div class="line">       LEVEL AS lvl</div><div class="line">FROM   table_name t</div><div class="line">CONNECT BY</div><div class="line">       id = <span class="function">PRIOR id</span></div><div class="line">AND    PRIOR <span class="title">SYS_GUID</span><span class="params">()</span> IS NOT NULL</div><div class="line">AND    LEVEL &lt; <span class="title">REGEXP_COUNT</span><span class="params">( list, <span class="string">'([^,]*)(,|$)'</span> )</span></div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> ID ITEM           LVL</div><div class="line">---------- ------- ----------</div><div class="line">         <span class="number">1</span> a                <span class="number">1</span> </div><div class="line">         <span class="number">1</span> b                <span class="number">2</span> </div><div class="line">         <span class="number">1</span> c                <span class="number">3</span> </div><div class="line">         <span class="number">1</span> d                <span class="number">4</span> </div><div class="line">         <span class="number">2</span> e                <span class="number">1</span> </div><div class="line">         <span class="number">3</span> (NULL)           <span class="number">1</span> </div><div class="line">         <span class="number">4</span> f                <span class="number">1</span> </div><div class="line">         <span class="number">4</span> (NULL)           <span class="number">2</span> </div><div class="line">         <span class="number">4</span> g                <span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="使用XMLTable拆分分隔字符串"><a href="#使用XMLTable拆分分隔字符串" class="headerlink" title="使用XMLTable拆分分隔字符串"></a>使用XMLTable拆分分隔字符串</h3><p>示例数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">CREATE TABLE <span class="title">table_name</span> <span class="params">( id, list )</span> AS</span></div><div class="line">SELECT 1, 'a,b,c,d' FROM DUAL UNION ALL -- Multiple items in the list</div><div class="line">SELECT 2, 'e'       FROM DUAL UNION ALL -- Single item in the list</div><div class="line">SELECT 3, NULL      FROM DUAL UNION ALL -- NULL list</div><div class="line">SELECT 4, 'f,,g'    FROM DUAL;          -- NULL item in the list</div></pre></td></tr></table></figure>
+<p>查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">SELECT t.id,</div><div class="line">       SUBSTRING( x.item.getStringVal(), <span class="number">2</span> ) AS item,</div><div class="line">       x.<span class="function">lvl</span></div><div class="line">FROM   table_name t</div><div class="line">       CROSS JOIN</div><div class="line">       <span class="title">XMLTABLE</span><span class="params">(</span></div><div class="line">         ( <span class="string">'"#'</span> || REPLACE( t.list, <span class="string">','</span>, <span class="string">'","#'</span> ) || '"' )</div><div class="line">         COLUMNS item XMLTYPE PATH '.'</div><div class="line">                 lvl  FOR ORDINALITY</div><div class="line">       ) x;</div></pre></td></tr></table></figure>
+<p>（注意：附加<code>＃</code>字符以便于提取<code>NULL</code>值;稍后使用<code>SUBSTR( item, 2 )</code>删除它）。如果不需要<code>NULL</code>值，那么可以简化查询并省略此操作。</p>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">ID ITEM           LVL</div><div class="line">---------- ------- ----------</div><div class="line">         <span class="number">1</span> a                <span class="number">1</span> </div><div class="line">         <span class="number">1</span> b                <span class="number">2</span> </div><div class="line">         <span class="number">1</span> c                <span class="number">3</span> </div><div class="line">         <span class="number">1</span> d                <span class="number">4</span> </div><div class="line">         <span class="number">2</span> e                <span class="number">1</span> </div><div class="line">         <span class="number">3</span> (NULL)           <span class="number">1</span> </div><div class="line">         <span class="number">4</span> f                <span class="number">1</span> </div><div class="line">         <span class="number">4</span> (NULL)           <span class="number">2</span> </div><div class="line">         <span class="number">4</span> g                <span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="使用相关表表达式拆分字符串"><a href="#使用相关表表达式拆分字符串" class="headerlink" title="使用相关表表达式拆分字符串"></a>使用相关表表达式拆分字符串</h3><p>示例数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">CREATE TABLE <span class="title">table_name</span> <span class="params">( id, list )</span> AS</span></div><div class="line">SELECT 1, 'a,b,c,d' FROM DUAL UNION ALL -- Multiple items in the list</div><div class="line">SELECT 2, 'e'       FROM DUAL UNION ALL -- Single item in the list</div><div class="line">SELECT 3, NULL      FROM DUAL UNION ALL -- NULL list</div><div class="line">SELECT 4, 'f,,g'    FROM DUAL;          -- NULL item in the list</div></pre></td></tr></table></figure>
+<p>查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">SELECT t.id,</div><div class="line">       v.COLUMN_VALUE AS value,</div><div class="line">       ROW_NUMBER() OVER ( PARTITION BY id ORDER BY ROWNUM ) AS lvl</div><div class="line">FROM   table_name t,</div><div class="line">       TABLE(</div><div class="line">         CAST(</div><div class="line">           MULTISET(</div><div class="line">             <span class="function">SELECT <span class="title">REGEXP_SUBSTR</span><span class="params">( t.list, <span class="string">'([^,]*)(,|$)'</span>, <span class="number">1</span>, LEVEL, NULL, <span class="number">1</span> )</span></span></div><div class="line">             FROM   DUAL</div><div class="line">             CONNECT BY LEVEL &lt; <span class="title">REGEXP_COUNT</span><span class="params">( t.list, <span class="string">'[^,]*(,|$)'</span> )</span></div><div class="line">           )</div><div class="line">           AS SYS.ODCIVARCHAR2LIST</div><div class="line">         )</div><div class="line">       ) v;</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> ID ITEM           LVL</div><div class="line">---------- ------- ----------</div><div class="line">         <span class="number">1</span> a                <span class="number">1</span> </div><div class="line">         <span class="number">1</span> b                <span class="number">2</span> </div><div class="line">         <span class="number">1</span> c                <span class="number">3</span> </div><div class="line">         <span class="number">1</span> d                <span class="number">4</span> </div><div class="line">         <span class="number">2</span> e                <span class="number">1</span> </div><div class="line">         <span class="number">3</span> (NULL)           <span class="number">1</span> </div><div class="line">         <span class="number">4</span> f                <span class="number">1</span> </div><div class="line">         <span class="number">4</span> (NULL)           <span class="number">2</span> </div><div class="line">         <span class="number">4</span> g                <span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="使用PL-SQL函数拆分字符串"><a href="#使用PL-SQL函数拆分字符串" class="headerlink" title="使用PL / SQL函数拆分字符串"></a>使用PL / SQL函数拆分字符串</h3><p>PL / SQL函数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function">CREATE OR REPLACE FUNCTION <span class="title">split_String</span><span class="params">(</span></span></div><div class="line">  i_str    IN  VARCHAR2,</div><div class="line">  i_delim  IN  VARCHAR2 DEFAULT <span class="string">','</span></div><div class="line">) RETURN SYS.ODCIVARCHAR2LIST DETERMINISTIC</div><div class="line">AS</div><div class="line">  p_result       SYS.ODCIVARCHAR2LIST := SYS.ODCIVARCHAR2LIST();</div><div class="line">  <span class="function">p_start        <span class="title">NUMBER</span><span class="params">(<span class="number">5</span>)</span> :</span>= <span class="number">1</span>;</div><div class="line">  <span class="function">p_end          <span class="title">NUMBER</span><span class="params">(<span class="number">5</span>)</span></span>;</div><div class="line">  <span class="function">c_len CONSTANT <span class="title">NUMBER</span><span class="params">(<span class="number">5</span>)</span> :</span>= LENGTH( i_str );</div><div class="line">  <span class="function">c_ld  CONSTANT <span class="title">NUMBER</span><span class="params">(<span class="number">5</span>)</span> :</span>= LENGTH( i_delim );</div><div class="line">BEGIN</div><div class="line">  IF c_len &gt; <span class="number">0</span> THEN</div><div class="line">    p_end := INSTR( i_str, i_delim, p_start );</div><div class="line">    WHILE p_end &gt; <span class="number">0</span> LOOP</div><div class="line">      p_result.EXTEND;</div><div class="line">      p_result( p_result.COUNT ) := SUBSTR( i_str, p_start, p_end - p_start );</div><div class="line">      p_start := p_end + c_ld;</div><div class="line">      p_end := INSTR( i_str, i_delim, p_start );</div><div class="line">    END LOOP;</div><div class="line">    IF p_start &lt;= c_len + <span class="number">1</span> THEN</div><div class="line">      p_result.EXTEND;</div><div class="line">      p_result( p_result.COUNT ) := SUBSTR( i_str, p_start, c_len - p_start + <span class="number">1</span> );</div><div class="line">    END IF;</div><div class="line">  END IF;</div><div class="line">  RETURN p_result;</div><div class="line">END;</div><div class="line">/</div></pre></td></tr></table></figure>
+<p>示例数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">CREATE TABLE <span class="title">table_name</span> <span class="params">( id, list )</span> AS</span></div><div class="line">SELECT 1, 'a,b,c,d' FROM DUAL UNION ALL -- Multiple items in the list</div><div class="line">SELECT 2, 'e'       FROM DUAL UNION ALL -- Single item in the list</div><div class="line">SELECT 3, NULL      FROM DUAL UNION ALL -- NULL list</div><div class="line">SELECT 4, 'f,,g'    FROM DUAL;          -- NULL item in the list</div></pre></td></tr></table></figure>
+<p>查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">SELECT t.id,</div><div class="line">       v.column_value AS value,</div><div class="line">       ROW_NUMBER() OVER ( PARTITION BY id ORDER BY ROWNUM ) AS lvl</div><div class="line">FROM   table_name t,</div><div class="line">       TABLE( split_String( t.list ) ) (+) v</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> ID ITEM           LVL</div><div class="line">---------- ------- ----------</div><div class="line">         <span class="number">1</span> a                <span class="number">1</span> </div><div class="line">         <span class="number">1</span> b                <span class="number">2</span> </div><div class="line">         <span class="number">1</span> c                <span class="number">3</span> </div><div class="line">         <span class="number">1</span> d                <span class="number">4</span> </div><div class="line">         <span class="number">2</span> e                <span class="number">1</span> </div><div class="line">         <span class="number">3</span> (NULL)           <span class="number">1</span> </div><div class="line">         <span class="number">4</span> f                <span class="number">1</span> </div><div class="line">         <span class="number">4</span> (NULL)           <span class="number">2</span> </div><div class="line">         <span class="number">4</span> g                <span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="使用递归子查询因子分解条件拆分字符串"><a href="#使用递归子查询因子分解条件拆分字符串" class="headerlink" title="使用递归子查询因子分解条件拆分字符串"></a>使用递归子查询因子分解条件拆分字符串</h3><p>示例数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">CREATE TABLE <span class="title">table_name</span> <span class="params">( id, list )</span> AS</span></div><div class="line">SELECT 1, 'a,b,c,d' FROM DUAL UNION ALL -- Multiple items in the list</div><div class="line">SELECT 2, 'e'       FROM DUAL UNION ALL -- Single item in the list</div><div class="line">SELECT 3, NULL      FROM DUAL UNION ALL -- NULL list</div><div class="line">SELECT 4, 'f,,g'    FROM DUAL;          -- NULL item in the list</div></pre></td></tr></table></figure>
+<p>查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function">WITH <span class="title">bounds</span> <span class="params">( id, list, start_pos, end_pos, lvl )</span> <span class="title">AS</span> <span class="params">(</span></span></div><div class="line">  SELECT id, list, <span class="number">1</span>, INSTR( list, <span class="string">','</span> ), 1 FROM table_name</div><div class="line">UNION ALL</div><div class="line">  SELECT id,</div><div class="line">         list,</div><div class="line">         end_pos + 1,</div><div class="line">         <span class="title">INSTR</span><span class="params">( list, <span class="string">','</span>, end_pos + <span class="number">1</span> )</span>,</div><div class="line">         lvl + 1</div><div class="line">  FROM   bounds</div><div class="line">  WHERE  end_pos &gt; 0</div><div class="line">)</div><div class="line">SELECT id,</div><div class="line">       <span class="title">SUBSTR</span><span class="params">(</span></div><div class="line">         list,</div><div class="line">         start_pos,</div><div class="line">         CASE end_pos</div><div class="line">           WHEN <span class="number">0</span></div><div class="line">           THEN LENGTH( list ) + 1</div><div class="line">           ELSE end_pos</div><div class="line">         END - start_pos</div><div class="line">       ) AS item,</div><div class="line">      lvl</div><div class="line">FROM   bounds</div><div class="line">ORDER BY id, lvl;</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">ID ITEM           LVL</div><div class="line">---------- ------- ----------</div><div class="line">         <span class="number">1</span> a                <span class="number">1</span> </div><div class="line">         <span class="number">1</span> b                <span class="number">2</span> </div><div class="line">         <span class="number">1</span> c                <span class="number">3</span> </div><div class="line">         <span class="number">1</span> d                <span class="number">4</span> </div><div class="line">         <span class="number">2</span> e                <span class="number">1</span> </div><div class="line">         <span class="number">3</span> (NULL)           <span class="number">1</span> </div><div class="line">         <span class="number">4</span> f                <span class="number">1</span> </div><div class="line">         <span class="number">4</span> (NULL)           <span class="number">2</span> </div><div class="line">         <span class="number">4</span> g                <span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="使用CROSS-APPLY拆分字符串（Oracle-12c）"><a href="#使用CROSS-APPLY拆分字符串（Oracle-12c）" class="headerlink" title="使用CROSS APPLY拆分字符串（Oracle 12c）"></a>使用CROSS APPLY拆分字符串（Oracle 12c）</h3><p>示例数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">CREATE TABLE <span class="title">table_name</span> <span class="params">( id, list )</span> AS</span></div><div class="line">SELECT 1, 'a,b,c,d' FROM DUAL UNION ALL -- Multiple items in the list</div><div class="line">SELECT 2, 'e'       FROM DUAL UNION ALL -- Single item in the list</div><div class="line">SELECT 3, NULL      FROM DUAL UNION ALL -- NULL list</div><div class="line">SELECT 4, 'f,,g'    FROM DUAL;          -- NULL item in the list</div></pre></td></tr></table></figure>
+<p>查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">SELECT t.id,</div><div class="line">       REGEXP_SUBSTR( t.list, <span class="string">'([^,]*)($|,)'</span>, <span class="number">1</span>, l.lvl, NULL, <span class="number">1</span> ) AS item,</div><div class="line">       l.<span class="function">lvl</span></div><div class="line">FROM   table_name t</div><div class="line">       CROSS <span class="title">APPLY</span></div><div class="line">       <span class="params">(</span></div><div class="line">         SELECT LEVEL AS lvl</div><div class="line">         FROM   DUAL</div><div class="line">         CONNECT BY LEVEL &lt;= REGEXP_COUNT( t.list, <span class="string">','</span> ) + 1</div><div class="line">       ) l;</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">ID ITEM           LVL</div><div class="line">---------- ------- ----------</div><div class="line">         <span class="number">1</span> a                <span class="number">1</span> </div><div class="line">         <span class="number">1</span> b                <span class="number">2</span> </div><div class="line">         <span class="number">1</span> c                <span class="number">3</span> </div><div class="line">         <span class="number">1</span> d                <span class="number">4</span> </div><div class="line">         <span class="number">2</span> e                <span class="number">1</span> </div><div class="line">         <span class="number">3</span> (NULL)           <span class="number">1</span> </div><div class="line">         <span class="number">4</span> f                <span class="number">1</span> </div><div class="line">         <span class="number">4</span> (NULL)           <span class="number">2</span> </div><div class="line">         <span class="number">4</span> g                <span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="使用XMLTable和FLWOR表达式分割字符串"><a href="#使用XMLTable和FLWOR表达式分割字符串" class="headerlink" title="使用XMLTable和FLWOR表达式分割字符串"></a>使用XMLTable和FLWOR表达式分割字符串</h3><p>此解决方案使用Oracle 12提供的 <a href="http://docs.oracle.com/database/121/ADXDB/xdb_xquery.htm#ADXDB-GUID-57984592-3A02-4DB4-9FDA-D5E2CCB3A797" target="_blank" rel="external"><code>ora:tokenize</code> XQuery function</a>。</p>
+<p>示例数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function">CREATE TABLE <span class="title">table_name</span> <span class="params">( id, list )</span> AS</span></div><div class="line">SELECT 1, 'a,b,c,d' FROM DUAL UNION ALL -- Multiple items in the list</div><div class="line">SELECT 2, 'e'       FROM DUAL UNION ALL -- Single item in the list</div><div class="line">SELECT 3, NULL      FROM DUAL UNION ALL -- NULL list</div><div class="line">SELECT 4, 'f,,g'    FROM DUAL;          -- NULL item in the list</div></pre></td></tr></table></figure>
+<p>查询：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">SELECT t.id,</div><div class="line">       x.item,</div><div class="line">       x.lvl</div><div class="line">FROM   table_name t,</div><div class="line">       XMLTABLE(</div><div class="line">         'let $list := tokenize(.,","),</div><div class="line">              $cnt := count($list)</div><div class="line">          for $val at $r in $list </div><div class="line">          where $r &lt; $cnt</div><div class="line">          return $val'</div><div class="line">       PASSING list||',' </div><div class="line">       COLUMNS</div><div class="line">         item VARCHAR2(100) PATH '.',</div><div class="line">         lvl FOR ORDINALITY</div><div class="line">       ) x;</div></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> ID ITEM           LVL</div><div class="line">---------- ------- ----------</div><div class="line">         <span class="number">1</span> a                <span class="number">1</span> </div><div class="line">         <span class="number">1</span> b                <span class="number">2</span> </div><div class="line">         <span class="number">1</span> c                <span class="number">3</span> </div><div class="line">         <span class="number">1</span> d                <span class="number">4</span> </div><div class="line">         <span class="number">2</span> e                <span class="number">1</span> </div><div class="line">         <span class="number">3</span> (NULL)           <span class="number">1</span> </div><div class="line">         <span class="number">4</span> f                <span class="number">1</span> </div><div class="line">         <span class="number">4</span> (NULL)           <span class="number">2</span> </div><div class="line">         <span class="number">4</span> g                <span class="number">3</span></div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/03/Oracle-JOINS/" rel="next" title="Oracle-JOINS">
+                <i class="fa fa-chevron-left"></i> Oracle-JOINS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用分层查询拆分字符串"><span class="nav-number">1.</span> <span class="nav-text">使用分层查询拆分字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用XMLTable拆分分隔字符串"><span class="nav-number">2.</span> <span class="nav-text">使用XMLTable拆分分隔字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用相关表表达式拆分字符串"><span class="nav-number">3.</span> <span class="nav-text">使用相关表表达式拆分字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用PL-SQL函数拆分字符串"><span class="nav-number">4.</span> <span class="nav-text">使用PL / SQL函数拆分字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用递归子查询因子分解条件拆分字符串"><span class="nav-number">5.</span> <span class="nav-text">使用递归子查询因子分解条件拆分字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用CROSS-APPLY拆分字符串（Oracle-12c）"><span class="nav-number">6.</span> <span class="nav-text">使用CROSS APPLY拆分字符串（Oracle 12c）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用XMLTable和FLWOR表达式分割字符串"><span class="nav-number">7.</span> <span class="nav-text">使用XMLTable和FLWOR表达式分割字符串</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
