@@ -90,13 +90,13 @@
 <meta property="og:url" content="http://kakajing.github.io/2017/02/27/Netty学习-EventLoop和Task调度/index.html">
 <meta property="og:site_name" content="余鸢">
 <meta property="og:description" content="在Java早期，我们的多线程策略只不过是按需要创建和启动新的Thread，来执行并发的工作任务单元，这个粗糙的策略在高负载下表现得非常糟糕。然后Java5引入了Executor API，通过线程缓存和复用，线程池极大地提高了性能。">
-<meta property="og:image" content="http://kakajing.github.io/2017/02/27/Netty学习-EventLoop和Task调度/C:/Users\Administrator\Desktop\新建文件夹\md图片\13.png">
-<meta property="og:image" content="http://kakajing.github.io/2017/02/27/Netty学习-EventLoop和Task调度/C:/Users\Administrator\Desktop\新建文件夹\md图片\14.png">
-<meta property="og:updated_time" content="2017-03-01T16:09:24.146Z">
+<meta property="og:image" content="http://omux103p0.bkt.clouddn.com/13.png">
+<meta property="og:image" content="http://omux103p0.bkt.clouddn.com/14.png">
+<meta property="og:updated_time" content="2017-03-15T13:15:53.180Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty学习-EventLoop和Task调度">
 <meta name="twitter:description" content="在Java早期，我们的多线程策略只不过是按需要创建和启动新的Thread，来执行并发的工作任务单元，这个粗糙的策略在高负载下表现得非常糟糕。然后Java5引入了Executor API，通过线程缓存和复用，线程池极大地提高了性能。">
-<meta name="twitter:image" content="http://kakajing.github.io/2017/02/27/Netty学习-EventLoop和Task调度/C:/Users\Administrator\Desktop\新建文件夹\md图片\13.png">
+<meta name="twitter:image" content="http://omux103p0.bkt.clouddn.com/13.png">
 
 
 
@@ -369,7 +369,7 @@
 </ul>
 <p>这个模式如图1所示。</p>
 <p>图1 Executor执行逻辑</p>
-<p> <img src="/2017/02/27/Netty学习-EventLoop和Task调度/C:/Users\Administrator\Desktop\新建文件夹\md图片\13.png" alt="13"></p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/13.png" alt="13"></p>
 <p>相比为每个task都创建和销毁一个线程，将线程放入池中、复用线程是一次性能的提升。但是这个模型还是无法消除上下文切换带来的开销，而这一点会随着线程数量的增加变得明显，在高负载下会变得严重。此外，在一个项目的运行过程中，因为某个应用的整体复杂度和并发需求，其他线程相关的问题也会出现。</p>
 <h3 id="EventLoop接口"><a href="#EventLoop接口" class="headerlink" title="EventLoop接口"></a>EventLoop接口</h3><p>运行task来处理一个连接在生命周期中产生的event，是任何一个网络框架的基本功能。其相应的编程结构通常被称为一个event loop， Netty采纳了这个名字，设计了接口<code>io.netty.channel.EventLoop</code>。</p>
 <p><strong>EVENT/TASK执行顺序</strong> Event和Task按FIFO（先进先出）的顺序执行。这保证了字节内容按正确的顺序被处理，免除了数据被破坏的可能性。</p>
@@ -400,7 +400,7 @@
 <p>如果当前调用线程(calling thread)就是分配给该Channel的EventLoop，代码被执行。否则，EventLoop将task放入一个内部的队列延后执行。当EventLoop处理它的event时，它会执行队列中的这些task。这就解释了为何任何线程都可以直接和Channel交互，而不需要为ChannelHandler加上同步。</p>
 <p>注意每个EventLoop都有它自己task队列，独立于其他任何一个EventLoop。</p>
 <p>图2 EventLoop执行逻辑</p>
-<p> <img src="/2017/02/27/Netty学习-EventLoop和Task调度/C:/Users\Administrator\Desktop\新建文件夹\md图片\14.png" alt="14"></p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/14.png" alt="14"></p>
 <p>之前我们已经强调过了不能阻塞当前I/O线程的重要性。现在我们换一种方式再说一遍：“永远不要把一个长时间运行的task放到执行的队列中，因为这会阻塞同一个线程中其他task的执行。”如果你必须要执行阻塞调用或者执行长时间运行的task，我们建议采用一个专门的EventExecutor。</p>
 <p>撇开这样一个限制情况不说，Netty采用的线程模型可以影响队列task对整个系统性能产生的效果，也可以影响传输方式采用的event处理方式。</p>
 <h4 id="Eventloop-线程的分配"><a href="#Eventloop-线程的分配" class="headerlink" title="Eventloop/线程的分配"></a>Eventloop/线程的分配</h4><p>为Channel的I/O和event提供服务的EventLoop都包含在一个EventLoopGroup中。EventLoop创建和分配的方式根据传输实现的不同而有所不同。</p>
