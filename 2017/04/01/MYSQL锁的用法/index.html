@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="spring-boot," />
+  <meta name="keywords" content="Mysql," />
 
 
 
@@ -84,18 +84,22 @@
 
 
 
-<meta name="description" content="Installation or Setup">
+<meta name="description" content="表级锁表级锁可以作为ENGINE = MyISAM的重要工具，但对于ENGINE = InnoDB很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。
+MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行协作以访问表，或者阻止其他会话在会话需要独占访问期间修改表。 会话只能为自己获取或释放锁。 一个会话无法获取另一个会话的锁或释放由另一个会话持有的锁。
+可以使用锁来">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用spring-boot">
-<meta property="og:url" content="http://kakajing.github.io/2017/01/16/使用spring-boot/index.html">
+<meta property="og:title" content="MYSQL锁的用法">
+<meta property="og:url" content="http://kakajing.github.io/2017/04/01/MYSQL锁的用法/index.html">
 <meta property="og:site_name" content="余鸢">
-<meta property="og:description" content="Installation or Setup">
-<meta property="og:image" content="http://kakajing.github.io/2017/01/16/使用spring-boot/C:/Users\Administrator\Desktop\1.png">
-<meta property="og:updated_time" content="2017-01-22T13:49:59.886Z">
+<meta property="og:description" content="表级锁表级锁可以作为ENGINE = MyISAM的重要工具，但对于ENGINE = InnoDB很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。
+MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行协作以访问表，或者阻止其他会话在会话需要独占访问期间修改表。 会话只能为自己获取或释放锁。 一个会话无法获取另一个会话的锁或释放由另一个会话持有的锁。
+可以使用锁来">
+<meta property="og:updated_time" content="2017-04-01T13:26:42.743Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用spring-boot">
-<meta name="twitter:description" content="Installation or Setup">
-<meta name="twitter:image" content="http://kakajing.github.io/2017/01/16/使用spring-boot/C:/Users\Administrator\Desktop\1.png">
+<meta name="twitter:title" content="MYSQL锁的用法">
+<meta name="twitter:description" content="表级锁表级锁可以作为ENGINE = MyISAM的重要工具，但对于ENGINE = InnoDB很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。
+MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行协作以访问表，或者阻止其他会话在会话需要独占访问期间修改表。 会话只能为自己获取或释放锁。 一个会话无法获取另一个会话的锁或释放由另一个会话持有的锁。
+可以使用锁来">
 
 
 
@@ -123,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://kakajing.github.io/2017/01/16/使用spring-boot/"/>
+  <link rel="canonical" href="http://kakajing.github.io/2017/04/01/MYSQL锁的用法/"/>
 
 
 
 
 
-  <title> 使用spring-boot | 余鸢 </title>
+  <title> MYSQL锁的用法 | 余鸢 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -262,7 +266,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/01/16/使用spring-boot/">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/04/01/MYSQL锁的用法/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="余鸢">
@@ -286,7 +290,7 @@
             
             
               
-                使用spring-boot
+                MYSQL锁的用法
               
             
           </h1>
@@ -301,8 +305,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-16T03:20:42+08:00">
-                2017-01-16
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-01T20:54:33+08:00">
+                2017-04-01
               </time>
             
 
@@ -324,8 +328,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring/" itemprop="url" rel="index">
-                    <span itemprop="name">spring</span>
+                  <a href="/categories/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
                   </a>
                 </span>
 
@@ -359,32 +363,53 @@
       
 
       
-        <h4 id="Installation-or-Setup"><a href="#Installation-or-Setup" class="headerlink" title="Installation or Setup"></a>Installation or Setup</h4><a id="more"></a>
-<p>第一次使用Spring Boot进行设置是相当快的，这要归功于Spring Community的辛勤工作。</p>
-<p>先决条件：</p>
-<ol>
-<li>Java安装</li>
-<li>Java IDE推荐不需要（Intellij，Eclipse，Netbeans等）</li>
-</ol>
-<p>你不需要安装Maven和/或Gradle。 <a href="https://i.stack.imgur.com/tZRxs.png" target="_blank" rel="external">Spring Initializr</a> 生成的项目带有一个Maven包装器（命令<code>mvnw</code>）或Gradle包装器（命令<code>gradlew</code>）。</p>
-<p>打开您的Web浏览器到<a href="https://start.spring.io这是一个启动板，用于创建新的Spring" target="_blank" rel="external">https://start.spring.io这是一个启动板，用于创建新的Spring</a> Boot应用程序，现在我们将以最低限度使用。</p>
-<p>如果这是您首选的构建工具，请随意从Maven切换到Gradle。</p>
-<p>在“搜索依赖关系”下搜索“Web”并添加。</p>
-<p>单击Generate Project！</p>
-<p>这将下载一个zip文件名为demo Feel免费提取这个文件，无论你想在你的计算机上。</p>
-<p>如果选择maven，请导航到基本目录的命令提示符，并发出<code>mvn clean install</code>命令</p>
-<p>你应该得到一个构建成功输出：</p>
-<p> <img src="/2017/01/16/使用spring-boot/C:/Users\Administrator\Desktop\1.png" alt="1"></p>
-<p>运行应用程序：<code>mvn spring-boot:run</code></p>
-<p>现在你的Spring Boot应用程序启动。 将您的Web浏览器导航到localhost:8080</p>
-<p>恭喜！ 你刚刚得到你的第一个Spring启动应用程序并运行。 现在让我们添加一小段代码，这样你就可以看到它的工作。</p>
-<p>因此，使用ctrl + c退出当前运行的服务器。</p>
-<p>导航到：<code>src/main/java/com/example/DemoApplication.java</code>更新此类以具有控制器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">package com.example;</div><div class="line"></div><div class="line">import org.springframework.boot.SpringApplication;</div><div class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">@RestController</div><div class="line">@SpringBootApplication</div><div class="line">public class DemoApplication &#123;</div><div class="line"></div><div class="line">    @RequestMapping(&quot;/&quot;)</div><div class="line">    String home() &#123;</div><div class="line">        return &quot;Hello World!&quot;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        SpringApplication.run(DemoApplication.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>现在允许再次构建和运行项目<code>mvn clean install spring-boot:run</code>！</p>
-<p>现在浏览您的web浏览器到localhost:8080</p>
-<p>Hello World!</p>
-<p>恭喜！ 我们刚刚完成创建一个Spring Boot应用程序，并设置我们的第一个控制器返回“Hello World!“ 欢迎来到Spring Boot的世界！</p>
+        <h3 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h3><p>表级锁可以作为<code>ENGINE = MyISAM</code>的重要工具，但对于<code>ENGINE = InnoDB</code>很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。</p>
+<p>MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行协作以访问表，或者阻止其他会话在会话需要独占访问期间修改表。 会话只能为自己获取或释放锁。 一个会话无法获取另一个会话的锁或释放由另一个会话持有的锁。</p>
+<p>可以使用锁来模拟事务，或者在更新表时获得更多的速度。 这将在本节后面更详细地解释。</p>
+<p>命令：<code>LOCK TABLES table_name READ|WRITE;</code></p>
+<p>你只能将锁类型分配给单个表;</p>
+<p>示例（READ LOCK）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LOCK TABLES table_name READ;</div></pre></td></tr></table></figure>
+<p>示例 (WRITE LOCK):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LOCK TABLES table_name WRITE;</div></pre></td></tr></table></figure>
+<p>要看到锁是否被应用，请使用以下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SHOW OPEN TABLES;</div></pre></td></tr></table></figure>
+<p>要刷新/删除所有锁，请使用以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UNLOCK TABLES;</div></pre></td></tr></table></figure>
+<p>例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">LOCK TABLES products WRITE:  </div><div class="line">INSERT INTO products(id,product_name) SELECT id,old_product_name FROM old_products;</div><div class="line">UNLOCK TABLES;</div></pre></td></tr></table></figure>
+<p>以上示例任何外部连接都无法将任何数据写入products表，直到解锁表products</p>
+<p>例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">LOCK TABLES products READ:  </div><div class="line">INSERT INTO products(id,product_name) SELECT id,old_product_name FROM old_products;</div><div class="line">UNLOCK TABLES;</div></pre></td></tr></table></figure>
+<p>以上示例任何外部连接都无法从products表中读取任何数据，直到解锁表products</p>
+<h3 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h3><p>如果表使用InnoDB，MySQL会自动使用行级锁定，以便多个事务可以同时使用同一个表进行读取和写入，而不会使对方等待。</p>
+<p>如果两个事务尝试修改同一行，并且都使用行级别锁定，其中一个事务将等待其他事务完成。</p>
+<p>对于预期要修改的每行，可以通过使用<code>SELECT ... FOR UPDATE</code>语句获得行级别锁定。</p>
+<p>考虑两个连接来详细说明行级锁定</p>
+<p>连接1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">START TRANSACTION;</div><div class="line">SELECT ledgerAmount FROM accDetails WHERE id = 1 FOR UPDATE;</div></pre></td></tr></table></figure>
+<p>在连接1中，通过<code>SELECT ... FOR UPDATE</code>语句获取行级锁。</p>
+<p>连接2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 500 WHERE id=1;</div></pre></td></tr></table></figure>
+<p>当有人尝试更新连接2中的同一行时，将等待连接1完成事务，否则将根据<code>innodb_lock_wait_timeout</code>设置显示错误消息，默认值为50秒。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Error Code: 1205. Lock wait timeout exceeded; try restarting transaction</div></pre></td></tr></table></figure>
+<p>要查看有关此锁的详细信息，请运行<code>SHOW ENGINE INNODB STATUS</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---TRANSACTION 1973004, ACTIVE 7 sec updating</div><div class="line">mysql tables in use 1, locked 1</div><div class="line">LOCK WAIT 2 lock struct(s), heap size 360, 1 row lock(s)</div><div class="line">MySQL thread id 4, OS thread handle 0x7f996beac700, query id 30 localhost root update</div><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 500 WHERE id=1</div><div class="line">------- TRX HAS BEEN WAITING 7 SEC FOR THIS LOCK TO BE GRANTED:</div></pre></td></tr></table></figure>
+<p>连接2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 250 WHERE id=2;</div><div class="line">1 row(s) affected</div></pre></td></tr></table></figure>
+<p>但是，更新连接2中的其他一行将被执行而没有任何错误。</p>
+<p>连接1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 750 WHERE id=1;</div><div class="line">COMMIT;</div><div class="line">1 row(s) affected</div></pre></td></tr></table></figure>
+<p>现在行锁被释放，因为在连接1中提交事务。<br>连接2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 500 WHERE id=1;</div><div class="line">1 row(s) affected</div></pre></td></tr></table></figure>
+<p>通过完成事务，连接1释放行锁之后，更新在连接2中执行，没有任何错误。</p>
+<h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><p>锁定用于解决并发问题。仅在运行事务时才需要锁定，首先从数据库读取值，然后将该值写入数据库。 自包含的插入，更新或删除操作不需要锁定。</p>
+<p>有两种可用的锁</p>
+<p><code>READ LOCK</code> - 用户只读表时。</p>
+<p><code>WRITE LOCK</code> - 当用户正在读取和写入表格时。</p>
+<p>当用户在表上持有<code>WRITE LOCK</code>时，没有其他用户可以读取或写入该表。 当用户在表上持有<code>READ LOCK</code>时，其他用户也可以读取或保持<code>READ LOCK</code>，但是没有用户可以在该表上写入或保持<code>WRITE LOCK</code>。</p>
+<p>如果默认存储引擎是InnoDB，MySQL会自动使用行级锁定，以便多个事务可以同时使用同一个表进行读取和写入，而不会使对方等待。</p>
+<p>对于InnoDB以外的所有存储引擎，MySQL使用表锁定。</p>
 
       
     </div>
@@ -408,7 +433,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/spring-boot/" rel="tag"># spring-boot</a>
+            <a href="/tags/Mysql/" rel="tag"># Mysql</a>
           
         </div>
       
@@ -417,8 +442,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/12/使用RESTful Web服务/" rel="next" title="使用RESTful Web服务">
-                <i class="fa fa-chevron-left"></i> 使用RESTful Web服务
+              <a href="/2017/03/08/对Netty加密和HTTP-HTTPS应用/" rel="next" title="对Netty加密和HTTP HTTPS应用">
+                <i class="fa fa-chevron-left"></i> 对Netty加密和HTTP HTTPS应用
               </a>
             
           </div>
@@ -426,10 +451,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/16/Google Guava isNullOrEmpty用于集合/" rel="prev" title="Google Guava isNullOrEmpty用于集合">
-                Google Guava isNullOrEmpty用于集合 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -552,7 +573,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Installation-or-Setup"><span class="nav-number">1.</span> <span class="nav-text">Installation or Setup</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#表级锁"><span class="nav-number">1.</span> <span class="nav-text">表级锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#行级锁"><span class="nav-number">2.</span> <span class="nav-text">行级锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#备注"><span class="nav-number">3.</span> <span class="nav-text">备注</span></a></li></ol></div>
             
 
           </div>

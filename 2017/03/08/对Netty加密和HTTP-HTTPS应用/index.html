@@ -92,7 +92,7 @@
 <meta property="og:description" content="使用 SSL/TLS 加密 Netty 程序">
 <meta property="og:image" content="http://omux103p0.bkt.clouddn.com/15.png">
 <meta property="og:image" content="http://omux103p0.bkt.clouddn.com/16.png">
-<meta property="og:updated_time" content="2017-03-15T14:17:15.846Z">
+<meta property="og:updated_time" content="2017-03-15T14:20:14.729Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="对Netty加密和HTTP HTTPS应用">
 <meta name="twitter:description" content="使用 SSL/TLS 加密 Netty 程序">
@@ -439,7 +439,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSocketServerInitializer</span> <span class="keyword">extends</span> <span class="title">ChannelInitializer</span>&lt;<span class="title">Channel</span>&gt; </span>&#123;</div><div class="line">  </div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(Channel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">  ch.pipeline().addLast(<span class="keyword">new</span> HttpServerCodec(), </div><div class="line">                        <span class="keyword">new</span> HttpObjectAggregator(<span class="number">65536</span>), <span class="comment">//1</span></div><div class="line">                        <span class="keyword">new</span> WebSocketServerProtocolHandler(<span class="string">"/websocket"</span>), <span class="comment">//2</span></div><div class="line">                        <span class="keyword">new</span> TextFrameHandler(), <span class="comment">//3</span></div><div class="line">                        <span class="keyword">new</span> BinaryFrameHandler(), <span class="comment">//4</span></div><div class="line">                        <span class="keyword">new</span> ContinuationFrameHandler()); <span class="comment">//5</span></div><div class="line">  &#125; </div><div class="line">  </div><div class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TextFrameHandler</span> <span class="keyword">extends</span></span></div><div class="line">    			<span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">TextWebSocketFrame</span>&gt; &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, TextWebSocketFrame msg)</span> </span></div><div class="line">      			<span class="keyword">throws</span> Exception &#123;</div><div class="line">    	<span class="comment">// Handle text frame</span></div><div class="line">    &#125;</div><div class="line">  &#125; </div><div class="line">  </div><div class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">BinaryFrameHandler</span> <span class="keyword">extends</span> </span></div><div class="line">    			<span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">BinaryWebSocketFrame</span>&gt; &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, BinaryWebSocketFrame msg)</span></span></div><div class="line">    			<span class="keyword">throws</span> Exception &#123;</div><div class="line">    	<span class="comment">// Handle binary frame</span></div><div class="line">    &#125;</div><div class="line">  &#125; </div><div class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ContinuationFrameHandler</span> <span class="keyword">extends</span> </span></div><div class="line">    			<span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">ContinuationWebSocketFrame</span>&gt; &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, ContinuationWebSocketFrame msg)</span> </span></div><div class="line">      			<span class="keyword">throws</span> Exception &#123;</div><div class="line">    	<span class="comment">// Handle continuation frame</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ol>
 <li>添加 HttpObjectAggregator 用于提供在握手时聚合 HttpRequest</li>
-<li>添加 WebSocketServerProtocolHandler 用于处理色好给你寄握手如果请求是发送<br>到”/websocket.” 端点，当升级完成后，它将会处理Ping, Pong 和 Close 帧</li>
+<li>添加 WebSocketServerProtocolHandler 用于处理色好给你寄握手如果请求是发送到”/websocket.” 端点，当升级完成后，它将会处理Ping, Pong 和 Close 帧</li>
 <li>TextFrameHandler 将会处理 TextWebSocketFrames</li>
 <li>BinaryFrameHandler 将会处理 BinaryWebSocketFrames</li>
 <li>ContinuationFrameHandler 将会处理ContinuationWebSocketFrames</li>
@@ -486,6 +486,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/01/MYSQL锁的用法/" rel="prev" title="MYSQL锁的用法">
+                MYSQL锁的用法 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -555,7 +559,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -564,7 +568,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -573,7 +577,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
