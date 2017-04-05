@@ -261,6 +261,151 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/04/04/Netty实现WebSocket聊天功能/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/04/Netty实现WebSocket聊天功能/" itemprop="url">
+                  Netty实现WebSocket聊天功能
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-04T00:42:30+08:00">
+                2017-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Netty/" itemprop="url" rel="index">
+                    <span itemprop="name">Netty</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h3>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/04/Netty实现WebSocket聊天功能/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/04/01/MYSQL锁的用法/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -362,56 +507,14 @@
 
       
         
-          
-            <h3 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h3><p>表级锁可以作为<code>ENGINE = MyISAM</code>的重要工具，但对于<code>ENGINE = InnoDB</code>很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。</p>
-<p>MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行协作以访问表，或者阻止其他会话在会话需要独占访问期间修改表。 会话只能为自己获取或释放锁。 一个会话无法获取另一个会话的锁或释放由另一个会话持有的锁。</p>
-<p>可以使用锁来模拟事务，或者在更新表时获得更多的速度。 这将在本节后面更详细地解释。</p>
-<p>命令：<code>LOCK TABLES table_name READ|WRITE;</code></p>
-<p>你只能将锁类型分配给单个表;</p>
-<p>示例（READ LOCK）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LOCK TABLES table_name READ;</div></pre></td></tr></table></figure>
-<p>示例 (WRITE LOCK):</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LOCK TABLES table_name WRITE;</div></pre></td></tr></table></figure>
-<p>要看到锁是否被应用，请使用以下命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SHOW OPEN TABLES;</div></pre></td></tr></table></figure>
-<p>要刷新/删除所有锁，请使用以下命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UNLOCK TABLES;</div></pre></td></tr></table></figure>
-<p>例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">LOCK TABLES products WRITE:  </div><div class="line">INSERT INTO products(id,product_name) SELECT id,old_product_name FROM old_products;</div><div class="line">UNLOCK TABLES;</div></pre></td></tr></table></figure>
-<p>以上示例任何外部连接都无法将任何数据写入products表，直到解锁表products</p>
-<p>例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">LOCK TABLES products READ:  </div><div class="line">INSERT INTO products(id,product_name) SELECT id,old_product_name FROM old_products;</div><div class="line">UNLOCK TABLES;</div></pre></td></tr></table></figure>
-<p>以上示例任何外部连接都无法从products表中读取任何数据，直到解锁表products</p>
-<h3 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h3><p>如果表使用InnoDB，MySQL会自动使用行级锁定，以便多个事务可以同时使用同一个表进行读取和写入，而不会使对方等待。</p>
-<p>如果两个事务尝试修改同一行，并且都使用行级别锁定，其中一个事务将等待其他事务完成。</p>
-<p>对于预期要修改的每行，可以通过使用<code>SELECT ... FOR UPDATE</code>语句获得行级别锁定。</p>
-<p>考虑两个连接来详细说明行级锁定</p>
-<p>连接1</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">START TRANSACTION;</div><div class="line">SELECT ledgerAmount FROM accDetails WHERE id = 1 FOR UPDATE;</div></pre></td></tr></table></figure>
-<p>在连接1中，通过<code>SELECT ... FOR UPDATE</code>语句获取行级锁。</p>
-<p>连接2</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 500 WHERE id=1;</div></pre></td></tr></table></figure>
-<p>当有人尝试更新连接2中的同一行时，将等待连接1完成事务，否则将根据<code>innodb_lock_wait_timeout</code>设置显示错误消息，默认值为50秒。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Error Code: 1205. Lock wait timeout exceeded; try restarting transaction</div></pre></td></tr></table></figure>
-<p>要查看有关此锁的详细信息，请运行<code>SHOW ENGINE INNODB STATUS</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---TRANSACTION 1973004, ACTIVE 7 sec updating</div><div class="line">mysql tables in use 1, locked 1</div><div class="line">LOCK WAIT 2 lock struct(s), heap size 360, 1 row lock(s)</div><div class="line">MySQL thread id 4, OS thread handle 0x7f996beac700, query id 30 localhost root update</div><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 500 WHERE id=1</div><div class="line">------- TRX HAS BEEN WAITING 7 SEC FOR THIS LOCK TO BE GRANTED:</div></pre></td></tr></table></figure>
-<p>连接2</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 250 WHERE id=2;</div><div class="line">1 row(s) affected</div></pre></td></tr></table></figure>
-<p>但是，更新连接2中的其他一行将被执行而没有任何错误。</p>
-<p>连接1</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 750 WHERE id=1;</div><div class="line">COMMIT;</div><div class="line">1 row(s) affected</div></pre></td></tr></table></figure>
-<p>现在行锁被释放，因为在连接1中提交事务。<br>连接2</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UPDATE accDetails SET ledgerAmount = ledgerAmount + 500 WHERE id=1;</div><div class="line">1 row(s) affected</div></pre></td></tr></table></figure>
-<p>通过完成事务，连接1释放行锁之后，更新在连接2中执行，没有任何错误。</p>
-<h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><p>锁定用于解决并发问题。仅在运行事务时才需要锁定，首先从数据库读取值，然后将该值写入数据库。 自包含的插入，更新或删除操作不需要锁定。</p>
-<p>有两种可用的锁</p>
-<p><code>READ LOCK</code> - 用户只读表时。</p>
-<p><code>WRITE LOCK</code> - 当用户正在读取和写入表格时。</p>
-<p>当用户在表上持有<code>WRITE LOCK</code>时，没有其他用户可以读取或写入该表。 当用户在表上持有<code>READ LOCK</code>时，其他用户也可以读取或保持<code>READ LOCK</code>，但是没有用户可以在该表上写入或保持<code>WRITE LOCK</code>。</p>
-<p>如果默认存储引擎是InnoDB，MySQL会自动使用行级锁定，以便多个事务可以同时使用同一个表进行读取和写入，而不会使对方等待。</p>
-<p>对于InnoDB以外的所有存储引擎，MySQL使用表锁定。</p>
-
-          
+          <h3 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h3><p>表级锁可以作为<code>ENGINE = MyISAM</code>的重要工具，但对于<code>ENGINE = InnoDB</code>很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/01/MYSQL锁的用法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1599,151 +1702,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/02/18/Netty学习-ChannelFuture的作用/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="余鸢">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="余鸢">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/18/Netty学习-ChannelFuture的作用/" itemprop="url">
-                  Netty学习-ChannelFuture的作用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-18T23:58:42+08:00">
-                2017-02-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Netty/" itemprop="url" rel="index">
-                    <span itemprop="name">Netty</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>ChannelFuture的作用是用来保存Channel异步操作的结果。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/02/18/Netty学习-ChannelFuture的作用/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1791,7 +1749,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">33</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

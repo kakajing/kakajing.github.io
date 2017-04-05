@@ -84,22 +84,16 @@
 
 
 
-<meta name="description" content="表级锁表级锁可以作为ENGINE = MyISAM的重要工具，但对于ENGINE = InnoDB很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。
-MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行协作以访问表，或者阻止其他会话在会话需要独占访问期间修改表。 会话只能为自己获取或释放锁。 一个会话无法获取另一个会话的锁或释放由另一个会话持有的锁。
-可以使用锁来">
+<meta name="description" content="表级锁表级锁可以作为ENGINE = MyISAM的重要工具，但对于ENGINE = InnoDB很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MYSQL锁的用法">
 <meta property="og:url" content="http://kakajing.github.io/2017/04/01/MYSQL锁的用法/index.html">
 <meta property="og:site_name" content="余鸢">
-<meta property="og:description" content="表级锁表级锁可以作为ENGINE = MyISAM的重要工具，但对于ENGINE = InnoDB很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。
-MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行协作以访问表，或者阻止其他会话在会话需要独占访问期间修改表。 会话只能为自己获取或释放锁。 一个会话无法获取另一个会话的锁或释放由另一个会话持有的锁。
-可以使用锁来">
-<meta property="og:updated_time" content="2017-04-01T13:26:42.743Z">
+<meta property="og:description" content="表级锁表级锁可以作为ENGINE = MyISAM的重要工具，但对于ENGINE = InnoDB很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。">
+<meta property="og:updated_time" content="2017-04-05T13:47:43.142Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MYSQL锁的用法">
-<meta name="twitter:description" content="表级锁表级锁可以作为ENGINE = MyISAM的重要工具，但对于ENGINE = InnoDB很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。
-MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行协作以访问表，或者阻止其他会话在会话需要独占访问期间修改表。 会话只能为自己获取或释放锁。 一个会话无法获取另一个会话的锁或释放由另一个会话持有的锁。
-可以使用锁来">
+<meta name="twitter:description" content="表级锁表级锁可以作为ENGINE = MyISAM的重要工具，但对于ENGINE = InnoDB很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。">
 
 
 
@@ -364,6 +358,7 @@ MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行
 
       
         <h3 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h3><p>表级锁可以作为<code>ENGINE = MyISAM</code>的重要工具，但对于<code>ENGINE = InnoDB</code>很少有用。 如果您试图用InnoDB使用表级锁，您应该重新思考如何处理事务。</p>
+<a id="more"></a>
 <p>MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行协作以访问表，或者阻止其他会话在会话需要独占访问期间修改表。 会话只能为自己获取或释放锁。 一个会话无法获取另一个会话的锁或释放由另一个会话持有的锁。</p>
 <p>可以使用锁来模拟事务，或者在更新表时获得更多的速度。 这将在本节后面更详细地解释。</p>
 <p>命令：<code>LOCK TABLES table_name READ|WRITE;</code></p>
@@ -452,6 +447,10 @@ MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/04/04/Netty实现WebSocket聊天功能/" rel="prev" title="Netty实现WebSocket聊天功能">
+                Netty实现WebSocket聊天功能 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -520,7 +519,7 @@ MySQL允许客户端会话明确地获取表级锁，以便与其他会话进行
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">33</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
