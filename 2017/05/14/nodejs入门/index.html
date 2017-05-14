@@ -1,0 +1,814 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Node," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Hello World HTTP server首先，为您的平台安装Node.js。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="node.js入门">
+<meta property="og:url" content="http://kakajing.github.io/2017/05/14/nodejs入门/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="Hello World HTTP server首先，为您的平台安装Node.js。">
+<meta property="og:image" content="http://kakajing.github.io/2017/05/14/nodejs入门/C:/Users\Administrator\Desktop\sp170514_214939.png">
+<meta property="og:updated_time" content="2017-05-14T14:50:23.120Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="node.js入门">
+<meta name="twitter:description" content="Hello World HTTP server首先，为您的平台安装Node.js。">
+<meta name="twitter:image" content="http://kakajing.github.io/2017/05/14/nodejs入门/C:/Users\Administrator\Desktop\sp170514_214939.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/05/14/nodejs入门/"/>
+
+
+
+
+
+  <title> node.js入门 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/05/14/nodejs入门/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                node.js入门
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-14T22:44:33+08:00">
+                2017-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/" itemprop="url" rel="index">
+                    <span itemprop="name">Node</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Hello-World-HTTP-server"><a href="#Hello-World-HTTP-server" class="headerlink" title="Hello World HTTP server"></a>Hello World HTTP server</h3><p>首先，为您的平台安装Node.js。</p>
+<a id="more"></a>
+<p>在这个例子中，我们将创建一个监听端口1337的HTTP服务器，它发送<code>Hello，World！</code> 到浏览器。 请注意，您可以使用任何其他服务当前未使用的端口号，而不使用端口1337。</p>
+<p><code>http</code>模块是一个Node.js <a href="http://stackoverflow.com/documentation/node.js/340/getting-started-with-node-js/30139/core-modules" target="_blank" rel="external"><strong>核心模块</strong></a>（Node.js源代码中包含的一个模块，不需要安装额外的资源）。 <code>http</code>模块提供使用<code>http.createServer()</code>方法创建HTTP服务器的功能。 要创建应用程序，请创建一个包含以下JavaScript代码的文件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>); <span class="comment">// Loads the http module</span></div><div class="line"></div><div class="line">http.createServer(<span class="function">(<span class="params">request, response</span>) =&gt;</span> &#123;</div><div class="line"></div><div class="line">    <span class="comment">// 1. Tell the browser everything is OK (Status code 200), and the data is in plain text</span></div><div class="line">    response.writeHead(<span class="number">200</span>, &#123;</div><div class="line">        <span class="string">'Content-Type'</span>: <span class="string">'text/plain'</span></div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="comment">// 2. Write the announced text to the body of the page</span></div><div class="line">    response.write(<span class="string">'Hello, World!\n'</span>);</div><div class="line"></div><div class="line">    <span class="comment">// 3. Tell the server that all of the response headers and body have been sent</span></div><div class="line">    response.end();</div><div class="line"></div><div class="line">&#125;).listen(<span class="number">1337</span>); <span class="comment">// 4. Tells the server what port to be on</span></div></pre></td></tr></table></figure>
+<p>使用任何文件名保存文件。 在这种情况下，如果我们将其命名为<code>hello.js</code>，则可以通过转到文件所在的目录并使用以下命令来运行应用程序：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node hello.js</div></pre></td></tr></table></figure>
+<p>然后可以使用浏览器中的URL <a href="http://localhost:1337/" target="_blank" rel="external">http://localhost:1337</a>或<a href="http://127.0.0.1:1337访问创建的服务器。" target="_blank" rel="external">http://127.0.0.1:1337访问创建的服务器。</a></p>
+<p>一个简单的网页会在顶部显示一个“Hello，World！”文本，如下面的截图所示。</p>
+<p> <img src="/2017/05/14/nodejs入门/C:/Users\Administrator\Desktop\sp170514_214939.png" alt="sp170514_214939"></p>
+<h3 id="Hello-World命令行"><a href="#Hello-World命令行" class="headerlink" title="Hello World命令行"></a>Hello World命令行</h3><p>Node.js也可以用来创建命令行实用程序。 下面的代码从命令行参数读取一个字符串以打印一个Hello消息。</p>
+<p>要运行这段代码：</p>
+<ol>
+<li>创建一个空文件，并粘贴下面的代码。 该文件的名称不重要，但很多人会将此文件命名为app.js或main.js.</li>
+<li>更改文件的权限，使其成为可执行文件。 示例<code>chmod 700 FILE_NAME</code></li>
+<li>通过键入<code>./APP_NAME</code>运行应用程序</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env node</span></div><div class="line"><span class="meta"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line">    The process.argv property returns an array containing the command line</div><div class="line">    arguments passed when the Node.js process was launched. The first element</div><div class="line">    will be process.execPath. The second element will be the path to the</div><div class="line">    JavaScript file being executed. The remaining elements will be any</div><div class="line">    additional command line arguments.</div><div class="line"></div><div class="line">    Example: [ 'node', '/path/to/yourscript', 'arg1', 'arg2', ... ]</div><div class="line">    URL: https://nodejs.org/api/process.html#process_process_argv</div><div class="line"> */</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//    1. Extract the name of the app/file name.</span></div><div class="line"><span class="keyword">var</span> appName = process.argv[<span class="number">1</span>].split(<span class="string">'/'</span>).pop();</div><div class="line"></div><div class="line"><span class="comment">//    2. Save the first provided argument as the username.</span></div><div class="line"><span class="keyword">var</span> name = process.argv[<span class="number">2</span>];</div><div class="line"></div><div class="line"><span class="comment">//    3. Check if the name was provided.</span></div><div class="line"><span class="keyword">if</span> (!name) &#123;</div><div class="line">    <span class="comment">//    1. Give the user an example how to use the app.</span></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">`Missing argument! \n\n\tExample: <span class="subst">$&#123;appName&#125;</span> YOUR_NAME\n`</span>);</div><div class="line"></div><div class="line">    <span class="comment">//    -&gt; Exit the app if error. The nr 1 tells the system that the app quit</span></div><div class="line">    <span class="comment">//       with an error, thus another command won't be executed. For example:</span></div><div class="line">    <span class="comment">//       ./hello &amp;&amp; ls -&gt; won't execute ls</span></div><div class="line">    <span class="comment">//       ./hello David &amp;&amp; ls -&gt; will execute ls</span></div><div class="line">    process.exit(<span class="number">1</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//    4. Display the message in the console.</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">`Hello, <span class="subst">$&#123;name&#125;</span>!`</span>);</div></pre></td></tr></table></figure>
+<h3 id="Hello-World-with-Express"><a href="#Hello-World-with-Express" class="headerlink" title="Hello World with Express"></a>Hello World with Express</h3><p>以下示例使用Express创建一个监听端口3000的HTTP服务器，响应“Hello，World！”。</p>
+<p>首先，创建一个新的文件夹，例如。对<code>myApp</code>。 进入<code>myApp</code>并制作一个包含以下代码的新的JavaScript文件（例如，我们将其命名为<code>hello.js</code>）。 然后从命令行使用“npm install –save express”安装快速模块。 请参阅<a href="http://stackoverflow.com/documentation/node.js/482/npm/1588/installing-packages#t=20170324115118574098" target="_blank" rel="external">本文档</a>了解如何安装软件包</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Import the top-level function of express</span></div><div class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</div><div class="line"></div><div class="line"><span class="comment">// Creates an Express application using the top-level function</span></div><div class="line"><span class="keyword">var</span> app = express();</div><div class="line"></div><div class="line"><span class="comment">// Define port number as 3000</span></div><div class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</div><div class="line"></div><div class="line"><span class="comment">// Routes HTTP GET requests to the specified path "/" with the specified callback function</span></div><div class="line">app.get(<span class="string">'/'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">request, response</span>) </span>&#123;</div><div class="line">  response.send(<span class="string">'Hello, World!'</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// Make the app listen on port 3000</span></div><div class="line">app.listen(port, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Server listening on http://localhost:'</span> + port);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>从命令行，运行以下命令：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node hello.js</div></pre></td></tr></table></figure>
+<p>打开浏览器并浏览 <a href="http://localhost:3000" target="_blank" rel="external">http://localhost:3000</a> 或<a href="http://127.0.0.1:3000查看响应。" target="_blank" rel="external">http://127.0.0.1:3000查看响应。</a></p>
+<h3 id="安装并运行Node-js"><a href="#安装并运行Node-js" class="headerlink" title="安装并运行Node.js"></a>安装并运行Node.js</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>首先，在您的开发计算机上安装Node.js。</p>
+<p>Windows：转到 <a href="https://nodejs.org/en/" target="_blank" rel="external">Node.js下载站点</a>并下载/运行安装程序。</p>
+<p>Mac：转到 <a href="https://nodejs.org/en/" target="_blank" rel="external">Node.js下载站点</a>并下载/运行安装程序。 或者，您可以通过<code>brew install node</code>安装节点。 Homebrew允许您通过命令行管理包。 您可以在<a href="http://brew.sh/" target="_blank" rel="external">Homebrew 网站</a>上阅读更多信息。</p>
+<p>Linux：按照命令行安装页面上的发行说明进行操作。</p>
+<h4 id="运行节点程序"><a href="#运行节点程序" class="headerlink" title="运行节点程序"></a>运行节点程序</h4><p>要运行Node.js程序，只需运行节点<code>app.js</code>或<code>nodejs app.js</code>，其中<code>app.js</code>是节点应用程序源代码的文件名。</p>
+<p>或者，节点程序可以作为脚本执行。 为此，需要从指向节点解释器的shebang开始，例如 <code>#!/usr/bin/env node</code>。 然后，该文件必须设置为可执行文件。 现在脚本可以直接从命令行运行。</p>
+<h3 id="Hello-World基本路由"><a href="#Hello-World基本路由" class="headerlink" title="Hello World基本路由"></a>Hello World基本路由</h3><p>一旦您了解如何使用节点创建<a href="http://stackoverflow.com/documentation/node.js/340/hello-world/1169/hello-world-http-server" target="_blank" rel="external">HTTP 服务器</a>，了解如何使其根据用户导航的路径“做”事情很重要。 这种现象称为“路由”。</p>
+<p>最基本的例子是检查 <code>if (request.url === &#39;some/path/here&#39;)</code>，然后调用一个响应一个新文件的函数。</p>
+<p>这里可以看到一个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">index</span> (<span class="params">request, response</span>) </span>&#123;</div><div class="line">    response.writeHead(<span class="number">200</span>);</div><div class="line">    response.end(<span class="string">'Hello, World!'</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">request, response</span>) </span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (request.url === <span class="string">'/'</span>) &#123;</div><div class="line">        <span class="keyword">return</span> index(request, response);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    response.writeHead(<span class="number">404</span>);</div><div class="line">    response.end(http.STATUS_CODES[<span class="number">404</span>]);</div><div class="line"></div><div class="line">&#125;).listen(<span class="number">1337</span>);</div></pre></td></tr></table></figure>
+<p>如果你继续定义这样的“路由”，那么你最终会得到一个大量的回调函数，我们不想像这样的大混乱，所以我们来看看我们是否可以清理它。</p>
+<p>首先，我们将所有路由存储在一个对象中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> routes = &#123;</div><div class="line">    <span class="string">'/'</span>: <span class="function"><span class="keyword">function</span> <span class="title">index</span> (<span class="params">request, response</span>) </span>&#123;</div><div class="line">        response.writeHead(<span class="number">200</span>);</div><div class="line">        response.end(<span class="string">'Hello, World!'</span>);</div><div class="line">    &#125;,</div><div class="line">    <span class="string">'/foo'</span>: <span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params">request, response</span>) </span>&#123;</div><div class="line">        response.writeHead(<span class="number">200</span>);</div><div class="line">        response.end(<span class="string">'You are now viewing "foo"'</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在我们已经在一个对象中存储了2条路由，现在我们可以在我们的主要回调中检查它们：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">request, response</span>) </span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (request.url <span class="keyword">in</span> routes) &#123;</div><div class="line">        <span class="keyword">return</span> routes[request.url](request, response);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    response.writeHead(<span class="number">404</span>);</div><div class="line">    response.end(http.STATUS_CODES[<span class="number">404</span>]);</div><div class="line"></div><div class="line">&#125;).listen(<span class="number">1337</span>);</div></pre></td></tr></table></figure>
+<p>现在每次尝试浏览您的网站时，它将检查您的路线中是否存在该路径，它将调用相应的功能。 如果没有找到路由，服务器将使用404（未找到）进行响应。</p>
+<p>在那里你有它 - 使用HTTP Server API路由非常简单。</p>
+<h3 id="调试您的NodeJS应用程序"><a href="#调试您的NodeJS应用程序" class="headerlink" title="调试您的NodeJS应用程序"></a>调试您的NodeJS应用程序</h3><p>您可以使用节点检查器。 运行此命令通过npm进行安装：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g node-inspector</div></pre></td></tr></table></figure>
+<p>然后您可以使用调试您的应用程序</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node-debug app.js</div></pre></td></tr></table></figure>
+<p>Github存储库可以在这里找到：<a href="https://github.com/node-inspector/node-inspector" target="_blank" rel="external">https://github.com/node-inspector/node-inspector</a></p>
+<h4 id="调试本机"><a href="#调试本机" class="headerlink" title="调试本机"></a>调试本机</h4><p>您也可以通过如下启动来本机调试node.js：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node debug your-script.js</div></pre></td></tr></table></figure>
+<p>要在您想要的代码行中完全断开调试器，请使用以下命令：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">debugger</span>;</div></pre></td></tr></table></figure>
+<h3 id="Hello-World-in-the-REPL"><a href="#Hello-World-in-the-REPL" class="headerlink" title="Hello World in the REPL"></a>Hello World in the REPL</h3><p>当没有参数调用时，Node.js启动也称为“Node shell”的REPL（Read-Eval-Print-Loop）。</p>
+<p>在命令提示符下键入节点。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ node</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+<p>在Node shell提示符<code>&gt;</code>下输入“Hello World！”</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ node</div><div class="line">&gt; <span class="string">"Hello World!"</span></div><div class="line"><span class="string">'Hello World!'</span></div></pre></td></tr></table></figure>
+<h3 id="在线部署您的应用程序"><a href="#在线部署您的应用程序" class="headerlink" title="在线部署您的应用程序"></a>在线部署您的应用程序</h3><p>将应用程序部署到特定于（Node.js）的托管环境时，此环境通常提供可用于运行服务器的<code>PORT</code>环境变量。 将端口号更改为<code>process.env.PORT</code>允许您访问应用程序。</p>
+<p>例如，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">request, response</span>) </span>&#123;</div><div class="line">   <span class="comment">// your server code</span></div><div class="line">&#125;).listen(process.env.PORT);</div></pre></td></tr></table></figure>
+<p>另外，如果要在调试时离线访问，可以使用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">request, response</span>) </span>&#123;</div><div class="line">  <span class="comment">// your server code</span></div><div class="line">&#125;).listen(process.env.PORT || <span class="number">3000</span>);</div></pre></td></tr></table></figure>
+<p>其中3000是离线端口号。</p>
+<h3 id="Core-modules"><a href="#Core-modules" class="headerlink" title="Core modules"></a>Core modules</h3><p>Node.js是一个Javascript引擎（Google的Chrome V8引擎，用C ++编写），允许在浏览器之外运行Javascript。 虽然许多库可用于扩展Node的功能，但引擎配备了一组实现基本功能的核心模块。</p>
+<p>节点目前包含34个核心模块：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">[ <span class="string">'assert'</span>,</div><div class="line">  <span class="string">'buffer'</span>,</div><div class="line">  <span class="string">'c/c++_addons'</span>,</div><div class="line">  <span class="string">'child_process'</span>,</div><div class="line">  <span class="string">'cluster'</span>,</div><div class="line">  <span class="string">'console'</span>,</div><div class="line">  <span class="string">'crypto'</span>,</div><div class="line">  <span class="string">'deprecated_apis'</span>,</div><div class="line">  <span class="string">'dns'</span>,</div><div class="line">  <span class="string">'domain'</span>,</div><div class="line">  <span class="string">'Events'</span>,</div><div class="line">  <span class="string">'fs'</span>,</div><div class="line">  <span class="string">'http'</span>,</div><div class="line">  <span class="string">'https'</span>,</div><div class="line">  <span class="string">'module'</span>,</div><div class="line">  <span class="string">'net'</span>,</div><div class="line">  <span class="string">'os'</span>,</div><div class="line">  <span class="string">'path'</span>,</div><div class="line">  <span class="string">'punycode'</span>,</div><div class="line">  <span class="string">'querystring'</span>,</div><div class="line">  <span class="string">'readline'</span>,</div><div class="line">  <span class="string">'repl'</span>,</div><div class="line">  <span class="string">'stream'</span>,</div><div class="line">  <span class="string">'string_decoder'</span>,</div><div class="line">  <span class="string">'timers'</span>,</div><div class="line">  <span class="string">'tls_(ssl)'</span>,</div><div class="line">  <span class="string">'tracing'</span>,</div><div class="line">  <span class="string">'tty'</span>,</div><div class="line">  <span class="string">'dgram'</span>,</div><div class="line">  <span class="string">'url'</span>,</div><div class="line">  <span class="string">'util'</span>,</div><div class="line">  <span class="string">'v8'</span>,</div><div class="line">  <span class="string">'vm'</span>,</div><div class="line">  <span class="string">'zlib'</span> ]</div></pre></td></tr></table></figure>
+<p>此列表是从Node文档API <a href="https://nodejs.org/api/all.html（JSON文件：https://nodejs.org/api/all.json）获得的。" target="_blank" rel="external">https://nodejs.org/api/all.html（JSON文件：https://nodejs.org/api/all.json）获得的。</a></p>
+<p>所有核心模块一目了然</p>
+<h4 id="assert"><a href="#assert" class="headerlink" title="assert"></a>assert</h4><p><code>assert</code> 模块提供了一组简单的断言测试，可用于测试不变量。</p>
+<h4 id="buffer"><a href="#buffer" class="headerlink" title="buffer"></a>buffer</h4><p>在ECMAScript 2015（ES6）引入<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer%0D%0Aence/Global_Objects/TypedArray" target="_blank" rel="external"><code>TypedArray</code></a>之前，JavaScript语言没有读取或操纵二进制数据流的机制。 <code>Buffer</code>类作为Node.js API的一部分引入，可以在TCP流和文件系统操作等上下文中与八位字节流进行交互。</p>
+<p>现在，在ES6中添加了 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArra%0D%0Ay" target="_blank" rel="external"><code>TypedArray</code></a>，<code>Buffer</code>类实现了<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array" target="_blank" rel="external"><code>Uint8Array</code></a>  API以更优化的方式适用于Node.js的用例。</p>
+<h4 id="c-c-addons"><a href="#c-c-addons" class="headerlink" title="c/c++_addons"></a><strong>c/c++_addons</strong></h4><p>Node.js Addons是使用C或C ++编写的动态链接共享对象，可以使用<code>require()</code>函数加载到Node.js中，并且就像它们是普通的Node.js模块一样使用。 它们主要用于在Node.js和C / C ++库之间运行的JavaScript之间提供接口。</p>
+<h4 id="child-process"><a href="#child-process" class="headerlink" title="child_process"></a>child_process</h4><p><code>child_process</code>模块提供了以与popen（3）相似但不完全相同的方式生成子进程的功能。</p>
+<h4 id="cluster"><a href="#cluster" class="headerlink" title="cluster"></a><a href="http://stackoverflow.com/documentation/node.js/2817/cluster-module" target="_blank" rel="external"><strong>cluster</strong></a></h4><p>Node.js的单个实例在单个线程中运行。 为了利用多核系统，用户有时会想要启动一个Node.js进程的集群来处理负载。 集群模块允许您轻松创建所有共享服务器端口的子进程。</p>
+<h4 id="console"><a href="#console" class="headerlink" title="console"></a><strong>console</strong></h4><p><code>console</code> 模块提供了一个简单的调试控制台，类似于Web浏览器提供的JavaScript控制台机制。</p>
+<h4 id="crypto-加密"><a href="#crypto-加密" class="headerlink" title="crypto(加密)"></a>crypto(加密)</h4><p><code>crypto</code>模块提供加密功能，其包括用于OpenSSL的哈希，HMAC，加密，解密，签名和验证功能的一组包装器。</p>
+<h4 id="deprecated-apis"><a href="#deprecated-apis" class="headerlink" title="deprecated_apis"></a>deprecated_apis</h4><p>当以下情况之一时，Node.js可能会弃用API：（a）API的使用被认为是不安全的，（b）改进的替代API已经可用，或者（c）在将来的主要版本中预期会发生对API的更改。</p>
+<h4 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h4><p><code>dns</code>模块包含属于两个不同类别的功能：</p>
+<ol>
+<li>使用底层操作系统设施执行名称解析的功能，并且不一定执行任何网络通信。 此类别只包含一个函数：<code>dns.lookup()</code>。</li>
+<li>连接到实际DNS服务器以执行名称解析的功能，并且始终使用网络执行DNS查询。 此类别包含除<code>dns.lookup()</code>之外的<code>dns</code>模块中的所有功能。</li>
+</ol>
+<h4 id="domain-域"><a href="#domain-域" class="headerlink" title="domain(域)"></a>domain(域)</h4><p><strong>此模块正在等待弃用</strong>。一旦替换API已经完成，该模块将被完全弃用。大多数终端用户不应该使用这个模块。绝对必须具有域名功能的用户可能依赖于它，但应该期望在将来迁移到不同的解决方案。</p>
+<h4 id="Events"><a href="#Events" class="headerlink" title="Events"></a><a href="http://stackoverflow.com/documentation/node.js/1623/event-emitters" target="_blank" rel="external"><strong>Events</strong></a></h4><p>Node.js的核心API大部分是围绕一个惯用的异步事件驱动架构构建的，其中某些类型的对象（称为“发射器”）周期性地发出命名的事件，这些事件会引起Function对象（“监听器”）的调用。</p>
+<h4 id="FS"><a href="#FS" class="headerlink" title="FS"></a>FS</h4><p>文件I / O由标准POSIX功能的简单包装器提供。要使用这个模块请<code>require(&#39;fs&#39;)</code>。所有的方法都有异步和同步的形式。</p>
+<h4 id="http"><a href="#http" class="headerlink" title="http"></a><a href="http://stackoverflow.com/documentation/node.js/2973/http" target="_blank" rel="external"><strong>http</strong></a></h4><p>Node.js中的HTTP接口旨在支持传统上很难使用的协议的许多功能。特别地，大的，可能的块编码的消息。界面注意不要缓冲整个请求或响应 - 用户能够流式传输数据。</p>
+<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p>HTTPS是TLS / SSL上的HTTP协议。 在Node.js中，这是作为单独的模块实现的。</p>
+<h4 id="module"><a href="#module" class="headerlink" title="module"></a>module</h4><p>Node.js有一个简单的模块加载系统。 在Node.js中，文件和模块是一一对应的（每个文件被视为单独的模块）。</p>
+<h4 id="net"><a href="#net" class="headerlink" title="net"></a>net</h4><p><code>net</code>模块为您提供了一个异步网络包装器。 它包含用于创建服务器和客户端（称为流）的功能。 您可以将此模块与<code>require(&#39;net&#39;);</code>包含在一起。</p>
+<h4 id="os"><a href="#os" class="headerlink" title="os"></a>os</h4><p><code>os</code>模块提供了许多与操作系统相关的实用方法。</p>
+<h4 id="path"><a href="#path" class="headerlink" title="path"></a>path</h4><p>路径模块提供用于处理文件和目录路径的实用程序。</p>
+<h4 id="punycode"><a href="#punycode" class="headerlink" title="punycode"></a>punycode</h4><p><strong>Node.js中捆绑的punycode模块的版本已被弃用。</strong></p>
+<h4 id="querystring"><a href="#querystring" class="headerlink" title="querystring"></a>querystring</h4><p><code>querystring</code>模块提供用于解析和格式化URL查询字符串的实用程序。</p>
+<h4 id="readline"><a href="#readline" class="headerlink" title="readline"></a>readline</h4><p><code>readline</code>模块提供一个从Readable流读取数据的接口（如<code>process.stdin</code>），一行一行。</p>
+<h4 id="repl"><a href="#repl" class="headerlink" title="repl"></a>repl</h4><p><code>repl</code>模块提供Read-Eval-Print-Loop（REPL）实现，该实现既可以作为独立程序使用，也可以包含在其他应用程序中。</p>
+<h4 id="stream"><a href="#stream" class="headerlink" title="stream"></a>stream</h4><p><code>Stream</code>是用于在Node.js中处理流数据的抽象界面。 流模块提供了一个基本API，可以轻松构建实现流接口的对象。</p>
+<p>Node.js提供了许多流对象。 例如，对HTTP服务器和<code>process.stdout</code>的请求都是流实例。</p>
+<h4 id="string-decoder"><a href="#string-decoder" class="headerlink" title="string_decoder"></a>string_decoder</h4><p><code>string_decode</code>r模块提供了一种API，用于将<code>Buffer</code>对象解码为字符串，以保留编码的多字节UTF-8和UTF-16字符。</p>
+<h4 id="timers"><a href="#timers" class="headerlink" title="timers"></a>timers</h4><p><code>timer</code> 模块暴露了一个全局API，用于在将来某个时间段调用的调度功能。 因为定时器功能是全局变量，所以不需要调用 <code>require(&#39;timers&#39;)</code>来使用API。</p>
+<p>Node.js中的定时器功能实现与Web浏览器提供的timers API类似的API，但使用围绕 <a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick" target="_blank" rel="external">Node.js事件循环</a>构建的不同内部实现。</p>
+<h4 id="tls-ssl"><a href="#tls-ssl" class="headerlink" title="tls_(ssl)"></a>tls_(ssl)</h4><p><code>tls</code>模块提供了构建在OpenSSL之上的传输层安全（TLS）和安全套接层（SSL）协议的实现。</p>
+<h4 id="tracing"><a href="#tracing" class="headerlink" title="tracing"></a>tracing</h4><p>跟踪事件提供了一种机制，用于集中由V8，节点核心和用户空间代码生成的跟踪信息。</p>
+<p>可以通过在启动Node.js应用程序时传递启用了<code>--trace-events-enabled</code>来启用跟踪。</p>
+<h4 id="tty"><a href="#tty" class="headerlink" title="tty"></a>tty</h4><p><code>tty</code>模块提供了<code>tty.ReadStream</code>和<code>tty.WriteStream</code>类。 在大多数情况下，直接使用本模块是没有必要或可能的。</p>
+<h4 id="dgram"><a href="#dgram" class="headerlink" title="dgram"></a>dgram</h4><p><code>dgram</code>模块提供UDP数据报套接字的实现。</p>
+<h4 id="url"><a href="#url" class="headerlink" title="url"></a>url</h4><p><code>url</code>模块提供用于URL解析和解析的实用程序。</p>
+<h4 id="util"><a href="#util" class="headerlink" title="util"></a>util</h4><p>util模块主要用于支持Node.js自己的内部API的需求。 然而，许多实用程序对于应用程序和模块开发人员也是有用的。</p>
+<h4 id="v8"><a href="#v8" class="headerlink" title="v8"></a>v8</h4><p><code>v8</code>模块公开了特定于Node.js二进制内置的V8版本的API。</p>
+<p>注意：API和实现可随时更改。</p>
+<h4 id="vm"><a href="#vm" class="headerlink" title="vm"></a>vm</h4><p><code>vm</code>模块提供用于在V8虚拟机上下文中编译和运行代码的API。 JavaScript代码可以编译并立即运行或编译，保存并稍后运行。</p>
+<p>注意：vm模块不是安全机制。 <strong>不要使用它来运行不受信任的代码。</strong></p>
+<h4 id="zlib"><a href="#zlib" class="headerlink" title="zlib"></a>zlib</h4><p><code>zlib</code>模块提供使用Gzip和Deflate / Inflate实现的压缩功能。</p>
+<h3 id="TLS-Socket：服务器和客户端"><a href="#TLS-Socket：服务器和客户端" class="headerlink" title="TLS Socket：服务器和客户端"></a>TLS Socket：服务器和客户端</h3><p>此与常规TCP连接之间的唯一主要区别是私钥和公共证书，您必须将其设置为选项对象。</p>
+<h4 id="如何创建密钥和证书"><a href="#如何创建密钥和证书" class="headerlink" title="如何创建密钥和证书"></a>如何创建密钥和证书</h4><p>此安全过程的第一步是创建私钥。这个私钥是什么？基本上，它是用于加密信息的一组随机噪声。在理论上，你可以创建一个键，并使用它来加密任何你想要的。但最好的做法是为特定的东西使用不同的键。因为如果有人偷你的私钥，就像有人偷你的钥匙一样。想象一下，如果你使用相同的钥匙来锁定你的车，车库，办公室等</p>
+<p><code>openssl genrsa -out private-key.pem 1024</code></p>
+<p>一旦我们有了私钥，我们就可以创建一个CSR（证书签名请求），这是我们要求私人密钥由一个花哨的权威机构签署的。这就是为什么你必须输入与贵公司有关的信息。此信息将由签名机构查看，并用于验证您。在我们的情况下，您输入的内容并不重要，因为在下一步中，我们将自己签署证书。</p>
+<p><code>openssl req -new -key private-key.pem -out csr.pem</code></p>
+<p>现在我们已经填写了我们的文件，现在是假装我们是一个很酷的签名机构的时候了。</p>
+<p><code>openssl x509 -req -in csr.pem -signkey private-key.pem -out public-cert.pem</code></p>
+<p>现在您拥有私钥和公共证书，可以建立两个NodeJS应用之间的安全连接。 而且可以在示例代码中看到，这是一个非常简单的过程。</p>
+<h4 id="重要！"><a href="#重要！" class="headerlink" title="重要！"></a>重要！</h4><p>由于我们自己创建了公开的证书，所以我们的证书是无价值的，因为我们是无私的。 NodeJS服务器默认不会信任这样的证书，这就是为什么我们需要告诉它实际上信任我们的证书，并使用以下选项rejectUnauthorized：false。 非常重要：在生产环境中，不要将此变量设置为true。</p>
+<h4 id="TLS-Socket-Server"><a href="#TLS-Socket-Server" class="headerlink" title="TLS Socket Server"></a>TLS Socket Server</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> tls = <span class="built_in">require</span>(<span class="string">'tls'</span>);</div><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="keyword">const</span> PORT = <span class="number">1337</span>;</div><div class="line"><span class="keyword">const</span> HOST = <span class="string">'127.0.0.1'</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">    <span class="attr">key</span>: fs.readFileSync(<span class="string">'private-key.pem'</span>),</div><div class="line">    <span class="attr">cert</span>: fs.readFileSync(<span class="string">'public-cert.pem'</span>)</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> server = tls.createServer(options, <span class="function"><span class="keyword">function</span>(<span class="params">socket</span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// Send a friendly message</span></div><div class="line">    socket.write(<span class="string">"I am the server sending you a message."</span>);</div><div class="line"></div><div class="line">    <span class="comment">// Print the data that we received</span></div><div class="line">    socket.on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</div><div class="line"></div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'Received: %s [it is %d bytes long]'</span>,</div><div class="line">            data.toString().replace(<span class="regexp">/(\n)/gm</span>,<span class="string">""</span>),</div><div class="line">            data.length);</div><div class="line"></div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="comment">// Let us know when the transmission is over</span></div><div class="line">    socket.on(<span class="string">'end'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'EOT (End Of Transmission)'</span>);</div><div class="line"></div><div class="line">    &#125;);</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// Start listening on a specific port and address</span></div><div class="line">server.listen(PORT, HOST, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"I'm listening at %s, on port %s"</span>, HOST, PORT);</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// When an error occurs, show it.</span></div><div class="line">server.on(<span class="string">'error'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.error(error);</div><div class="line"></div><div class="line">    <span class="comment">// Close the connection after the error occurred.</span></div><div class="line">    server.destroy();</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="TLS-Socket-Client"><a href="#TLS-Socket-Client" class="headerlink" title="TLS Socket Client"></a>TLS Socket Client</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> tls = <span class="built_in">require</span>(<span class="string">'tls'</span>);</div><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="keyword">const</span> PORT = <span class="number">1337</span>;</div><div class="line"><span class="keyword">const</span> HOST = <span class="string">'127.0.0.1'</span></div><div class="line"></div><div class="line"><span class="comment">// Pass the certs to the server and let it know to process even unauthorized certs.</span></div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">    <span class="attr">key</span>: fs.readFileSync(<span class="string">'private-key.pem'</span>),</div><div class="line">    <span class="attr">cert</span>: fs.readFileSync(<span class="string">'public-cert.pem'</span>),</div><div class="line">    <span class="attr">rejectUnauthorized</span>: <span class="literal">false</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> client = tls.connect(PORT, HOST, options, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// Check if the authorization worked</span></div><div class="line">    <span class="keyword">if</span> (client.authorized) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"Connection authorized by a Certificate Authority."</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"Connection not authorized: "</span> + client.authorizationError)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Send a friendly message</span></div><div class="line">    client.write(<span class="string">"I am the client sending you a message."</span>);</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">client.on(<span class="string">"data"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'Received: %s [it is %d bytes long]'</span>,</div><div class="line">        data.toString().replace(<span class="regexp">/(\n)/gm</span>,<span class="string">""</span>),</div><div class="line">        data.length);</div><div class="line"></div><div class="line">    <span class="comment">// Close the connection after receiving the message</span></div><div class="line">    client.end();</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">client.on(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"Connection closed"</span>);</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// When an error ocoures, show it.</span></div><div class="line">client.on(<span class="string">'error'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.error(error);</div><div class="line"></div><div class="line">    <span class="comment">// Close the connection after the error occurred.</span></div><div class="line">    client.destroy();</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Node/" rel="tag"># Node</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/10/显式的锁机制/" rel="next" title="显式的锁机制">
+                <i class="fa fa-chevron-left"></i> 显式的锁机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hello-World-HTTP-server"><span class="nav-number">1.</span> <span class="nav-text">Hello World HTTP server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hello-World命令行"><span class="nav-number">2.</span> <span class="nav-text">Hello World命令行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hello-World-with-Express"><span class="nav-number">3.</span> <span class="nav-text">Hello World with Express</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装并运行Node-js"><span class="nav-number">4.</span> <span class="nav-text">安装并运行Node.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装"><span class="nav-number">4.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行节点程序"><span class="nav-number">4.2.</span> <span class="nav-text">运行节点程序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hello-World基本路由"><span class="nav-number">5.</span> <span class="nav-text">Hello World基本路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试您的NodeJS应用程序"><span class="nav-number">6.</span> <span class="nav-text">调试您的NodeJS应用程序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#调试本机"><span class="nav-number">6.1.</span> <span class="nav-text">调试本机</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hello-World-in-the-REPL"><span class="nav-number">7.</span> <span class="nav-text">Hello World in the REPL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在线部署您的应用程序"><span class="nav-number">8.</span> <span class="nav-text">在线部署您的应用程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-modules"><span class="nav-number">9.</span> <span class="nav-text">Core modules</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#assert"><span class="nav-number">9.1.</span> <span class="nav-text">assert</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#buffer"><span class="nav-number">9.2.</span> <span class="nav-text">buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#c-c-addons"><span class="nav-number">9.3.</span> <span class="nav-text">c/c++_addons</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#child-process"><span class="nav-number">9.4.</span> <span class="nav-text">child_process</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cluster"><span class="nav-number">9.5.</span> <span class="nav-text">cluster</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#console"><span class="nav-number">9.6.</span> <span class="nav-text">console</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#crypto-加密"><span class="nav-number">9.7.</span> <span class="nav-text">crypto(加密)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#deprecated-apis"><span class="nav-number">9.8.</span> <span class="nav-text">deprecated_apis</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS"><span class="nav-number">9.9.</span> <span class="nav-text">DNS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#domain-域"><span class="nav-number">9.10.</span> <span class="nav-text">domain(域)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Events"><span class="nav-number">9.11.</span> <span class="nav-text">Events</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FS"><span class="nav-number">9.12.</span> <span class="nav-text">FS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#http"><span class="nav-number">9.13.</span> <span class="nav-text">http</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTPS"><span class="nav-number">9.14.</span> <span class="nav-text">HTTPS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#module"><span class="nav-number">9.15.</span> <span class="nav-text">module</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#net"><span class="nav-number">9.16.</span> <span class="nav-text">net</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#os"><span class="nav-number">9.17.</span> <span class="nav-text">os</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#path"><span class="nav-number">9.18.</span> <span class="nav-text">path</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#punycode"><span class="nav-number">9.19.</span> <span class="nav-text">punycode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#querystring"><span class="nav-number">9.20.</span> <span class="nav-text">querystring</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#readline"><span class="nav-number">9.21.</span> <span class="nav-text">readline</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#repl"><span class="nav-number">9.22.</span> <span class="nav-text">repl</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stream"><span class="nav-number">9.23.</span> <span class="nav-text">stream</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#string-decoder"><span class="nav-number">9.24.</span> <span class="nav-text">string_decoder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#timers"><span class="nav-number">9.25.</span> <span class="nav-text">timers</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tls-ssl"><span class="nav-number">9.26.</span> <span class="nav-text">tls_(ssl)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tracing"><span class="nav-number">9.27.</span> <span class="nav-text">tracing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tty"><span class="nav-number">9.28.</span> <span class="nav-text">tty</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dgram"><span class="nav-number">9.29.</span> <span class="nav-text">dgram</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#url"><span class="nav-number">9.30.</span> <span class="nav-text">url</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#util"><span class="nav-number">9.31.</span> <span class="nav-text">util</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#v8"><span class="nav-number">9.32.</span> <span class="nav-text">v8</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vm"><span class="nav-number">9.33.</span> <span class="nav-text">vm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zlib"><span class="nav-number">9.34.</span> <span class="nav-text">zlib</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TLS-Socket：服务器和客户端"><span class="nav-number">10.</span> <span class="nav-text">TLS Socket：服务器和客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何创建密钥和证书"><span class="nav-number">10.1.</span> <span class="nav-text">如何创建密钥和证书</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重要！"><span class="nav-number">10.2.</span> <span class="nav-text">重要！</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TLS-Socket-Server"><span class="nav-number">10.3.</span> <span class="nav-text">TLS Socket Server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TLS-Socket-Client"><span class="nav-number">10.4.</span> <span class="nav-text">TLS Socket Client</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
