@@ -1,0 +1,759 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Node," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="从文件异步读取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件系统IO">
+<meta property="og:url" content="http://kakajing.github.io/2017/05/17/文件系统IO/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="从文件异步读取">
+<meta property="og:updated_time" content="2017-05-17T11:34:08.153Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文件系统IO">
+<meta name="twitter:description" content="从文件异步读取">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/05/17/文件系统IO/"/>
+
+
+
+
+
+  <title> 文件系统IO | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/05/17/文件系统IO/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                文件系统IO
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-17T19:34:25+08:00">
+                2017-05-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node/" itemprop="url" rel="index">
+                    <span itemprop="name">Node</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="从文件异步读取"><a href="#从文件异步读取" class="headerlink" title="从文件异步读取"></a>从文件异步读取</h3><a id="more"></a>
+<p>对所有文件操作使用文件系统模块：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div></pre></td></tr></table></figure>
+<h4 id="Encoding"><a href="#Encoding" class="headerlink" title="Encoding"></a>Encoding</h4><p>在这个例子中，从目录<code>/ tmp</code>中读取<code>hello.txt</code>。 此操作将在后台完成，并且在完成或失败时发生回调：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">fs.readFile(<span class="string">'/tmp/hello.txt'</span>, &#123; <span class="attr">encoding</span>: <span class="string">'utf8'</span> &#125;, (err, content) =&gt; &#123;</div><div class="line">  <span class="comment">// 如果发生错误，输出并返回</span></div><div class="line">  <span class="keyword">if</span>(err) <span class="keyword">return</span> <span class="built_in">console</span>.error(err);</div><div class="line"></div><div class="line">  <span class="comment">// 没有发生错误，内容是一个 string</span></div><div class="line">  <span class="built_in">console</span>.log(content);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="Without-Encoding"><a href="#Without-Encoding" class="headerlink" title="Without Encoding"></a>Without Encoding</h4><p>从当前目录中读取二进制文件<code>binary.txt</code>，在后台异步读取。 请注意，我们不设置’encoding’选项 - 这样可以防止Node.js将内容解码为字符串：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">fs.readFile(<span class="string">'binary'</span>, (err, binaryContent) =&gt; &#123;</div><div class="line">  <span class="comment">// If an error occurred, output it and return</span></div><div class="line">  <span class="keyword">if</span>(err) <span class="keyword">return</span> <span class="built_in">console</span>.error(err);</div><div class="line"></div><div class="line">  <span class="comment">// No error occurred, content is a Buffer, output it in</span></div><div class="line">  <span class="comment">// hexadecimal representation.</span></div><div class="line">  <span class="built_in">console</span>.log(content.toString(<span class="string">'hex'</span>));</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="相对路径"><a href="#相对路径" class="headerlink" title="相对路径"></a>相对路径</h4><p>请记住，在一般情况下，您的脚本可以使用任意当前工作目录运行。 要找到相对于当前脚本的文件，请使用<code>_dirname</code> 或 <code>_filename</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fs.readFile(path.resolve(__dirname, <span class="string">'someFile'</span>), (err, binaryContent) =&gt; &#123;</div><div class="line">    <span class="comment">//Rest of Function</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="使用readdir或readdirSync列出目录内容"><a href="#使用readdir或readdirSync列出目录内容" class="headerlink" title="使用readdir或readdirSync列出目录内容"></a>使用readdir或readdirSync列出目录内容</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="comment">// Read the contents of the directory /usr/local/bin asynchronously.</span></div><div class="line"><span class="comment">// The callback will be invoked once the operation has either completed</span></div><div class="line"><span class="comment">// or failed.</span></div><div class="line">fs.readdir(<span class="string">'/usr/local/bin'</span>, (err, files) =&gt; &#123;</div><div class="line">  <span class="comment">// On error, show it and return</span></div><div class="line">  <span class="keyword">if</span>(err) <span class="keyword">return</span> <span class="built_in">console</span>.error(err);</div><div class="line"></div><div class="line">  <span class="comment">// files is an array containing the names of all entries</span></div><div class="line">  <span class="comment">// in the directory, excluding '.' (the directory itself)</span></div><div class="line">  <span class="comment">// and '..' (the parent directory).</span></div><div class="line"></div><div class="line">  <span class="comment">// Display directory entries</span></div><div class="line">  <span class="built_in">console</span>.log(files.join(<span class="string">' '</span>));</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>同步变量可用作<code>readdirSync</code>，它阻塞主线程，因此可以同时防止异步代码的执行。 大多数开发人员避免同步IO功能，以提高性能。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> files;</div><div class="line"></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">  files = fs.readdirSync(<span class="string">'/var/tmp'</span>);</div><div class="line">&#125; <span class="keyword">catch</span>(err) &#123;</div><div class="line">  <span class="comment">// An error occurred</span></div><div class="line">  <span class="built_in">console</span>.error(err);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="使用generator"><a href="#使用generator" class="headerlink" title="使用generator"></a>使用generator</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="comment">// Iterate through all items obtained via</span></div><div class="line"><span class="comment">// 'yield' statements</span></div><div class="line"><span class="comment">// A callback is passed to the generator function because it is required by</span></div><div class="line"><span class="comment">// the 'readdir' method</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params">gen</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> iter = gen(<span class="function">(<span class="params">err, data</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (err) &#123; iter.throw(err); &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> iter.next(data);</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  iter.next();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> dirPath = <span class="string">'/usr/local/bin'</span>;</div><div class="line"></div><div class="line"><span class="comment">// Execute the generator function</span></div><div class="line">run(<span class="function"><span class="keyword">function</span>* (<span class="params">resume</span>) </span>&#123;</div><div class="line">  <span class="comment">// Emit the list of files in the directory from the generator</span></div><div class="line">  <span class="keyword">var</span> contents = <span class="keyword">yield</span> fs.readdir(dirPath, resume);</div><div class="line">  <span class="built_in">console</span>.log(contents);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="通过管道流复制文件"><a href="#通过管道流复制文件" class="headerlink" title="通过管道流复制文件"></a>通过管道流复制文件</h3><p>该程序使用可读流和可写流与流类提供的<code>pipe()</code>函数来复制文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// require the file system module</span></div><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line">    在名为'node.txt'的当前目录中创建可读流文件</div><div class="line">     使用utf8编码</div><div class="line">     读取16-kilobyte块中的数据</div><div class="line">*/</div><div class="line"><span class="keyword">var</span> readable = fs.createReadStream(__dirname + <span class="string">'/node.txt'</span>, &#123; <span class="attr">encoding</span>: <span class="string">'utf8'</span>, <span class="attr">highWaterMark</span>: <span class="number">16</span> * <span class="number">1024</span> &#125;);</div><div class="line"></div><div class="line"><span class="comment">// create writable stream</span></div><div class="line"><span class="keyword">var</span> writable = fs.createWriteStream(__dirname + <span class="string">'/nodePipe.txt'</span>);</div><div class="line"></div><div class="line"><span class="comment">// 使用pipe将可读写复制</span></div><div class="line">readable.pipe(writable);</div></pre></td></tr></table></figure>
+<p>同步读取文件</p>
+<p>对于任何文件操作，您将需要文件系统模块：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div></pre></td></tr></table></figure>
+<h4 id="Reading-a-String"><a href="#Reading-a-String" class="headerlink" title="Reading a String"></a>Reading a String</h4><p><code>fs.readFileSync</code>的行为类似于<code>fs.readFile</code>，但是它在同步完成时不会回调，因此阻止主线程。 大多数node.js开发人员喜欢异步变量，这将在程序执行中几乎没有任何延迟。</p>
+<p>如果指定了<code>encoding</code>选项，将返回一个字符串，否则将返回一个<code>Buffer</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Read a string from another file synchronously</span></div><div class="line"><span class="keyword">let</span> content;</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">  content = fs.readFileSync(<span class="string">'sync.txt'</span>, &#123; <span class="attr">encoding</span>: <span class="string">'utf8'</span> &#125;);</div><div class="line">&#125; <span class="keyword">catch</span>(err) &#123;</div><div class="line">  <span class="comment">// An error occurred</span></div><div class="line">  <span class="built_in">console</span>.error(err);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="检查文件或目录的权限"><a href="#检查文件或目录的权限" class="headerlink" title="检查文件或目录的权限"></a>检查文件或目录的权限</h3><p><code>fs.access()</code>确定路径是否存在，以及用户对该路径上的文件或目录的权限。 <code>fs.access</code>不返回结果，如果没有返回错误，则路径存在，并且用户具有所需的权限。</p>
+<p>权限模式作为<code>fs</code>对象<code>fs.constants</code>上的属性可用</p>
+<ul>
+<li><code>fs.constants.F_OK</code> - 具有读/写/执行权限（如果没有提供模式，这是默认值）</li>
+<li><code>fs.constants.R_OK</code> - 具有读取权限</li>
+<li><code>fs.constants.W_OK</code> - 具有写权限</li>
+<li><code>fs.constants.X_OK</code> - 具有执行权限（与Windows上的<code>fs.constants.F_OK</code>相同）</li>
+</ul>
+<h4 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"><span class="keyword">var</span> path = <span class="string">'/path/to/check'</span>;</div><div class="line"></div><div class="line"><span class="comment">// checks execute permission</span></div><div class="line">fs.access(path, fs.constants.X_OK, (err) =&gt; &#123;</div><div class="line">    <span class="keyword">if</span> (err) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"%s doesn't exist"</span>, path);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'can execute %s'</span>, path);</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"><span class="comment">// 检查我们是否有读/写权限</span></div><div class="line"><span class="comment">// 指定多个权限模式时</span></div><div class="line"><span class="comment">// 每个模式由管道分隔：`|`</span></div><div class="line">fs.access(path, fs.constants.R_OK | fs.constants.W_OK, (err) =&gt; &#123;</div><div class="line">    <span class="keyword">if</span> (err) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"%s doesn't exist"</span>, path);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'can read/write %s'</span>, path);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h4><p><code>fs.access</code>也有一个同步版本的<code>fs.accessSync</code>。 使用<code>fs.accessSync</code>时，必须将其包含在<code>try/catch</code>块中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 检查写权限</span></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    fs.accessSync(path, fs.constants.W_OK);</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'can write %s'</span>, path);</div><div class="line">&#125;</div><div class="line"><span class="keyword">catch</span> (err) &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"%s doesn't exist"</span>, path);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="检查文件或目录是否存在"><a href="#检查文件或目录是否存在" class="headerlink" title="检查文件或目录是否存在"></a>检查文件或目录是否存在</h3><h4 id="异步-1"><a href="#异步-1" class="headerlink" title="异步"></a>异步</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line">fs.stat(<span class="string">'path/to/file'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!err) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'file or directory exists'</span>);</div><div class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span> (err.code === <span class="string">'ENOENT'</span>) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'file or directory does not exist'</span>);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="同步-1"><a href="#同步-1" class="headerlink" title="同步"></a>同步</h4><p>在这里，我们必须将函数调用包装在<code>try/catch</code>块中来处理错误。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    fs.statSync(<span class="string">'path/to/file'</span>);</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'file or directory exists'</span>);</div><div class="line">&#125;<span class="keyword">catch</span> (err) &#123;</div><div class="line">  <span class="keyword">if</span> (err.code === <span class="string">'ENOENT'</span>) &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'file or directory does not exist'</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="确定文本文件的行数"><a href="#确定文本文件的行数" class="headerlink" title="确定文本文件的行数"></a>确定文本文件的行数</h3><h4 id="app-js"><a href="#app-js" class="headerlink" title="app.js"></a>app.js</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> readline = <span class="built_in">require</span>(<span class="string">'readline'</span>);</div><div class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> file = <span class="string">'path.to.file'</span>;</div><div class="line"><span class="keyword">var</span> linesCount = <span class="number">0</span>;</div><div class="line"><span class="keyword">var</span> rl = readline.createInterface(&#123;</div><div class="line">    <span class="attr">input</span>: fs.createReadStream(file),</div><div class="line">    <span class="attr">output</span>: process.stdout,</div><div class="line">    <span class="attr">terminal</span>: <span class="literal">false</span></div><div class="line">&#125;);</div><div class="line">rl.on(<span class="string">'line'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">line</span>) </span>&#123;</div><div class="line">    linesCount++; <span class="comment">// 在每个换行符上，将+1添加到“linesCount”</span></div><div class="line">&#125;);</div><div class="line">rl.on(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(linesCount); <span class="comment">// 当“close”事件被调用时打印结果</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="逐行读取文件"><a href="#逐行读取文件" class="headerlink" title="逐行读取文件"></a>逐行读取文件</h3><h4 id="app-js-1"><a href="#app-js-1" class="headerlink" title="app.js"></a>app.js</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> readline = <span class="built_in">require</span>(<span class="string">'readline'</span>);</div><div class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> file = <span class="string">'path.to.file'</span>;</div><div class="line"><span class="keyword">var</span> rl = readline.createInterface(&#123;</div><div class="line">    <span class="attr">input</span>: fs.createReadStream(file),</div><div class="line">    <span class="attr">output</span>: process.stdout,</div><div class="line">    <span class="attr">terminal</span>: <span class="literal">false</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">rl.on(<span class="string">'line'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">line</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(line) <span class="comment">// 在每个换行符上打印行的内容</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="创建或使用现有目录时避免竞争条件"><a href="#创建或使用现有目录时避免竞争条件" class="headerlink" title="创建或使用现有目录时避免竞争条件"></a>创建或使用现有目录时避免竞争条件</h3><p>由于Node的异步性质，首先要创建或使用目录：</p>
+<ol>
+<li><p>用<code>fs.stat()</code>检查它的存在，然后</p>
+</li>
+<li><p>根据存在检查的结果创建或使用它，</p>
+</li>
+</ol>
+<p>如果在检查时间和创建时间之间创建文件夹，则可能导致竞争条件。 下面的方法将<code>fs.mkdir()</code>和<code>fs.mkdirSync()</code>包含在错误捕获的包装器中，如果代码为EEXIST（已经存在），则异常通过。 如果错误是别的东西，像EPERM（pemission被拒绝），抛出或传递一个像本机功能那样的错误。</p>
+<p><strong><code>fs.mkdir()</code>的异步版本</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">mkdir</span> (<span class="params">dirPath, callback</span>) </span>&#123;</div><div class="line">  fs.mkdir(dirPath, (err) =&gt; &#123;</div><div class="line">    callback(err &amp;&amp; err.code !== <span class="string">'EEXIST'</span> ? err : <span class="literal">null</span>);</div><div class="line">  &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">mkdir(<span class="string">'./existingDir'</span>, (err) =&gt; &#123;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (err)</div><div class="line">    <span class="keyword">return</span> <span class="built_in">console</span>.error(err.code);</div><div class="line"></div><div class="line">  <span class="comment">// Do something with `./existingDir` here</span></div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p><strong>同步版本<code>fs.mkdirSync()</code></strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">mkdirSync</span> (<span class="params">dirPath</span>) </span>&#123;</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">    fs.mkdirSync(dirPath);</div><div class="line">  &#125; <span class="keyword">catch</span>(e) &#123;</div><div class="line">    <span class="keyword">if</span> ( e.code !== <span class="string">'EEXIST'</span> ) <span class="keyword">throw</span> e;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">mkdirSync(<span class="string">'./existing-dir'</span>);</div><div class="line"><span class="comment">// Do something with `./existing-dir` now</span></div></pre></td></tr></table></figure>
+<p>更改文本文件的内容</p>
+<p>例。 它将使用简单的RegExp <code>replace(/email/gim, &#39;name&#39;)</code>将文本<code>email</code>替换为文本文件<code>index.txt</code>中的<code>name</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"> </div><div class="line">fs.readFile(<span class="string">'index.txt'</span>, <span class="string">'utf-8'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, data</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line"> </div><div class="line">    <span class="keyword">var</span> newValue = data.replace(<span class="regexp">/email/gim</span>, <span class="string">'name'</span>);</div><div class="line"> </div><div class="line">    fs.writeFile(<span class="string">'index.txt'</span>, newValue, <span class="string">'utf-8'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, data</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'Done!'</span>);</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h3 id="使用流克隆文件"><a href="#使用流克隆文件" class="headerlink" title="使用流克隆文件"></a>使用流克隆文件</h3><p>该程序说明了如何使用可读写的流使用<code>createReadStream()</code>和由文件系统模块提供的<code>createWriteStream()</code>函数来复制文件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//Require the file System module</span></div><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line">  Create readable stream to file in current directory (__dirname) named 'node.txt'</div><div class="line">  Use utf8 encoding </div><div class="line">  Read the data in 16-kilobyte chunks</div><div class="line">*/</div><div class="line"><span class="keyword">var</span> readable = fs.createReadStream(__dirname + <span class="string">'/node.txt'</span>, &#123; <span class="attr">encoding</span>: <span class="string">'utf8'</span>, <span class="attr">highWaterMark</span>: <span class="number">16</span> * <span class="number">1024</span> &#125;);</div><div class="line"></div><div class="line"><span class="comment">// create writable stream</span></div><div class="line"><span class="keyword">var</span> writable = fs.createWriteStream(__dirname + <span class="string">'/nodeCopy.txt'</span>);</div><div class="line"></div><div class="line"><span class="comment">// Write each chunk of data to the writable stream</span></div><div class="line">readable.on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">chunk</span>) </span>&#123;</div><div class="line">    writable.write(chunk);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="使用unlink或unlinkSync删除文件"><a href="#使用unlink或unlinkSync删除文件" class="headerlink" title="使用unlink或unlinkSync删除文件"></a>使用unlink或unlinkSync删除文件</h3><p>异步删除文件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line">fs.unlink(<span class="string">'/path/to/file.txt'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line"></div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'file deleted'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>您也可以同步删除*：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line">fs.unlinkSync(<span class="string">'/path/to/file.txt'</span>);</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'file deleted'</span>);</div></pre></td></tr></table></figure>
+<p>*避免同步方法，因为它们阻止整个进程，直到执行完成。</p>
+<h3 id="使用流将文件读入Buffer"><a href="#使用流将文件读入Buffer" class="headerlink" title="使用流将文件读入Buffer"></a>使用流将文件读入Buffer</h3><p>在使用<code>fs.readFile()</code>方法从文件读取内容已经是异步的时候，有时我们想要在一个Stream中获取数据，而不是简单的回调。 这样我们可以将这些数据管理到其他位置，或者将其处理成最后一次。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="comment">// 使用数组存储文件数据块</span></div><div class="line"><span class="keyword">let</span> chunks = [];</div><div class="line"><span class="comment">// 使用这个变量来存储最终的数据</span></div><div class="line"><span class="keyword">let</span> fileBuffer;</div><div class="line"></div><div class="line"><span class="comment">// 将文件读入stream.Readable</span></div><div class="line"><span class="keyword">let</span> fileStream = fs.createReadStream(<span class="string">'text.txt'</span>);</div><div class="line"></div><div class="line"><span class="comment">// An error occurred with the stream</span></div><div class="line">fileStream.once(<span class="string">'error'</span>, (err) =&gt; &#123;</div><div class="line">    <span class="comment">// Be sure to handle this properly!</span></div><div class="line">    <span class="built_in">console</span>.error(err); </div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 文件完成读取</span></div><div class="line">fileStream.once(<span class="string">'end'</span>, () =&gt; &#123;</div><div class="line">    <span class="comment">// 从数据块中创建最终数据Buffer;</span></div><div class="line">    fileBuffer = Buffer.concat(chunks);</div><div class="line">    </div><div class="line">    <span class="comment">// Of course, you can do anything else you need to here, like emit an event!</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// Data is flushed from fileStream in chunks,</span></div><div class="line"><span class="comment">// this callback will be executed for each chunk</span></div><div class="line">fileStream.on(<span class="string">'data'</span>, (chunk) =&gt; &#123;</div><div class="line">    chunks.push(chunk); <span class="comment">// push data chunk to array</span></div><div class="line"></div><div class="line">    <span class="comment">// We can perform actions on the partial data we have so far!</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="使用writeFile或writeFileSync写入文件"><a href="#使用writeFile或writeFileSync写入文件" class="headerlink" title="使用writeFile或writeFileSync写入文件"></a>使用writeFile或writeFileSync写入文件</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="comment">// Save the string "Hello world!" in a file called "hello.txt" in</span></div><div class="line"><span class="comment">// the directory "/tmp" using the default encoding (utf8).</span></div><div class="line"><span class="comment">// This operation will be completed in background and the callback</span></div><div class="line"><span class="comment">// will be called when it is either done or failed.</span></div><div class="line">fs.writeFile(<span class="string">'/tmp/hello.txt'</span>, <span class="string">'Hello world!'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</div><div class="line">  <span class="comment">// If an error occurred, show it and return</span></div><div class="line">  <span class="keyword">if</span>(err) <span class="keyword">return</span> <span class="built_in">console</span>.error(err);</div><div class="line">  <span class="comment">// Successfully wrote to the file!</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// Save binary data to a file called "binary.txt" in the current</span></div><div class="line"><span class="comment">// directory. Again, the operation will be completed in background.</span></div><div class="line"><span class="keyword">var</span> buffer = <span class="keyword">new</span> Buffer([ <span class="number">0x48</span>, <span class="number">0x65</span>, <span class="number">0x6c</span>, <span class="number">0x6c</span>, <span class="number">0x6f</span> ]);</div><div class="line">fs.writeFile(<span class="string">'binary.txt'</span>, buffer, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</div><div class="line">  <span class="comment">// If an error occurred, show it and return</span></div><div class="line">  <span class="keyword">if</span>(err) <span class="keyword">return</span> <span class="built_in">console</span>.error(err);</div><div class="line">  <span class="comment">// Successfully wrote binary contents to the file!</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p><code>fs.writeFileSync</code>的行为类似于<code>fs.writeFile</code>，但是它不会在同步完成时执行回调，因此阻止主线程。 大多数node.js开发人员喜欢异步变量，这将在程序执行中几乎没有任何延迟。</p>
+<p>注意：在node.js中阻塞主线程是不好的做法。 同步功能只能在调试时使用或没有其他选项可用。</p>
+<p>在Node.js中，资源密集型操作（例如I / O）异步执行，但具有同步对应（例如存在<code>fs.readFile</code>，其对应方是<code>fs.readFileSync</code>）。 由于Node是单线程的，所以在使用同步操作时应该小心，因为它们会阻塞整个进程。</p>
+<p>如果进程被同步操作阻塞，那么整个执行周期（包括事件循环）将被停止。 这意味着其他异步代码（包括事件和事件处理程序）将不会运行，您的程序将继续等到单个阻止操作完成。</p>
+<p>同步和异步操作都有适当的用途，但必须注意使用它们。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Node/" rel="tag"># Node</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/15/使用Express的Web Apps/" rel="next" title="使用Express的Web Apps">
+                <i class="fa fa-chevron-left"></i> 使用Express的Web Apps
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#从文件异步读取"><span class="nav-number">1.</span> <span class="nav-text">从文件异步读取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Encoding"><span class="nav-number">1.1.</span> <span class="nav-text">Encoding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Without-Encoding"><span class="nav-number">1.2.</span> <span class="nav-text">Without Encoding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#相对路径"><span class="nav-number">1.3.</span> <span class="nav-text">相对路径</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用readdir或readdirSync列出目录内容"><span class="nav-number">2.</span> <span class="nav-text">使用readdir或readdirSync列出目录内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用generator"><span class="nav-number">2.1.</span> <span class="nav-text">使用generator</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过管道流复制文件"><span class="nav-number">3.</span> <span class="nav-text">通过管道流复制文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Reading-a-String"><span class="nav-number">3.1.</span> <span class="nav-text">Reading a String</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#检查文件或目录的权限"><span class="nav-number">4.</span> <span class="nav-text">检查文件或目录的权限</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#异步"><span class="nav-number">4.1.</span> <span class="nav-text">异步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同步"><span class="nav-number">4.2.</span> <span class="nav-text">同步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#检查文件或目录是否存在"><span class="nav-number">5.</span> <span class="nav-text">检查文件或目录是否存在</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#异步-1"><span class="nav-number">5.1.</span> <span class="nav-text">异步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同步-1"><span class="nav-number">5.2.</span> <span class="nav-text">同步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确定文本文件的行数"><span class="nav-number">6.</span> <span class="nav-text">确定文本文件的行数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#app-js"><span class="nav-number">6.1.</span> <span class="nav-text">app.js</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逐行读取文件"><span class="nav-number">7.</span> <span class="nav-text">逐行读取文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#app-js-1"><span class="nav-number">7.1.</span> <span class="nav-text">app.js</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建或使用现有目录时避免竞争条件"><span class="nav-number">8.</span> <span class="nav-text">创建或使用现有目录时避免竞争条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用流克隆文件"><span class="nav-number">9.</span> <span class="nav-text">使用流克隆文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用unlink或unlinkSync删除文件"><span class="nav-number">10.</span> <span class="nav-text">使用unlink或unlinkSync删除文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用流将文件读入Buffer"><span class="nav-number">11.</span> <span class="nav-text">使用流将文件读入Buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用writeFile或writeFileSync写入文件"><span class="nav-number">12.</span> <span class="nav-text">使用writeFile或writeFileSync写入文件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
