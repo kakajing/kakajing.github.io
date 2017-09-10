@@ -261,6 +261,251 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/09/10/对BFC的理解/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/09/10/对BFC的理解/" itemprop="url">
+                  对BFC的理解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-10T21:07:57+08:00">
+                2017-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原创/" itemprop="url" rel="index">
+                    <span itemprop="name">原创</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="BFC是什么？"><a href="#BFC是什么？" class="headerlink" title="BFC是什么？"></a>BFC是什么？</h3><p>在解释 BFC 是什么之前，会涉及到CSS布局的一些基本概念，需要先介绍 Box、Formatting Context的概念。</p>
+<ul>
+<li>对css有了解的朋友肯定都知道盒式模型这个概念，对一个元素设置css，首先需要知道这个元素是block还是inline类型。而BFC就是用来格式化块级盒子，同样管理inline类型的盒子还有IFC，以及其他的FC。那首先我们就来看看FC的概念。</li>
+<li>Formatting Context：指页面中一个渲染区域，并且拥有一套渲染规则，他决定了其子元素如何定位，以及与其他元素的相互关系和作用。</li>
+<li>BFC：块级格式化上下文，它是指一个独立的块级渲染区域，只有Block-level Box参与，该区域拥有一套渲染规则来约束块级盒子的布局，且与区域外部无关。</li>
+</ul>
+<h4 id="Box-CSS布局的基本单位"><a href="#Box-CSS布局的基本单位" class="headerlink" title="　　Box: CSS布局的基本单位"></a>　　Box: CSS布局的基本单位</h4><p>　　Box 是 CSS 布局的对象和基本单位， 直观点来说，就是一个页面是由很多个 Box 组成的。元素的类型和 display 属性，决定了这个 Box 的类型。 不同类型的 Box， 会参与不同的 Formatting Context（一个决定如何渲染文档的容器），因此Box内的元素会以不同的方式渲染。让我们看看有哪些盒子：</p>
+<ul>
+<li>block-level box:display 属性为 block, list-item, table 的元素，会生成 block-level box。并且参与 block fomatting context；</li>
+<li>inline-level box:display 属性为 inline, inline-block, inline-table 的元素，会生成 inline-level box。并且参与 inline formatting context；</li>
+<li>run-in box: css3 中才有， 这儿先不讲了。</li>
+</ul>
+<h4 id="Formatting-context"><a href="#Formatting-context" class="headerlink" title="　　Formatting context"></a>　　Formatting context</h4><p>　　Formatting context 是 W3C CSS2.1 规范中的一个概念。它是页面中的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素的关系和相互作用。最常见的 Formatting context 有 Block fomatting context (简称BFC)和 Inline formatting context (简称IFC)。</p>
+<p>　　CSS2.1 中只有 <code>BFC</code>和 <code>IFC</code>, <strong>CSS3 </strong>中还增加了 <code>GFC</code>和 <code>FFC。</code></p>
+<h4 id="BFC-定义"><a href="#BFC-定义" class="headerlink" title="　　BFC 定义"></a>　　BFC 定义</h4><p>　　BFC(Block formatting context)直译为”块级格式化上下文”。它是一个独立的渲染区域，只有Block-level box参与， 它规定了内部的Block-level Box如何布局，并且与这个区域外部毫不相干。</p>
+<p>​       块级元素是那种源文档被格式化为可视块了的元素，然后使这个元素变成块级元素的display属性取值如下： ‘block’, ‘list-item’, 和 ‘table’。</p>
+<p>​       块级盒block-level box是这种参与了块级排版上下文的一种盒子，每个块级元素都生成了一个包含后代盒子和生成的内容的主要块级盒，并且这个盒子参与了任何定位的计算。</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE1.png" alt="图1"></p>
+<p>​      块级元素会自动生成一个块级盒block-level box，这是块级盒block-level-box的盒模型构成，它表明的是块级盒自身的结构构成。</p>
+<p>​     margin、border、padding、content分别定义了元素四种边，然后每种类型的边的四条边定义了一个盒子，分别是content box、padding box、border box、margin box，而决定块盒在包含块中与相邻块盒的垂直间距的便是margin-box，这个margin-box是始终存在的，即使它的margin为0，试看下面的代码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div style="width: 400px;height: 400px; background:#ff4400;"&gt;&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p> <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE2.png" alt="图2"></p>
+<p>此时我没有为这个div设置margin值，但是这个div还是有一个默认为0的margin的，试看下面的浏览器生成的computed style：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE3.png" alt="图3"></p>
+<p>可以看到div默认的margin为0</p>
+<h3 id="哪些元素会生成BFC"><a href="#哪些元素会生成BFC" class="headerlink" title="哪些元素会生成BFC?"></a>哪些元素会生成BFC?</h3><ul>
+<li>根元素</li>
+<li>float属性不为none</li>
+<li>position为absolute或fixed</li>
+<li>display为inline-block, table-cell, table-caption, flex, inline-flex</li>
+<li>overflow不为visible</li>
+</ul>
+<h3 id="BFC布局规则："><a href="#BFC布局规则：" class="headerlink" title="　　BFC布局规则："></a>　　BFC布局规则：</h3><ol>
+<li>内部的Box会在垂直方向，一个接一个地放置。</li>
+<li>Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠</li>
+<li>每个元素的margin box的左边， 与包含块border box的左边相接触(对于从左往右的格式化，否则相反)。即使存在浮动也是如此。</li>
+<li>BFC的区域不会与float box重叠。</li>
+<li>BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。反之也如此。</li>
+<li>计算BFC的高度时，浮动元素也参与计算</li>
+</ol>
+<h3 id="BFC在布局中的应用"><a href="#BFC在布局中的应用" class="headerlink" title="BFC在布局中的应用"></a>BFC在布局中的应用</h3><p>那么BFC有何用？</p>
+<ol>
+<li><p>清除浮动</p>
+</li>
+<li><p>防止 margin 重叠</p>
+</li>
+<li>多栏布局的一种方式</li>
+</ol>
+<h5 id="清除浮动"><a href="#清除浮动" class="headerlink" title="清除浮动"></a>清除浮动</h5><ul>
+<li>使得父元素包含子元素，常见的方式是为父元素设置overflow：hidden或者浮动父元素。根本原因在于创建BFC的元素，子浮动元素也会参与其高度计算，即不会产生高度塌陷问题。</li>
+</ul>
+<p>代码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;</div><div class="line">    .par &#123;</div><div class="line">        border: 5px solid #fcc;</div><div class="line">        width: 300px;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    .child &#123;</div><div class="line">        border: 5px solid #f66;</div><div class="line">        width:100px;</div><div class="line">        height: 100px;</div><div class="line">        float: left;</div><div class="line">    &#125;</div><div class="line">&lt;/style&gt;</div><div class="line">&lt;body&gt;</div><div class="line">    &lt;div class="par"&gt;</div><div class="line">        &lt;div class="child"&gt;&lt;/div&gt;</div><div class="line">        &lt;div class="child"&gt;&lt;/div&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div></pre></td></tr></table></figure>
+<p>页面：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE7.png" alt="图7"></p>
+<p>根据<code>BFC</code>布局规则第六条：</p>
+<blockquote>
+<p>计算<code>BFC</code>的高度时，浮动元素也参与计算</p>
+</blockquote>
+<p>为达到清除内部浮动，我们可以触发par生成<code>BFC</code>，那么par在计算高度时，par内部的浮动元素child也会参与计算。</p>
+<p>代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.par</span> &#123;</div><div class="line">    <span class="attribute">overflow</span>: hidden;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>效果如下：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE8.png" alt="图8"></p>
+<h5 id="防止margin重叠："><a href="#防止margin重叠：" class="headerlink" title="防止margin重叠："></a>防止margin重叠：</h5><ul>
+<li>同一个BFC中俩个相邻的box才会发生重叠与方向无关，不过由于上文提到的第一条限制，我们甚少看到水平方向的margin重叠。这在IE这中是个特例，IE可以设置write-mode。</li>
+<li>要阻止margin重叠，只要将俩个元素别放在一个BFC中即可（可以用上文提到的方式让相邻元素其中一个生成BFC）。阻止俩个相邻元素的重叠看起来没有意义，主要用于嵌套元素。</li>
+</ul>
+<p>代码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;</div><div class="line">    p &#123;</div><div class="line">        color: #f55;</div><div class="line">        background: #fcc;</div><div class="line">        width: 200px;</div><div class="line">        line-height: 100px;</div><div class="line">        text-align:center;</div><div class="line">        margin: 100px;</div><div class="line">    &#125;</div><div class="line">&lt;/style&gt;</div><div class="line">&lt;body&gt;</div><div class="line">    &lt;p&gt;Haha&lt;/p&gt;</div><div class="line">    &lt;p&gt;Hehe&lt;/p&gt;</div><div class="line">&lt;/body&gt;</div></pre></td></tr></table></figure>
+<p>页面：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE5.png" alt="图5"></p>
+<p>两个p之间的距离为100px，发送了margin重叠。<br>根据BFC布局规则第二条：</p>
+<blockquote>
+<p><code>Box</code>垂直方向的距离由margin决定。属于同一个<code>BFC</code>的两个相邻<code>Box</code>的margin会发生重叠</p>
+</blockquote>
+<p>我们可以在p外面包裹一层容器，并触发该容器生成一个<code>BFC</code>。那么两个P便不属于同一个<code>BFC</code>，就不会发生margin重叠了。<br>代码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;</div><div class="line">    .wrap &#123;</div><div class="line">        overflow: hidden;</div><div class="line">    &#125;</div><div class="line">    p &#123;</div><div class="line">        color: #f55;</div><div class="line">        background: #fcc;</div><div class="line">        width: 200px;</div><div class="line">        line-height: 100px;</div><div class="line">        text-align:center;</div><div class="line">        margin: 100px;</div><div class="line">    &#125;</div><div class="line">&lt;/style&gt;</div><div class="line">&lt;body&gt;</div><div class="line">    &lt;p&gt;Haha&lt;/p&gt;</div><div class="line">    &lt;div class="wrap"&gt;</div><div class="line">        &lt;p&gt;Hehe&lt;/p&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/body&gt;</div></pre></td></tr></table></figure>
+<p>效果如下：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE6.png" alt="图6"></p>
+<h5 id="多栏布局的一种方式"><a href="#多栏布局的一种方式" class="headerlink" title="多栏布局的一种方式"></a>多栏布局的一种方式</h5><ul>
+<li>上文提到的一条规则：与浮动元素相邻的已生成BFC的元素不能与浮动元素互相覆盖。利用该特性可以作为多栏布局的一种实现方式。</li>
+<li>这种布局的特点在于左右俩栏的宽度固定，中间栏可以根据浏览器宽度自适应。 <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE4.png" alt="图4"></li>
+</ul>
+<p>代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">body</span> &#123;</div><div class="line">  <span class="attribute">width</span>: <span class="number">600px</span>;</div><div class="line">  <span class="attribute">position</span>: relative;</div><div class="line">&#125;</div><div class="line"><span class="selector-class">.left</span> &#123;</div><div class="line">  <span class="attribute">width</span>: <span class="number">200px</span>;</div><div class="line">  <span class="attribute">height</span>: <span class="number">350px</span>;</div><div class="line">  <span class="attribute">float</span>: left;</div><div class="line">  <span class="attribute">background</span>: red;</div><div class="line">&#125;</div><div class="line"><span class="selector-class">.right</span> &#123;</div><div class="line">  <span class="attribute">height</span>: <span class="number">400px</span>;</div><div class="line">  <span class="attribute">background</span>: blue;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>效果：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE9.png" alt="图9"></p>
+<p>根据BFC布局规则第3条：</p>
+<blockquote>
+<p>每个元素的margin box的左边， 与包含块border box的左边相接触(对于从左往右的格式化，否则相反)。即使存在浮动也是如此。</p>
+</blockquote>
+<p>根据BFC布局规则第四条：</p>
+<blockquote>
+<p>BFC的区域不会与float box重叠。</p>
+</blockquote>
+<p>我们可以通过通过触发right生成BFC， 来实现自适应两栏布局。</p>
+<p>加上：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.right</span> &#123;</div><div class="line"><span class="attribute">height</span>: <span class="number">400px</span>;</div><div class="line"><span class="attribute">background</span>: blue;</div><div class="line"><span class="attribute">overflow</span>:hidden;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>效果如下：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/%E5%9B%BE10.png" alt="图10"></p>
+<p>这样实现了左栏的宽度固定，右栏可以根据浏览器宽度自适应，依次类比，三栏布局也是很好实现的</p>
+<p>参考链接：</p>
+<p><a href="http://www.cnblogs.com/lhb25/p/inside-block-formatting-ontext.html" target="_blank" rel="external">http://www.cnblogs.com/lhb25/p/inside-block-formatting-ontext.html</a></p>
+<p><a href="http://web.jobbole.com/84808/" target="_blank" rel="external">http://web.jobbole.com/84808/</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/05/21/Exporting 和Consuming模块/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1558,151 +1803,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/03/05/Oracle-拆分字符串/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="余鸢">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="余鸢">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/05/Oracle-拆分字符串/" itemprop="url">
-                  Oracle-拆分字符串
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-05T21:56:34+08:00">
-                2017-03-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Oracle/" itemprop="url" rel="index">
-                    <span itemprop="name">Oracle</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="使用分层查询拆分字符串"><a href="#使用分层查询拆分字符串" class="headerlink" title="使用分层查询拆分字符串"></a>使用分层查询拆分字符串</h3>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/05/Oracle-拆分字符串/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1750,7 +1850,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1768,7 +1868,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
