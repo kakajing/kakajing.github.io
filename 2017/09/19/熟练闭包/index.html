@@ -1,0 +1,715 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="对于那些使用不支持闭包特性的编程语言的程序员来说，闭包可能是一个陌生的概念。幸运的是，闭包真没什么可害怕的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="熟练闭包">
+<meta property="og:url" content="http://kakajing.github.io/2017/09/19/熟练闭包/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="对于那些使用不支持闭包特性的编程语言的程序员来说，闭包可能是一个陌生的概念。幸运的是，闭包真没什么可害怕的。">
+<meta property="og:updated_time" content="2017-09-19T07:35:09.378Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="熟练闭包">
+<meta name="twitter:description" content="对于那些使用不支持闭包特性的编程语言的程序员来说，闭包可能是一个陌生的概念。幸运的是，闭包真没什么可害怕的。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/09/19/熟练闭包/"/>
+
+
+
+
+
+  <title> 熟练闭包 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/09/19/熟练闭包/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                熟练闭包
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-19T15:34:40+08:00">
+                2017-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>对于那些使用不支持闭包特性的编程语言的程序员来说，闭包可能是一个陌生的概念。幸运的是，闭包真没什么可害怕的。</p>
+<a id="more"></a>
+<h4 id="理解闭包"><a href="#理解闭包" class="headerlink" title="理解闭包"></a>理解闭包</h4><p>理解闭包只需要学会三个基本的事实。<strong>第一个事实：JavaScript允许你引用在当前函数以外定义的变量。</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeSandwich</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> maginIngredient = <span class="string">"peanut butter"</span>;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">make</span>(<span class="params">filling</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> magincIngredient + <span class="string">" and "</span> + filling;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> make(<span class="string">"jelly"</span>);</div><div class="line">&#125;</div><div class="line">makeSandwich();  <span class="comment">//"peanut butter and jelly"</span></div></pre></td></tr></table></figure>
+<p>请注意内部的<code>make</code>函数是如何引用定义在外部<code>makeSandwich</code>函数内部的<code>maginIngredient</code>变量的。</p>
+<p><strong>第二个事实：即使外部函数已经返回，当前函数仍然可以引用在外部函数所定义的变量。</strong>如果这听起来让人难以置信，请记住，JavaScript的函数是第一类（first-class）对象。这意味着你可以返回一个内部函数，并在稍后调用它。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">sandwich</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> maginIngredient = <span class="string">"peanut butter"</span>;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">make</span>(<span class="params">filling</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> magincIngredient + <span class="string">" and "</span> + filling;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> make;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> f = makeSandwich();  </div><div class="line">f(<span class="string">"jelly"</span>);         <span class="comment">//"peanut butter and jelly"</span></div><div class="line">f(<span class="string">"bananas"</span>);      <span class="comment">//"peanut butter and bananas"</span></div><div class="line">f(<span class="string">"marsh"</span>);        <span class="comment">//"peanut butter and marsh"</span></div></pre></td></tr></table></figure>
+<p>这与第一个列子几乎完全相同。不同的是，不是在外部的<code>sandwich</code>函数中立即调用<code>make(&quot;jelly&quot;)</code>，而是返回<code>make</code>函数奔三。因此，f的值为内部的<code>make</code>函数，调用f实际上是调用<code>make</code>函数。但即使<code>sandwich</code>函数已经返回，<code>make</code>函数仍然能记住<code>magincIngredient</code>的值。</p>
+<p>这是如何工作的？答案是：JavaScript的函数值包含了比调用它们时执行所需要的代码还要多的信息。而且，JavaScript函数值还在内部存储它们可能会引用的定义在其封闭作用域的变量。<strong>那些在其所涵盖的作用域内跟踪变量的函数被称为闭包。</strong><code>make</code>函数就是一个闭包，其代码引用了两个外部变量：<code>maginIngredient</code>和<code>filling</code>。每当<code>make</code>函数被调用时，其代码都会引用到这两个变量，因为该闭包存储了这两个变量。</p>
+<p>函数可以引用在其作用域内的任何变量，包括参数和外部函数变量。我们可以利用这点来编写更加通用的<code>sandwich</code>函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">sandwich</span>(<span class="params">maginIngredient</span>) </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">make</span>(<span class="params">filling</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> magincIngredient + <span class="string">" and "</span> + filling;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> make;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> hamAnd = sandwich(<span class="string">"ham"</span>);</div><div class="line">hamAnd(<span class="string">"cheese"</span>);         <span class="comment">//"ham butter and cheese"</span></div><div class="line">hamAnd(<span class="string">"bananas"</span>);      <span class="comment">//"ham butter and bananas"</span></div><div class="line"><span class="keyword">var</span> turkeyAnd = sandwich(<span class="string">"turkey"</span>);</div><div class="line">turkeyAnd(<span class="string">"Swiss"</span>);        <span class="comment">//"turkey butter and Swiss"</span></div><div class="line">turkeyAnd(<span class="string">"Provolone"</span>)     <span class="comment">//"turkey butter and Provolone"</span></div></pre></td></tr></table></figure>
+<p>该函数创建了hamAnd和turkeyAnd两个完全不同的函数。尽管它们都是由相同的mak函数定义的，但是它们是两个截然不同的对象。第一个函数的magincIngredient值为“ham”，而第二个函数的magincIngredient值为“turkeyAnd”。</p>
+<p>闭包是JavaScript最优雅、最有表现力的特性之一，也是许多惯用法的核心。JavaScript甚至还提供了一种更为方便的构建闭包的字面量语法——函数表达式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">sandwich</span>(<span class="params">maginIngredient</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">filling</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> magincIngredient + <span class="string">" and "</span> + filling;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>请注意，该函数表达式是匿名的。由于我们只需要其能产生一个新的函数值，而不打算在局部调用它，因此根本没有必要给该函数命名。函数表达式也可以有名称。</p>
+<p><strong>学习闭包的第三个也是最后一个事实：闭包可以更新外部变量的值。</strong>实际上，闭包存储的是外部变量的引用，而不是它们的值的副本。因此，对于任何具有访问这些外部变量的闭包，都可以进行更新。一个简单的惯用法box对象说明了这一切。它存储了一个可读写的内部值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">box</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> val = <span class="literal">undefined</span>;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">        <span class="attr">set</span>: <span class="function"><span class="keyword">function</span> (<span class="params">newVal</span>) </span>&#123;</div><div class="line">            val = newVal;</div><div class="line">        &#125;,</div><div class="line">        <span class="attr">get</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> val;</div><div class="line">        &#125;,</div><div class="line">        <span class="attr">type</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">typeof</span> val;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> b = box();</div><div class="line">b.type();    <span class="comment">//undefined</span></div><div class="line">b.set(<span class="number">98</span>);</div><div class="line">b.get();     <span class="comment">//98</span></div><div class="line">b.type();   <span class="comment">//"number"</span></div></pre></td></tr></table></figure>
+<p>该例子产生了一个包含三个闭包的对象。这三个闭包是set，get，type属性。它们共同访问val变量。set闭包更新了val的值，随后调用get和type查看更新的结果。</p>
+<h4 id="提示："><a href="#提示：" class="headerlink" title="提示："></a>提示：</h4><ul>
+<li>函数可以引用定义在其外部作用域的变量。</li>
+<li>闭包比创建它们的函数有更长的生命周期。</li>
+<li>闭包在内部存储其外部变量的引用，并能读写这些变量。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/10/对BFC的理解/" rel="next" title="对BFC的理解">
+                <i class="fa fa-chevron-left"></i> 对BFC的理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#理解闭包"><span class="nav-number">1.</span> <span class="nav-text">理解闭包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#提示："><span class="nav-number">2.</span> <span class="nav-text">提示：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
