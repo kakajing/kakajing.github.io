@@ -1,0 +1,738 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="准备工作安装vue-cli脚手架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue音乐播放器开发（一）">
+<meta property="og:url" content="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="准备工作安装vue-cli脚手架">
+<meta property="og:image" content="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/C:/Users\user\Desktop\v1.png">
+<meta property="og:image" content="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/C:/Users\user\Desktop\vueapp\v2.png">
+<meta property="og:image" content="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/vueapp/v3.png">
+<meta property="og:image" content="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/vueapp/v4.png">
+<meta property="og:image" content="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/vueapp/v5.png">
+<meta property="og:image" content="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/vueapp/v6.png">
+<meta property="og:updated_time" content="2017-10-09T15:58:34.045Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue音乐播放器开发（一）">
+<meta name="twitter:description" content="准备工作安装vue-cli脚手架">
+<meta name="twitter:image" content="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/C:/Users\user\Desktop\v1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/"/>
+
+
+
+
+
+  <title> Vue音乐播放器开发（一） | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/10/09/Vue音乐播放器开发（一）/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Vue音乐播放器开发（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-09T23:24:10+08:00">
+                2017-10-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index">
+                    <span itemprop="name">vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><h4 id="安装vue-cli脚手架"><a href="#安装vue-cli脚手架" class="headerlink" title="安装vue-cli脚手架"></a>安装vue-cli脚手架</h4><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vue init webpack music</div></pre></td></tr></table></figure>
+<p> <img src="/2017/10/09/Vue音乐播放器开发（一）/C:/Users\user\Desktop\v1.png" alt="v1"></p>
+<p> 在这里，需要注意的是，使用ESLint来标准化代码。如图红框部分。</p>
+<blockquote>
+<p>搭建Vue脚手架，参考<a href="http://www.jianshu.com/p/1626b8643676" target="_blank" rel="external">搭建vue脚手架</a></p>
+</blockquote>
+<p>准备项目目录介绍记忆图标字体、公共样式等资源，如图</p>
+<p> <img src="/2017/10/09/Vue音乐播放器开发（一）/C:/Users\user\Desktop\vueapp\v2.png" alt="v2"></p>
+<h4 id="添加约束"><a href="#添加约束" class="headerlink" title="添加约束"></a>添加约束</h4><p><strong>index.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span></span></div><div class="line">          <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0,</span></div><div class="line">          maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>music<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>注意：一定要记得加上<code>&lt;meta name=&quot;viewport&quot; ... &gt;</code>设置，这是更好的适配移动端的代码。</p>
+<h4 id="在package-json添加依赖"><a href="#在package-json添加依赖" class="headerlink" title="在package.json添加依赖"></a>在<code>package.json</code>添加依赖</h4><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">"dependencies": &#123;</div><div class="line">    "babel-runtime": "^6.26.0",</div><div class="line">    "vue": "^2.4.2",</div><div class="line">    "vue-router": "^2.7.0",</div><div class="line">    "fastclick": "^1.0.6"</div><div class="line">  &#125;,</div><div class="line">"devDependencies": &#123;</div><div class="line">  ...</div><div class="line">  "babel-polyfill": "^6.26.0",</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>babel-runtime</code>对ES6的语法做转义。</p>
+<p><code>fastclick</code>解决移动端点击300毫秒延迟的问题。</p>
+<p><code>babel-polyfill</code>对ES6的API做转义。</p>
+<h4 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h4><p><code>npm install</code>安装之后在<code>main.js</code>里引入</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'babel-polyfill'</span></div><div class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></div><div class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App'</span></div><div class="line"><span class="comment">// import router from './router'</span></div><div class="line"><span class="keyword">import</span> fastclick <span class="keyword">from</span> <span class="string">'fastclick'</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> <span class="string">'common/stylus/index.styl'</span></div><div class="line"></div><div class="line">Vue.config.productionTip = <span class="literal">false</span></div><div class="line"></div><div class="line">fastclick.attach(<span class="built_in">document</span>.body)</div><div class="line"></div><div class="line"><span class="comment">/* eslint-disable no-new */</span></div><div class="line"><span class="keyword">new</span> Vue(&#123;</div><div class="line">  <span class="attr">el</span>: <span class="string">'#app'</span>,</div><div class="line">  <span class="attr">render</span>: <span class="function"><span class="params">h</span> =&gt;</span> h(App)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h5 id="使用css预编译处理器stylus"><a href="#使用css预编译处理器stylus" class="headerlink" title="使用css预编译处理器stylus"></a>使用css预编译处理器<code>stylus</code></h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install style-loader css-loader stylus stylus-loader -D</div></pre></td></tr></table></figure>
+<p>引入组件要注意该组件的路径，这里我在<code>webpack.base.config.js</code>里修改别名，来对接下来要用的组件路径简便化，更直观些。</p>
+<p><strong>webpack.base.config.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">resolve: &#123;</div><div class="line">    <span class="attr">extensions</span>: [<span class="string">'.js'</span>, <span class="string">'.vue'</span>, <span class="string">'.json'</span>],</div><div class="line">    <span class="attr">alias</span>: &#123;</div><div class="line">      <span class="string">'@'</span>: resolve(<span class="string">'src'</span>),</div><div class="line">      <span class="string">'common'</span>: resolve(<span class="string">'src/common'</span>),</div><div class="line">      <span class="string">'components'</span>: resolve(<span class="string">'src/components'</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<p>修改过<code>webpack.base.config.js</code>文件后需重启服务器。</p>
+<h3 id="页面骨架开发"><a href="#页面骨架开发" class="headerlink" title="页面骨架开发"></a>页面骨架开发</h3><h4 id="编写header组件"><a href="#编写header组件" class="headerlink" title="编写header组件"></a>编写header组件</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"m-header"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"icon"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">"text"</span>&gt;</span>Music<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/ecmascript-6"</span>&gt;</span><span class="javascript"></span></div><div class="line">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="引入到App-vue挂载到页面"><a href="#引入到App-vue挂载到页面" class="headerlink" title="引入到App.vue挂载到页面"></a>引入到<code>App.vue</code>挂载到页面</h4><p><strong>App.vue</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div id=&quot;app&quot;&gt;</div><div class="line">    &lt;m-header&gt;&lt;/m-header&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">&lt;script type=&quot;text/ecmascript-6&quot;&gt;</div><div class="line">  import MHeader from &apos;components/m-header/m-header&apos;</div><div class="line"></div><div class="line">  export default &#123;</div><div class="line">    components: &#123;</div><div class="line">      MHeader</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>效果如图：</p>
+<p> <img src="/2017/10/09/Vue音乐播放器开发（一）/vueapp/v3.png" alt="v3"></p>
+<h4 id="编写页面入口基础代码"><a href="#编写页面入口基础代码" class="headerlink" title="编写页面入口基础代码"></a>编写页面入口基础代码</h4><p>这里代码省略，直接上图</p>
+<p><img src="/2017/10/09/Vue音乐播放器开发（一）/vueapp/v4.png" alt="v4"></p>
+<h4 id="导航栏组件开发"><a href="#导航栏组件开发" class="headerlink" title="导航栏组件开发"></a>导航栏组件开发</h4><p><strong>tab.vue</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class=&quot;tab&quot;&gt;</div><div class="line">    &lt;router-link tag=&quot;div&quot; class=&quot;tab-item&quot; to=&quot;/recommend&quot;&gt;</div><div class="line">      &lt;span class=&quot;tab-link&quot;&gt;推荐&lt;/span&gt;</div><div class="line">    &lt;/router-link&gt;</div><div class="line">    &lt;router-link tag=&quot;div&quot; class=&quot;tab-item&quot; to=&quot;/singer&quot;&gt;</div><div class="line">      &lt;span class=&quot;tab-link&quot;&gt;歌手&lt;/span&gt;</div><div class="line">    &lt;/router-link&gt;</div><div class="line">    &lt;router-link tag=&quot;div&quot; class=&quot;tab-item&quot; to=&quot;/rank&quot;&gt;</div><div class="line">      &lt;span class=&quot;tab-link&quot;&gt;排行&lt;/span&gt;</div><div class="line">    &lt;/router-link&gt;</div><div class="line">    &lt;router-link tag=&quot;div&quot; class=&quot;tab-item&quot; to=&quot;/search&quot;&gt;</div><div class="line">      &lt;span class=&quot;tab-link&quot;&gt;搜索&lt;/span&gt;</div><div class="line">    &lt;/router-link&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">&lt;script type=&quot;text/ecmascript-6&quot;&gt;</div><div class="line">  export default &#123;&#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<h4 id="路由配置"><a href="#路由配置" class="headerlink" title="路由配置"></a>路由配置</h4><p>在index.js里配置基础组件</p>
+<p><strong>index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></div><div class="line"><span class="keyword">import</span> Router <span class="keyword">from</span> <span class="string">'vue-router'</span></div><div class="line"><span class="keyword">import</span> Recommend <span class="keyword">from</span> <span class="string">'components/recommend/recommend'</span></div><div class="line"><span class="keyword">import</span> Singer <span class="keyword">from</span> <span class="string">'components/singer/singer'</span></div><div class="line"><span class="keyword">import</span> Rank <span class="keyword">from</span> <span class="string">'components/rank/rank'</span></div><div class="line"><span class="keyword">import</span> Search <span class="keyword">from</span> <span class="string">'components/search/search'</span></div><div class="line"></div><div class="line">Vue.use(Router)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Router(&#123;</div><div class="line">  <span class="attr">routes</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">path</span>: <span class="string">'/'</span>,</div><div class="line">      <span class="attr">redirect</span>: <span class="string">'/recommend'</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">path</span>: <span class="string">'/recommend'</span>,</div><div class="line">      <span class="attr">component</span>: Recommend</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">path</span>: <span class="string">'/singer'</span>,</div><div class="line">      <span class="attr">component</span>: Singer</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">path</span>: <span class="string">'/rank'</span>,</div><div class="line">      <span class="attr">component</span>: Rank</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">path</span>: <span class="string">'/search'</span>,</div><div class="line">      <span class="attr">component</span>: Search</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p> <img src="/2017/10/09/Vue音乐播放器开发（一）/vueapp/v5.png" alt="v5"></p>
+<p> 效果： </p>
+<p> <img src="/2017/10/09/Vue音乐播放器开发（一）/vueapp/v6.png" alt="v6"></p>
+<h4 id="具体源代码"><a href="#具体源代码" class="headerlink" title="具体源代码"></a>具体源代码</h4><p>参考：<a href="https://github.com/kakajing/vue-music" target="_blank" rel="external">https://github.com/kakajing/vue-music</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/20/css小知识总结/" rel="next" title="css小知识总结">
+                <i class="fa fa-chevron-left"></i> css小知识总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装vue-cli脚手架"><span class="nav-number">1.1.</span> <span class="nav-text">安装vue-cli脚手架</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加约束"><span class="nav-number">1.2.</span> <span class="nav-text">添加约束</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在package-json添加依赖"><span class="nav-number">1.3.</span> <span class="nav-text">在package.json添加依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引入"><span class="nav-number">1.4.</span> <span class="nav-text">引入</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用css预编译处理器stylus"><span class="nav-number">1.4.1.</span> <span class="nav-text">使用css预编译处理器stylus</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面骨架开发"><span class="nav-number">2.</span> <span class="nav-text">页面骨架开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#编写header组件"><span class="nav-number">2.1.</span> <span class="nav-text">编写header组件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引入到App-vue挂载到页面"><span class="nav-number">2.2.</span> <span class="nav-text">引入到App.vue挂载到页面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写页面入口基础代码"><span class="nav-number">2.3.</span> <span class="nav-text">编写页面入口基础代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#导航栏组件开发"><span class="nav-number">2.4.</span> <span class="nav-text">导航栏组件开发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#路由配置"><span class="nav-number">2.5.</span> <span class="nav-text">路由配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#具体源代码"><span class="nav-number">2.6.</span> <span class="nav-text">具体源代码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
