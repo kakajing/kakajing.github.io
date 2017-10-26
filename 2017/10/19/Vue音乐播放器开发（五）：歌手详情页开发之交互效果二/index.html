@@ -1,0 +1,741 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="接 Vue音乐播放器开发（四）：歌手详情页开发以及Vuex的使用一
+交互效果图片跟随滑动变小当歌曲列表往上滑动时，图片跟随滑动变小以展示更多歌曲数据，当往下拉时，图片跟着放大。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue音乐播放器开发（五）：歌手详情页开发以及Vuex的使用二">
+<meta property="og:url" content="http://kakajing.github.io/2017/10/19/Vue音乐播放器开发（五）：歌手详情页开发之交互效果二/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="接 Vue音乐播放器开发（四）：歌手详情页开发以及Vuex的使用一
+交互效果图片跟随滑动变小当歌曲列表往上滑动时，图片跟随滑动变小以展示更多歌曲数据，当往下拉时，图片跟着放大。">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/v37.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/v38.png">
+<meta property="og:image" content="http://omux103p0.bkt.clouddn.com/V39.png">
+<meta property="og:updated_time" content="2017-10-26T12:51:11.518Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue音乐播放器开发（五）：歌手详情页开发以及Vuex的使用二">
+<meta name="twitter:description" content="接 Vue音乐播放器开发（四）：歌手详情页开发以及Vuex的使用一
+交互效果图片跟随滑动变小当歌曲列表往上滑动时，图片跟随滑动变小以展示更多歌曲数据，当往下拉时，图片跟着放大。">
+<meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/v37.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/10/19/Vue音乐播放器开发（五）：歌手详情页开发之交互效果二/"/>
+
+
+
+
+
+  <title> Vue音乐播放器开发（五）：歌手详情页开发以及Vuex的使用二 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/10/19/Vue音乐播放器开发（五）：歌手详情页开发之交互效果二/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Vue音乐播放器开发（五）：歌手详情页开发以及Vuex的使用二
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-19T21:41:20+08:00">
+                2017-10-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index">
+                    <span itemprop="name">vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>接 <a href="https://kakajing.github.io/2017/10/15/Vue%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E6%AD%8C%E6%89%8B%E8%AF%A6%E6%83%85%E9%A1%B5%E5%BC%80%E5%8F%91%E4%BB%A5%E5%8F%8AVuex%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%80/">Vue音乐播放器开发（四）：歌手详情页开发以及Vuex的使用一</a></p>
+<h2 id="交互效果"><a href="#交互效果" class="headerlink" title="交互效果"></a>交互效果</h2><h3 id="图片跟随滑动变小"><a href="#图片跟随滑动变小" class="headerlink" title="图片跟随滑动变小"></a>图片跟随滑动变小</h3><p>当歌曲列表往上滑动时，图片跟随滑动变小以展示更多歌曲数据，当往下拉时，图片跟着放大。</p>
+<a id="more"></a>
+<p>当向上滚动列表时有个底也要跟着向上滚，那就需要一个层，这个层在文字的下面，随着滚动有向上推的过程。在scroll组件之前添加这个<code>class</code>为<code>bg-layer</code>的<code>div</code>层。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"bg-layer"</span> ref=<span class="string">"layer"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></div><div class="line"> &lt;scroll <span class="class"><span class="keyword">class</span></span>=<span class="string">"list"</span> :data=<span class="string">"songs"</span> ref=<span class="string">"list"</span>&gt;</div><div class="line">   <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"song-list-wrapper"</span>&gt;</span></span></div><div class="line">      <span class="tag">&lt;<span class="name">song-list</span> <span class="attr">:songs</span>=<span class="string">"songs"</span>&gt;</span><span class="tag">&lt;/<span class="name">song-list</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">scroll</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>让<code>bg-layer</code>有个向上回动的效果，当滚动时需要操作<code>bg-layer</code>层的<code>transform</code>外向的偏移，让它随着滚动，所以要监听滚动的距离。给scroll组件添加个<code>probeType</code>，在created时添加<code>probeType</code>和<code>listenScroll</code>属性，这样就可以实时监听scroll位置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;scroll :probe-type=<span class="string">"probeType"</span> :listen-scroll=<span class="string">"listenScroll"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"list"</span> :data=<span class="string">"songs"</span> ref=<span class="string">"list"</span>&gt;</div><div class="line">      <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"song-list-wrapper"</span>&gt;</span></span></div><div class="line">        <span class="tag">&lt;<span class="name">song-list</span> <span class="attr">:songs</span>=<span class="string">"songs"</span>&gt;</span><span class="tag">&lt;/<span class="name">song-list</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">scroll</span>&gt;</span></div><div class="line"></div><div class="line">created () &#123;</div><div class="line">  <span class="keyword">this</span>.probeType = <span class="number">3</span></div><div class="line">  <span class="keyword">this</span>.listenScroll = <span class="literal">true</span></div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>监听个scroll事件，首先要维护一个纵向滚动的值，在data里定义scrollY变量默认为0。</p>
+<p><img src="http://oxkc6g4t4.bkt.clouddn.com/v37.png" alt="v37"></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">data () &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    <span class="attr">scrollY</span>: <span class="number">0</span></div><div class="line">  &#125;</div><div class="line">    &#125;,</div><div class="line"><span class="attr">methods</span>: &#123;</div><div class="line">  scroll (pos) &#123;</div><div class="line">    <span class="keyword">this</span>.scrollY = pos.y</div><div class="line">  &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>给scrollY赋值就可以实时拿到scrollY的值。接着要做的是在滚动时拿到scrollY的值来设置bg-layer的偏移量。</p>
+<p>设置bg-layer的滚动，watch scrollY。获取layer的<code>transform</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">watch: &#123;</div><div class="line">  scrollY (newY) &#123;</div><div class="line">    <span class="keyword">this</span>.$refs.layer.style[<span class="string">'transform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;newY&#125;</span>px,0)`</span></div><div class="line">    <span class="keyword">this</span>.$refs.layer.style[<span class="string">'webkitTransform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;newY&#125;</span>px,0)`</span></div><div class="line">  &#125;</div><div class="line"> &#125;,</div></pre></td></tr></table></figure>
+<p>发现个问题，滚动时图片还是会露出来，是因为bg-layer层的高度是100%。如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/v38.png" alt="v38"></p>
+<p>这里就要做个限制。bg-layer随着scroll滚动时并不是无限滚动的过程，只需要滚动到一个位置就行了。所以要设置它的最大的滚动距离。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">mounted () &#123;</div><div class="line">  <span class="keyword">this</span>.imageHeight = <span class="keyword">this</span>.$refs.bgImage.clientHeight</div><div class="line">  <span class="comment">// 最小translateY值</span></div><div class="line">  <span class="keyword">this</span>.minTranslateY = -<span class="keyword">this</span>.imageHeight</div><div class="line">  <span class="keyword">this</span>.$refs.list.$el.style.top = <span class="string">`<span class="subst">$&#123;<span class="keyword">this</span>.imageHeight&#125;</span>px`</span></div><div class="line">    &#125;,</div><div class="line"><span class="attr">watch</span>: &#123;</div><div class="line">  scrollY (newY) &#123;</div><div class="line">    <span class="comment">// 最大滚动距离</span></div><div class="line">    <span class="keyword">let</span> translateY = <span class="built_in">Math</span>.max(<span class="keyword">this</span>.minTranslateY, newY)</div><div class="line">    <span class="keyword">this</span>.$refs.layer.style[<span class="string">'transform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;translateY&#125;</span>px,0)`</span></div><div class="line">    <span class="keyword">this</span>.$refs.layer.style[<span class="string">'webkitTransform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;translateY&#125;</span>px,0)`</span></div><div class="line">  &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>记录背景图的高度和最小translateY值，计算出最大滚动距离。</p>
+<p>为了不让bg-layer滚动到顶部，只需要修改minTranslateY，这里定义个常量<code>RESERVED_HEIGHT</code>高度为40的偏移量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> RESERVED_HEIGHT = <span class="number">40</span></div><div class="line"></div><div class="line">mounted () &#123;</div><div class="line">  <span class="keyword">this</span>.imageHeight = <span class="keyword">this</span>.$refs.bgImage.clientHeight</div><div class="line">  <span class="keyword">this</span>.minTranslateY = -<span class="keyword">this</span>.imageHeight + RESERVED_HEIGHT</div><div class="line">  <span class="keyword">this</span>.$refs.list.$el.style.top = <span class="string">`<span class="subst">$&#123;<span class="keyword">this</span>.imageHeight&#125;</span>px`</span></div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>效果：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/V39.png" alt="V39"></p>
+<p>红线圈出的部分就是<code>RESERVED_HEIGHT</code>的高度。</p>
+<p>由图可以看出，当滚动到顶部时文字会遮住图片，实际效果是希望滚动到定不是图片会遮住文字。</p>
+<p>bg-layer层的position为relative布局的，设置z-index为10就会发现图片会遮住文字，但又会发现这时图片的高度是不对的，图片完全遮住文字就没有刚才的效果了，这里需要修改z-index和图片的高度。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">watch: &#123;</div><div class="line">      scrollY (newY) &#123;</div><div class="line">        <span class="keyword">let</span> translateY = <span class="built_in">Math</span>.max(<span class="keyword">this</span>.minTranslateY, newY)</div><div class="line">        <span class="keyword">let</span> zIndex = <span class="number">0</span></div><div class="line">        <span class="keyword">this</span>.$refs.layer.style[<span class="string">'transform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;translateY&#125;</span>px,0)`</span></div><div class="line">        <span class="keyword">this</span>.$refs.layer.style[<span class="string">'webkitTransform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;translateY&#125;</span>px,0)`</span></div><div class="line">        <span class="comment">// 当滚动到顶部时</span></div><div class="line">        <span class="keyword">if</span> (newY &lt; <span class="keyword">this</span>.minTranslateY) &#123;</div><div class="line">          zIndex = <span class="number">10</span></div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.paddingTop = <span class="number">0</span></div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.height = <span class="string">`<span class="subst">$&#123;RESERVED_HEIGHT&#125;</span>px`</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.paddingTop = <span class="string">'70%'</span></div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.height = <span class="number">0</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.$refs.bgImage.style.zIndex = zIndex</div><div class="line">      &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>这样跟随滚动的效果就实现，同时达到了滚动到顶部<code>overflow</code>是<code>hidden</code>的状态</p>
+<h3 id="图片跟随滚动放大效果"><a href="#图片跟随滚动放大效果" class="headerlink" title="图片跟随滚动放大效果"></a>图片跟随滚动放大效果</h3><p>当鼠标下拉时，图片跟着有放大的效果，修改transform的scale，定义scale默认为1。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">watch: &#123;</div><div class="line">      scrollY (newY) &#123;</div><div class="line">        <span class="keyword">let</span> translateY = <span class="built_in">Math</span>.max(<span class="keyword">this</span>.minTranslateY, newY)</div><div class="line">        <span class="keyword">let</span> zIndex = <span class="number">0</span></div><div class="line">        <span class="keyword">let</span> scale = <span class="number">1</span></div><div class="line">        <span class="keyword">this</span>.$refs.layer.style[<span class="string">'transform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;translateY&#125;</span>px,0)`</span></div><div class="line">        <span class="keyword">this</span>.$refs.layer.style[<span class="string">'webkitTransform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;translateY&#125;</span>px,0)`</span></div><div class="line">        <span class="comment">// 计算scale的比例</span></div><div class="line">        <span class="keyword">const</span> percent = <span class="built_in">Math</span>.abs(newY / <span class="keyword">this</span>.imageHeight)</div><div class="line">        <span class="comment">// 往下拉时计算scale的值</span></div><div class="line">        <span class="keyword">if</span> (newY &gt; <span class="number">0</span>) &#123;</div><div class="line">          scale = <span class="number">1</span> + percent</div><div class="line">          zIndex = <span class="number">10</span></div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="comment">// 当滚动到顶部时</span></div><div class="line">        <span class="keyword">if</span> (newY &lt; <span class="keyword">this</span>.minTranslateY) &#123;</div><div class="line">          zIndex = <span class="number">10</span></div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.paddingTop = <span class="number">0</span></div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.height = <span class="string">`<span class="subst">$&#123;RESERVED_HEIGHT&#125;</span>px`</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.paddingTop = <span class="string">'70%'</span></div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.height = <span class="number">0</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.$refs.bgImage.style.zIndex = zIndex</div><div class="line">        <span class="keyword">this</span>.$refs.bgImage.style[<span class="string">'transform'</span>] = <span class="string">`scale(<span class="subst">$&#123;scale&#125;</span>)`</span></div><div class="line">        <span class="keyword">this</span>.$refs.bgImage.style[<span class="string">'webkitTransform'</span>] = <span class="string">`scale(<span class="subst">$&#123;scale&#125;</span>)`</span></div><div class="line">      &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>鼠标往下拉时，图片也跟着往下有一点距离，它是无缝的，计算scale的值为<code>scale = 1 + percent</code>。背景图片的高度(this.imageHeight)乘以scale就等于增加newY的高度，所以图片的高度和newY的滚动是相契合的。</p>
+<h3 id="图片跟随滚动高速模糊"><a href="#图片跟随滚动高速模糊" class="headerlink" title="图片跟随滚动高速模糊"></a>图片跟随滚动高速模糊</h3><p>当鼠标下拉时，希望图片有高速模糊的效果并且模糊效果随着图片向上滑时模糊度更大。定义变量blur，当newY&gt;0时设置blur的比例值，然后设置bg-image的filter的样式属性<code>backdrop-filter</code>（backdrio-filter是css高速模糊的属性）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">watch: &#123;</div><div class="line">      scrollY (newY) &#123;</div><div class="line">        <span class="keyword">let</span> translateY = <span class="built_in">Math</span>.max(<span class="keyword">this</span>.minTranslateY, newY)</div><div class="line">        <span class="keyword">let</span> zIndex = <span class="number">0</span></div><div class="line">        <span class="keyword">let</span> scale = <span class="number">1</span></div><div class="line">        <span class="keyword">let</span> blur = <span class="number">0</span></div><div class="line">        <span class="keyword">this</span>.$refs.layer.style[<span class="string">'transform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;translateY&#125;</span>px,0)`</span></div><div class="line">        <span class="keyword">this</span>.$refs.layer.style[<span class="string">'webkitTransform'</span>] = <span class="string">`translate3d(0,<span class="subst">$&#123;translateY&#125;</span>px,0)`</span></div><div class="line">        <span class="keyword">const</span> percent = <span class="built_in">Math</span>.abs(newY / <span class="keyword">this</span>.imageHeight)</div><div class="line">        <span class="keyword">if</span> (newY &gt; <span class="number">0</span>) &#123;</div><div class="line">          scale = <span class="number">1</span> + percent</div><div class="line">          zIndex = <span class="number">10</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          <span class="comment">// 设置blur的值</span></div><div class="line">          blur = <span class="built_in">Math</span>.min(<span class="number">20</span> * percent, <span class="number">20</span>)</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 设置filter的模糊度</span></div><div class="line">        <span class="keyword">this</span>.$refs.filter.style[<span class="string">'backdrop-filter'</span>] = <span class="string">`blur(<span class="subst">$&#123;blur&#125;</span>px)`</span></div><div class="line">        <span class="keyword">this</span>.$refs.filter.style[<span class="string">'webkitBackdrop-filter'</span>] = <span class="string">`blur(<span class="subst">$&#123;blur&#125;</span>px)`</span></div><div class="line">        <span class="comment">// 当滚动到顶部时</span></div><div class="line">        <span class="keyword">if</span> (newY &lt; <span class="keyword">this</span>.minTranslateY) &#123;</div><div class="line">          zIndex = <span class="number">10</span></div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.paddingTop = <span class="number">0</span></div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.height = <span class="string">`<span class="subst">$&#123;RESERVED_HEIGHT&#125;</span>px`</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.paddingTop = <span class="string">'70%'</span></div><div class="line">          <span class="keyword">this</span>.$refs.bgImage.style.height = <span class="number">0</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.$refs.bgImage.style.zIndex = zIndex</div><div class="line">        <span class="keyword">this</span>.$refs.bgImage.style[<span class="string">'transform'</span>] = <span class="string">`scale(<span class="subst">$&#123;scale&#125;</span>)`</span></div><div class="line">        <span class="keyword">this</span>.$refs.bgImage.style[<span class="string">'webkitTransform'</span>] = <span class="string">`scale(<span class="subst">$&#123;scale&#125;</span>)`</span></div><div class="line">      &#125;</div><div class="line">    &#125;,</div></pre></td></tr></table></figure>
+<h2 id="实现返回键事件-click-quot-back-quot"><a href="#实现返回键事件-click-quot-back-quot" class="headerlink" title="实现返回键事件@click=&quot;back&quot;"></a>实现返回键事件<code>@click=&quot;back&quot;</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;music-list&quot;&gt;</div><div class="line">    &lt;div class=&quot;back&quot; @click=&quot;back&quot;&gt;</div><div class="line">      &lt;i class=&quot;icon-back&quot;&gt;&lt;/i&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">    ....</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<h2 id="实现背景图片里的按钮"><a href="#实现背景图片里的按钮" class="headerlink" title="实现背景图片里的按钮"></a>实现背景图片里的按钮</h2><p>随机播放全部按钮</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;bg-image&quot; :style=&quot;bgStyle&quot; ref=&quot;bgImage&quot;&gt;</div><div class="line">      &lt;div class=&quot;play-wrapper&quot;&gt;</div><div class="line">        &lt;div class=&quot;play&quot;&gt;</div><div class="line">          &lt;i class=&quot;icon-play&quot;&gt;&lt;/i&gt;</div><div class="line">          &lt;span class=&quot;text&quot;&gt;随机播放全部&lt;/span&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      &lt;div class=&quot;filter&quot; ref=&quot;filter&quot;&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p>当数据加载完成时再显示按钮渲染。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;play&quot; v-show=&quot;songs.length&gt;0&quot;&gt;</div></pre></td></tr></table></figure>
+<p>当滚动到顶部时让随机播放全部按钮消失。</p>
+<p>watch scrollY方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 当滚动到顶部时</span></div><div class="line"><span class="keyword">if</span> (newY &lt; <span class="keyword">this</span>.minTranslateY) &#123;</div><div class="line">  zIndex = <span class="number">10</span></div><div class="line">  <span class="keyword">this</span>.$refs.bgImage.style.paddingTop = <span class="number">0</span></div><div class="line">  <span class="keyword">this</span>.$refs.bgImage.style.height = <span class="string">`<span class="subst">$&#123;RESERVED_HEIGHT&#125;</span>px`</span></div><div class="line">  <span class="keyword">this</span>.$refs.playBtn.style.display = <span class="string">'none'</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">  <span class="keyword">this</span>.$refs.bgImage.style.paddingTop = <span class="string">'70%'</span></div><div class="line">  <span class="keyword">this</span>.$refs.bgImage.style.height = <span class="number">0</span></div><div class="line">  <span class="keyword">this</span>.$refs.playBtn.style.display = <span class="string">''</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="加载中效果"><a href="#加载中效果" class="headerlink" title="加载中效果"></a>加载中效果</h2><p>最后在scroll组件里注册loading组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;loading-container&quot; v-show=&quot;!songs.length&quot;&gt;</div><div class="line">    &lt;loading&gt;&lt;/loading&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/15/Vue音乐播放器开发（四）：歌手详情页开发以及Vuex的使用一/" rel="next" title="Vue音乐播放器开发（四）：歌手详情页开发以及Vuex的使用一">
+                <i class="fa fa-chevron-left"></i> Vue音乐播放器开发（四）：歌手详情页开发以及Vuex的使用一
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#交互效果"><span class="nav-number">1.</span> <span class="nav-text">交互效果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图片跟随滑动变小"><span class="nav-number">1.1.</span> <span class="nav-text">图片跟随滑动变小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片跟随滚动放大效果"><span class="nav-number">1.2.</span> <span class="nav-text">图片跟随滚动放大效果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片跟随滚动高速模糊"><span class="nav-number">1.3.</span> <span class="nav-text">图片跟随滚动高速模糊</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现返回键事件-click-quot-back-quot"><span class="nav-number">2.</span> <span class="nav-text">实现返回键事件@click="back"</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现背景图片里的按钮"><span class="nav-number">3.</span> <span class="nav-text">实现背景图片里的按钮</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载中效果"><span class="nav-number">4.</span> <span class="nav-text">加载中效果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
