@@ -1,0 +1,856 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="播放器内置组件开发播放器可以通过歌手详情列表、歌单详情列表、排行榜列表以及搜索结果打开，换言之，多个组件都可以操作这个播放器。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue音乐播放器开发（六）：播放器的实现（一）">
+<meta property="og:url" content="http://kakajing.github.io/2017/10/28/Vue音乐播放器开发（六）：播放器的实现（一）/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="播放器内置组件开发播放器可以通过歌手详情列表、歌单详情列表、排行榜列表以及搜索结果打开，换言之，多个组件都可以操作这个播放器。">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/v40.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/v46.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/v41.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/v42.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/v43.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/v44.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/v45.png">
+<meta property="og:updated_time" content="2017-11-23T13:11:12.240Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue音乐播放器开发（六）：播放器的实现（一）">
+<meta name="twitter:description" content="播放器内置组件开发播放器可以通过歌手详情列表、歌单详情列表、排行榜列表以及搜索结果打开，换言之，多个组件都可以操作这个播放器。">
+<meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/v40.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2017/10/28/Vue音乐播放器开发（六）：播放器的实现（一）/"/>
+
+
+
+
+
+  <title> Vue音乐播放器开发（六）：播放器的实现（一） | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2017/10/28/Vue音乐播放器开发（六）：播放器的实现（一）/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Vue音乐播放器开发（六）：播放器的实现（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-28T15:24:36+08:00">
+                2017-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index">
+                    <span itemprop="name">vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="播放器内置组件开发"><a href="#播放器内置组件开发" class="headerlink" title="播放器内置组件开发"></a>播放器内置组件开发</h2><p>播放器可以通过歌手详情列表、歌单详情列表、排行榜列表以及搜索结果打开，换言之，多个组件都可以操作这个播放器。</p>
+<a id="more"></a>
+<h3 id="播放器Vuex数据设计"><a href="#播放器Vuex数据设计" class="headerlink" title="播放器Vuex数据设计"></a>播放器Vuex数据设计</h3><p>打开播放器时点击缩小播放器仍然可以在后台播放运行，也就是说全局性的控制播放器数据，所以要通过vuex管理 。首先思考播放器需要哪些相关数据。</p>
+<p>列出播放器相关的数据：</p>
+<p><code>playing</code>：播放状态</p>
+<p><code>fullScreen</code>：展开或收起</p>
+<p><code>playlist</code>：播放列表</p>
+<p><code>sequenceList</code>：顺序列表</p>
+<p><code>mode</code>：播放模式</p>
+<p><code>currentIndex</code>：当前播放索引</p>
+<p><strong>state.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;playMode&#125; <span class="keyword">from</span> <span class="string">'common/js/config'</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> state = &#123;</div><div class="line">  <span class="attr">singer</span>: &#123;&#125;,</div><div class="line">  <span class="attr">playing</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">fullScreen</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">playlist</span>: [],</div><div class="line">  <span class="attr">sequenceList</span>: [],</div><div class="line">  <span class="attr">mode</span>: playMode.sequence,</div><div class="line">  <span class="attr">currentIndex</span>: <span class="number">-1</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> state</div></pre></td></tr></table></figure>
+<p>这几个数据的其他配置如mutations、getters在此省略，具体参考代码。</p>
+<h3 id="播放器组件开发"><a href="#播放器组件开发" class="headerlink" title="播放器组件开发"></a>播放器组件开发</h3><p>播放器<strong>player.vue</strong> 基础样式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class=&quot;player&quot;&gt;</div><div class="line">    &lt;div class=&quot;normal-player&quot;&gt;播放器&lt;/div&gt;</div><div class="line">    &lt;div class=&quot;mini-player&quot;&gt;&lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line">&lt;script type=&quot;text/ecmascript-6&quot;&gt;</div><div class="line"></div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>播放器是全局组件，放在<code>App.vue</code>下面，通过<code>Vuex</code>传递数据，触发<code>action</code>提交<code>mutation</code>，从而使播放器开始工作。</p>
+<p><strong>App.vue</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div id=&quot;app&quot;&gt;</div><div class="line">    &lt;m-header&gt;&lt;/m-header&gt;</div><div class="line">    &lt;tab&gt;&lt;/tab&gt;</div><div class="line">    &lt;keep-alive&gt;</div><div class="line">      &lt;router-view&gt;&lt;/router-view&gt;</div><div class="line">    &lt;/keep-alive&gt;</div><div class="line">    &lt;player&gt;&lt;/player&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<p>用vuex相关数据控制播放器的显示和隐藏，传入<code>fullScreen</code>控制显示或隐藏，<code>playlist</code>控制播放器渲染。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class=&quot;player&quot; v-show=&quot;playlist.length&gt;0&quot;&gt;</div><div class="line">    &lt;div class=&quot;normal-player&quot; v-show=&quot;fullScreen&quot;&gt;播放器&lt;/div&gt;</div><div class="line">    &lt;div class=&quot;mini-player&quot; v-show=&quot;fullScreen&quot;&gt;&lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">&lt;script type=&quot;text/ecmascript-6&quot;&gt;</div><div class="line">  import &#123;mapGetters&#125; from &apos;vuex&apos;</div><div class="line"></div><div class="line">  export default &#123;</div><div class="line">    computed: &#123;</div><div class="line">      ...mapGetters([</div><div class="line">        &apos;fullScreen&apos;,</div><div class="line">        &apos;playlist&apos;</div><div class="line">      ])</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<h4 id="控制播放器的展示"><a href="#控制播放器的展示" class="headerlink" title="控制播放器的展示"></a>控制播放器的展示</h4><p>点击歌曲列表时展开播放器，也就是点击歌曲列表song-list组件，给song-list组件添加事件<code>selectItem(item, index)</code></p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/v40.png" alt="v40"></p>
+<p> 而song-list又被music-list组件使用，在music-list组件触发select事件<code>@select=&quot;selectItem&quot;</code>。</p>
+<p><strong>music-list.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"song-list-wrapper"</span>&gt;</div><div class="line">    <span class="xml"><span class="tag">&lt;<span class="name">song-list</span> @<span class="attr">select</span>=<span class="string">"selectItem"</span> <span class="attr">:songs</span>=<span class="string">"songs"</span>&gt;</span><span class="tag">&lt;/<span class="name">song-list</span>&gt;</span></span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><code>selectItem</code>要做三件事：</p>
+<p>1、点击歌曲时要播放整个歌曲列表，设置<code>playlist</code>和<code>sequenceList</code></p>
+<p>2、根据点击的歌曲索引，设置<code>currentIndex</code>，点击时实际上歌曲要播放了，设置播放状态<code>playing</code></p>
+<p>3、默认展开全屏播放器，设置<code>fullScreen</code></p>
+<p>设置这些数据实际就是提交<code>mutations</code>。在一个动作中多次改变<code>mutation</code>那么会封装一个<code>action</code>。在<code>actions.js</code>里定义<code>selectPlay</code>。</p>
+<p><strong>action.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> * <span class="keyword">as</span> types <span class="keyword">from</span> <span class="string">'./mutation-types'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> selectPlay = <span class="function"><span class="keyword">function</span> (<span class="params">&#123;commit, state&#125;, &#123;list, index&#125;</span>) </span>&#123;</div><div class="line">  commit(types.SET_SEQUENCE_LIST, list)</div><div class="line">  commit(types.SET_PLAYLIST, list)</div><div class="line">  commit(types.SET_CURRENT_INDEX, index)</div><div class="line">  commit(types.SET_FULL_SCREEN, <span class="literal">true</span>)</div><div class="line">  commit(types.SET_PLAYING_STATE, <span class="literal">true</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>selectPlay对一系列mutation做封装，提交mutation。</p>
+<p>在music-list组件里调用actions</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;mapActions&#125; <span class="keyword">from</span> <span class="string">'vuex'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</div><div class="line">  <span class="attr">methods</span>: &#123;</div><div class="line">    selectItem (item, index) &#123;</div><div class="line">        <span class="keyword">this</span>.selectPlay(&#123;</div><div class="line">          <span class="attr">list</span>: <span class="keyword">this</span>.songs,</div><div class="line">          index</div><div class="line">        &#125;)</div><div class="line">      &#125;,</div><div class="line">      ...mapActions([</div><div class="line">        <span class="string">'selectPlay'</span></div><div class="line">      ])</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>action</code>逻辑执行<code>mutation</code>就会改变，<code>mutation</code>改变就会映射到<code>mapGetters</code>，也就会得到<code>fullScreen</code>和<code>playlist</code>的改变。</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/v46.png" alt="v46"></p>
+<p>通过定义的vuex以及一些事件点击操作去修改的vuex数据，这些操作行为成功实现了player组件的显示。</p>
+<p>传入<code>currentSong</code>填充歌曲基本数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class=&quot;player&quot; v-show=&quot;playlist.length&gt;0&quot;&gt;</div><div class="line">    &lt;div class=&quot;normal-player&quot; v-show=&quot;fullScreen&quot;&gt;</div><div class="line">      &lt;div class=&quot;background&quot;&gt;</div><div class="line">        &lt;img width=&quot;100%&quot; height=&quot;100%&quot; :src=&quot;currentSong.image&quot;&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      ...</div><div class="line">        &lt;h1 class=&quot;title&quot; v-html=&quot;currentSong.name&quot;&gt;&lt;/h1&gt;</div><div class="line">        &lt;h2 class=&quot;subtitle&quot; v-html=&quot;currentSong.singer&quot;&gt;&lt;/h2&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      &lt;div class=&quot;middle&quot;&gt;</div><div class="line">        &lt;div class=&quot;middle-l&quot;&gt;</div><div class="line">          &lt;div class=&quot;cd-wrapper&quot;&gt;</div><div class="line">            &lt;div class=&quot;cd&quot;&gt;</div><div class="line">              &lt;img class=&quot;image&quot; :src=&quot;currentSong.image&quot;&gt;</div><div class="line">            &lt;/div&gt;</div><div class="line">          &lt;/div&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      &lt;div class=&quot;bottom&quot;&gt;...&lt;/div&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">    &lt;div class=&quot;mini-player&quot; v-show=&quot;!fullScreen&quot;&gt;</div><div class="line">      &lt;div class=&quot;icon&quot;&gt;</div><div class="line">        &lt;img width=&quot;40&quot; height=&quot;40&quot; :src=&quot;currentSong.image&quot;&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      &lt;div class=&quot;text&quot;&gt;</div><div class="line">        &lt;h2 class=&quot;name&quot; v-html=&quot;currentSong.name&quot;&gt;&lt;/h2&gt;</div><div class="line">        &lt;p class=&quot;desc&quot; v-html=&quot;currentSong.singer&quot;&gt;&lt;/p&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      ...</div><div class="line">    &lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">&lt;script type=&quot;text/ecmascript-6&quot;&gt;</div><div class="line">  import &#123;mapGetters&#125; from &apos;vuex&apos;</div><div class="line">  </div><div class="line">  export default &#123;</div><div class="line">    computed: &#123;</div><div class="line">      ...mapGetters([</div><div class="line">        &apos;fullScreen&apos;,</div><div class="line">        &apos;playlist&apos;,</div><div class="line">        &apos;currentSong&apos;</div><div class="line">      ])</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>效果展示：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/v41.png" alt="v41"></p>
+<h4 id="mini播放器的展示"><a href="#mini播放器的展示" class="headerlink" title="mini播放器的展示"></a>mini播放器的展示</h4><p>miniPlayer是需要把<code>fullScreen</code>设置为<code>false</code>，因此点击返回按钮时把<code>fullScreen</code>设置为<code>false</code>，添加个<code>click</code>事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;normal-player&quot; v-show=&quot;fullScreen&quot;&gt;</div><div class="line">	...</div><div class="line">	&lt;div class=&quot;top&quot;&gt;</div><div class="line">        &lt;div class=&quot;back&quot; @click=&quot;back&quot;&gt;</div><div class="line">          &lt;i class=&quot;icon-back&quot;&gt;&lt;/i&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">        &lt;h1 class=&quot;title&quot; v-html=&quot;currentSong.name&quot;&gt;&lt;/h1&gt;</div><div class="line">        &lt;h2 class=&quot;subtitle&quot; v-html=&quot;currentSong.singer&quot;&gt;&lt;/h2&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">  methods: &#123;</div><div class="line">      back () &#123;</div><div class="line">        this.setFullScreen(false)</div><div class="line">      &#125;,</div><div class="line">      ...mapMutations(&#123;</div><div class="line">        setFullScreen: &apos;SET_FULL_SCREEN&apos;</div><div class="line">      &#125;)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过mutation改变fullScreen。</p>
+<p>效果展示：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/v42.png" alt="v42"></p>
+<p> 点击mini播放器打开全屏，同理在mini播放器添加个click事件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;mini-player&quot; v-show=&quot;!fullScreen&quot; @click=&quot;open&quot;&gt;</div><div class="line">      ...</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">open () &#123;</div><div class="line">   this.setFullScreen(true)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="播放器展开收起动画"><a href="#播放器展开收起动画" class="headerlink" title="播放器展开收起动画"></a>播放器展开收起动画</h4><h5 id="最大化和最小化切换"><a href="#最大化和最小化切换" class="headerlink" title="最大化和最小化切换"></a>最大化和最小化切换</h5><p>播放器最大化和最小化切换时没有交互动画显得比较生硬，为了体验更好使用<code>&lt;transition&gt;&lt;/transition&gt;</code>自定义标签设置交互动画。</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/v43.png" alt="v43"></p>
+<p>使用<code>&lt;transition&gt;&lt;/transition&gt;</code>包裹要实现的区块。然后根据<code>name</code>编写css样式</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/v44.png" alt="v44"></p>
+<h5 id="点击放大或缩小时的交互动画"><a href="#点击放大或缩小时的交互动画" class="headerlink" title="点击放大或缩小时的交互动画"></a>点击放大或缩小时的交互动画</h5><p>当展开收起播放器时，mini播放器的图片放大或缩小有渐变的效果，利用vuejs提供JavaScript钩子，在钩子里创建css3的animation。给name为normal的添加<code>@enter</code>、<code>@afterEnter</code>、<code>@leave</code>、<code>@afterLeave</code>这几个事件。</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/v45.png" alt="v45"></p>
+<p> enter方法有两个参数，第一个参数el是要做动画的dom，第二个参数done是回调函数，done执行时就会跳到下一个钩子<code>afterEnter</code>，<code>leave</code>和<code>enter</code>一样有两个参数，done执行时跳到下个钩子<code>afterLeave</code>。</p>
+<p>使用css3写动画首先要知道几个位置：从运动的起始点和终点的区域、横坐标和纵坐标以及scale的大小。但这些是动态获取的不能预先知道，所以通过js的方式创建css3动画。这里使用<a href="https://github.com/HenrikJoreteg/create-keyframe-animation" target="_blank" rel="external">create-keyframe-animation</a>第三方库实现通过js编程方式创建css3动画。</p>
+<p>在这之前先封装个函数来获取初始位置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 获取初始位置</span></div><div class="line">_getPosAndScale() &#123;</div><div class="line">        <span class="keyword">const</span> targetWidth = <span class="number">40</span></div><div class="line">        <span class="keyword">const</span> paddingLeft = <span class="number">40</span></div><div class="line">        <span class="keyword">const</span> paddingBottom = <span class="number">30</span></div><div class="line">        <span class="keyword">const</span> paddingTop = <span class="number">80</span></div><div class="line">        <span class="comment">// cd-wrapper的宽度</span></div><div class="line">        <span class="keyword">const</span> width = <span class="built_in">window</span>.innerWidth * <span class="number">0.8</span></div><div class="line">        <span class="comment">// 初始缩放比例</span></div><div class="line">        <span class="keyword">const</span> scale = targetWidth / width</div><div class="line">        <span class="keyword">const</span> x = -(<span class="built_in">window</span>.innerWidth / <span class="number">2</span> - paddingLeft)</div><div class="line">        <span class="keyword">const</span> y = <span class="built_in">window</span>.innerHeight - paddingTop - width / <span class="number">2</span> - paddingBottom</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          x,</div><div class="line">          y,</div><div class="line">          scale</div><div class="line">        &#125;</div><div class="line">      &#125;,</div></pre></td></tr></table></figure>
+<p>点击目标创建动画</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">enter(el, done) &#123;</div><div class="line">        <span class="keyword">const</span> &#123;x, y, scale&#125; = <span class="keyword">this</span>._getPosAndScale()</div><div class="line"></div><div class="line">        <span class="keyword">let</span> animation = &#123;</div><div class="line">          <span class="number">0</span>: &#123;</div><div class="line">            <span class="attr">transform</span>: <span class="string">`translate3d(<span class="subst">$&#123;x&#125;</span>px,<span class="subst">$&#123;y&#125;</span>px,0) scale(<span class="subst">$&#123;scale&#125;</span>)`</span></div><div class="line">          &#125;,</div><div class="line">          <span class="number">60</span>: &#123;</div><div class="line">            <span class="attr">transform</span>: <span class="string">`translate3d(0,0,0) scale(1.1)`</span></div><div class="line">          &#125;,</div><div class="line">          <span class="number">100</span>: &#123;</div><div class="line">            <span class="attr">transform</span>: <span class="string">`translate3d(0,0,0) scale(1)`</span></div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">        animations.registerAnimation(&#123;</div><div class="line">          <span class="attr">name</span>: <span class="string">'move'</span>,</div><div class="line">          animation,</div><div class="line">          <span class="attr">presets</span>: &#123;</div><div class="line">            <span class="attr">duration</span>: <span class="number">400</span>,</div><div class="line">            <span class="attr">easing</span>: <span class="string">'linear'</span></div><div class="line">          &#125;</div><div class="line">        &#125;)</div><div class="line">        animations.runAnimation(<span class="keyword">this</span>.$refs.cdWrapper, <span class="string">'move'</span>, done)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>动画执行完后调用done函数，done函数执行后跳到afterEnter，afterEnter做的事情就是结束动画，animation设置为空</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">afterEnter () &#123;</div><div class="line">   animations.unregisterAnimation(<span class="string">'move'</span>)</div><div class="line">   <span class="keyword">this</span>.$refs.cdWrapper.style.animation = <span class="string">''</span></div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>leave动画</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">leave(el, done) &#123;</div><div class="line">  <span class="keyword">this</span>.$refs.cdWrapper.style.transition = <span class="string">'all 0.4s'</span></div><div class="line">  <span class="keyword">const</span> &#123;x, y, scale&#125; = <span class="keyword">this</span>._getPosAndScale()</div><div class="line">  <span class="keyword">this</span>.$refs.cdWrapper.style[transform] = <span class="string">`translate3d(<span class="subst">$&#123;x&#125;</span>px,<span class="subst">$&#123;y&#125;</span>px,0) scale(<span class="subst">$&#123;scale&#125;</span>)`</span></div><div class="line">  <span class="keyword">this</span>.$refs.cdWrapper.addEventListener(<span class="string">'transitionend'</span>, done)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>leave动画执行完后调用done，done执行完后跳到afterLeave，afterLeave将动画设置为空</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">afterLeave() &#123;</div><div class="line">  <span class="keyword">this</span>.$refs.cdWrapper.style.transition = <span class="string">''</span></div><div class="line">  <span class="keyword">this</span>.$refs.cdWrapper.style[transform] = <span class="string">''</span></div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<h4 id="播放器歌曲播放功能实现"><a href="#播放器歌曲播放功能实现" class="headerlink" title="播放器歌曲播放功能实现"></a>播放器歌曲播放功能实现</h4><p>播放功能实际上是使用HTML5的<code>audio</code>标签实现的，<code>src</code>属性指向的是播放音乐地址。</p>
+<p>在<strong>player.vue</strong>里添加<code>audio</code>标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;audio ref=&quot;audio&quot; :src=&quot;currentSong.url&quot;&gt;&lt;/audio&gt;</div></pre></td></tr></table></figure>
+<p>仅仅通过指定播放地址是不能播放，还需要调用<code>audio</code>的<code>play</code>方法，在<code>currentSong</code>发生改变时调用<code>play</code>方法，这样要watch <code>currentSong</code>的变化</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">watch: &#123;</div><div class="line">      currentSong () &#123;</div><div class="line">        <span class="keyword">this</span>.$refs.audio.play()</div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>启动效果会报错：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Uncaught (<span class="keyword">in</span> promise) DOMException: The play() request was interrupted by a <span class="keyword">new</span> load request.</div></pre></td></tr></table></figure>
+<p>这是dom异常，在调用<code>play</code>方法时同时去请求src，但dom还没被读取就调用<code>play</code>，所以报错了。在这加个延迟<code>$nextTick()</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">watch: &#123;</div><div class="line">      currentSong () &#123;</div><div class="line">        <span class="keyword">this</span>.$nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">          <span class="keyword">this</span>.$refs.audio.play()</div><div class="line">        &#125;)</div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>报错消失，歌曲正常播放。</p>
+<h4 id="音乐暂停功能实现"><a href="#音乐暂停功能实现" class="headerlink" title="音乐暂停功能实现"></a>音乐暂停功能实现</h4><p>vuex里有定义一个状态叫<code>playing</code>，是控制当前播放歌曲是播放还是暂停状态。点击歌曲列表时会提交一个action，在action里提交<code>SET_PLAYING_STATE</code>的mutation设置为<code>true</code>，所以当点击歌曲列表时<code>playing</code>状态为<code>true</code>。通过mapGetters里的<code>playing</code>获取当前状态，然后通过mutation改变<code>playing</code>的状态</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">      ...mapGetters([</div><div class="line">        <span class="string">'fullScreen'</span>,</div><div class="line">        <span class="string">'playlist'</span>,</div><div class="line">        <span class="string">'currentSong'</span>,</div><div class="line">        <span class="string">'playing'</span></div><div class="line">      ])</div><div class="line">&#125;,</div><div class="line"><span class="attr">methods</span>: &#123;</div><div class="line">  ...mapMutations(&#123;</div><div class="line">        <span class="attr">setFullScreen</span>: <span class="string">'SET_FULL_SCREEN'</span>,</div><div class="line">        <span class="attr">setPlayingState</span>: <span class="string">'SET_PLAYING_STATE'</span></div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用<code>setPlayingState</code>方法改变<code>playing</code>状态</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;div class="bottom"&gt;</div><div class="line">  &lt;div class="icon i-center"&gt;</div><div class="line">     &lt;i @click="togglePlaying" class="icon-play"&gt;&lt;/i&gt;</div><div class="line">   &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line">     </div><div class="line">togglePlaying () &#123;</div><div class="line">   this.setPlayingState(!this.playing)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>仅仅设置playing不能让播放器停止，真正控制播放的还是播放器，所以watch playing状态</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">playing (newPlaying) &#123;</div><div class="line">  <span class="keyword">const</span> audio = <span class="keyword">this</span>.$refs.audio</div><div class="line">  <span class="keyword">this</span>.$nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    newPlaying ? audio.play() : audio.pause()</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="动态改变播放按钮样式"><a href="#动态改变播放按钮样式" class="headerlink" title="动态改变播放按钮样式"></a>动态改变播放按钮样式</h4><p>当点击歌曲播放时显示播放按钮，点击暂停时显示暂停按钮。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;div class="bottom"&gt;</div><div class="line">	&lt;div class="icon i-center"&gt;</div><div class="line">    	&lt;i @click="togglePlaying" :class="playIcon"&gt;&lt;/i&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line">        </div><div class="line">computed: &#123;</div><div class="line">      playIcon () &#123;</div><div class="line">        return this.playing ? 'icon-pause' : 'icon-play'</div><div class="line">      &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同理，mini播放器也是</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;div class="mini-player" v-show="!fullScreen" @click="open"&gt;</div><div class="line">	&lt;div class="control"&gt;</div><div class="line">        &lt;i @click="togglePlaying" :class="miniIcon"&gt;&lt;/i&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"> </div><div class="line"> computed: &#123;</div><div class="line">   miniIcon () &#123;</div><div class="line">     return this.playing ? 'icon-pause-mini' : 'icon-play-mini'</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>点击mini播放器播放按钮发现播放器又弹了出来，是因为子元素点击事件会冒泡到父元素上，父元素也有个点击事件去打开播放器，为了防止事件向上冒泡修改为<code>@click.stop=&#39;togglePlaying&#39;</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;mini-player&quot; v-show=&quot;!fullScreen&quot; @click=&quot;open&quot;&gt;</div><div class="line">	&lt;div class=&quot;control&quot;&gt;</div><div class="line">        &lt;i @click=&quot;togglePlaying&quot; :class=&quot;miniIcon&quot;&gt;&lt;/i&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<h4 id="cd图片旋转"><a href="#cd图片旋转" class="headerlink" title="cd图片旋转"></a>cd图片旋转</h4><p>歌曲播放时歌曲图片跟着旋转，暂停时图片不动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;cd-wrapper&quot; ref=&quot;cdWrapper&quot;&gt;</div><div class="line">  &lt;div class=&quot;cd&quot; :class=&quot;cdCls&quot;&gt;</div><div class="line">  	&lt;img class=&quot;image&quot; :src=&quot;currentSong.image&quot;&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">computed: &#123; </div><div class="line">  cdCls () &#123;</div><div class="line">  	return this.playing ? &apos;play&apos; : &apos;play pause&apos;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同理，mini播放器也是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;mini-player&quot; v-show=&quot;!fullScreen&quot; @click=&quot;open&quot;&gt;</div><div class="line">  &lt;div class=&quot;icon&quot;&gt;</div><div class="line">  	&lt;img :class=&quot;cdCls&quot; width=&quot;40&quot; height=&quot;40&quot; :src=&quot;currentSong.image&quot;&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<h4 id="歌曲前进后退功能实现"><a href="#歌曲前进后退功能实现" class="headerlink" title="歌曲前进后退功能实现"></a>歌曲前进后退功能实现</h4><p>前进后退功能其实就是改变当前播放歌曲的索引。</p>
+<p>vuex有个状态是<code>currentIndex</code>，表示当前播放歌曲的索引，当点击歌曲列表时触发action，action有个对<code>SET_CURRENT_INDEX</code>的mutation的提交，修改<code>currentIndex</code>播放到第几位，这也代表了当前播放的歌曲。通过mapGetters里的<code>currentIndex</code>获取当前播放歌曲，然后通过mutation改变<code>currentIndex</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">...mapGetters([</div><div class="line">  <span class="string">'fullScreen'</span>,</div><div class="line">  <span class="string">'playlist'</span>,</div><div class="line">  <span class="string">'currentSong'</span>,</div><div class="line">  <span class="string">'playing'</span>,</div><div class="line">  <span class="string">'currentIndex'</span></div><div class="line">])</div></pre></td></tr></table></figure>
+<p>添加<code>@prev</code>和<code>@next</code>方法</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&lt;div class="icon i-left"&gt;</div><div class="line">	&lt;i @click="prev" class="icon-prev"&gt;&lt;/i&gt;</div><div class="line">&lt;/div&gt;</div><div class="line">&lt;div class="icon i-center"&gt;</div><div class="line">	&lt;i @click="togglePlaying" :class="playIcon"&gt;&lt;/i&gt;</div><div class="line">&lt;/div&gt;</div><div class="line">&lt;div class="icon i-right"&gt;</div><div class="line">	&lt;i @click="next" class="icon-next"&gt;&lt;/i&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">methods: &#123;</div><div class="line">  prev () &#123;</div><div class="line">    let index = this.currentIndex + 1</div><div class="line">    if (index === this.playlist.length) &#123;</div><div class="line">      index = 0</div><div class="line">    &#125;</div><div class="line">    this.setCurrentIndex(index)</div><div class="line">  &#125;,</div><div class="line">  next () &#123;</div><div class="line">    let index = this.currentIndex - 1</div><div class="line">    if (index === -1) &#123;</div><div class="line">      index = this.playlist.length - 1</div><div class="line">    &#125;</div><div class="line">    this.setCurrentIndex(index)</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>点击暂停切换下首歌，下首歌播放了但icon没发生变化，是因为点击next时歌曲切换了但是<code>playing</code>状态没修改，这里修改下代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">prev () &#123;</div><div class="line">  <span class="keyword">let</span> index = <span class="keyword">this</span>.currentIndex + <span class="number">1</span></div><div class="line">  <span class="keyword">if</span> (index === <span class="keyword">this</span>.playlist.length) &#123;</div><div class="line">    index = <span class="number">0</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">this</span>.setCurrentIndex(index)</div><div class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.playing) &#123;</div><div class="line">    <span class="keyword">this</span>.togglePlaying()</div><div class="line">  &#125;</div><div class="line">&#125;,</div><div class="line">next () &#123;</div><div class="line">  <span class="keyword">let</span> index = <span class="keyword">this</span>.currentIndex - <span class="number">1</span></div><div class="line">  <span class="keyword">if</span> (index === <span class="number">-1</span>) &#123;</div><div class="line">    index = <span class="keyword">this</span>.playlist.length - <span class="number">1</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">this</span>.setCurrentIndex(index)</div><div class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.playing) &#123;</div><div class="line">    <span class="keyword">this</span>.togglePlaying()</div><div class="line">  &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>快速切换歌曲时会报<code>Uncaught (in promise) DOMException: The play() request was interrupted by a new load request.</code>之前遇到的错误。</p>
+<p><code>audio</code>有<code>@canplay</code>和<code>@error</code>两个事件：</p>
+<p>1、<code>@canplay</code>：当歌曲加载播放会触发事件，</p>
+<p>2、<code>@error</code>：当歌曲地址发生错误时会触发error事件</p>
+<p>在<code>audio</code>标签监听<code>@canplay=&quot;read&quot;</code>和<code>@error=&quot;error&quot;</code>事件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;audio ref=&quot;audio&quot; :src=&quot;currentSong.url&quot; @canplay=&quot;read&quot; @error=&quot;error&quot;&gt;&lt;/audio&gt;</div></pre></td></tr></table></figure>
+<p>只有当歌曲read时才能点击下首歌，反之不能点击下首歌。用一个标识位控制，在data里定义<code>songReady</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">data () &#123;</div><div class="line">      <span class="keyword">return</span> &#123;</div><div class="line">        <span class="attr">songReady</span>: <span class="literal">false</span></div><div class="line">      &#125;</div><div class="line">&#125;,</div><div class="line">  </div><div class="line"><span class="attr">methods</span>: &#123;</div><div class="line">        prev () &#123;</div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.songReady) &#123;</div><div class="line">          <span class="keyword">return</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">let</span> index = <span class="keyword">this</span>.currentIndex + <span class="number">1</span></div><div class="line">        <span class="keyword">if</span> (index === <span class="keyword">this</span>.playlist.length) &#123;</div><div class="line">          index = <span class="number">0</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.setCurrentIndex(index)</div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.playing) &#123;</div><div class="line">          <span class="keyword">this</span>.togglePlaying()</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.songReady = <span class="literal">false</span></div><div class="line">      &#125;,</div><div class="line">      next () &#123;</div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.songReady) &#123;</div><div class="line">          <span class="keyword">return</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">let</span> index = <span class="keyword">this</span>.currentIndex - <span class="number">1</span></div><div class="line">        <span class="keyword">if</span> (index === <span class="number">-1</span>) &#123;</div><div class="line">          index = <span class="keyword">this</span>.playlist.length - <span class="number">1</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.setCurrentIndex(index)</div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.playing) &#123;</div><div class="line">          <span class="keyword">this</span>.togglePlaying()</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.songReady = <span class="literal">false</span></div><div class="line">      &#125;,</div><div class="line">      read () &#123;</div><div class="line">        <span class="keyword">this</span>.songReady = <span class="literal">true</span></div><div class="line">      &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当用户切换下首歌遇到网络错误或者下首歌url错误，songReady永远不能执行，之后的点击事件都不能用，当下首歌加载失败触发error函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">read () &#123;</div><div class="line">       <span class="keyword">this</span>.songReady = <span class="literal">true</span></div><div class="line">     &#125;,</div><div class="line">     error () &#123;</div><div class="line">       <span class="keyword">this</span>.songReady = <span class="literal">true</span></div><div class="line">     &#125;,</div></pre></td></tr></table></figure>
+<p>从样式上做些处理,当我们不能点击时给这个按钮绑定<code>disableClas</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&lt;div class="bottom"&gt;</div><div class="line">  &lt;div class="operators"&gt;</div><div class="line">   ...</div><div class="line">    &lt;div class="icon i-left" :class="disableCls"&gt;</div><div class="line">    	&lt;i @click="prev" class="icon-prev"&gt;&lt;/i&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">    &lt;div class="icon i-center" :class="disableCls"&gt;</div><div class="line">    	&lt;i @click="togglePlaying" :class="playIcon"&gt;&lt;/i&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">    &lt;div class="icon i-right" :class="disableCls"&gt;</div><div class="line">    	&lt;i @click="next" class="icon-next"&gt;&lt;/i&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">   ...</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">computed: &#123;</div><div class="line">  disableCls () &#123;</div><div class="line">    return this.songReady ? '' : 'disable'</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="具体源代码"><a href="#具体源代码" class="headerlink" title="具体源代码"></a>具体源代码</h3><p>参考：<a href="https://github.com/kakajing/vue-music" target="_blank" rel="external">https://github.com/kakajing/vue-music</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/19/Vue音乐播放器开发（五）：歌手详情页开发之交互效果二/" rel="next" title="Vue音乐播放器开发（五）：歌手详情页开发以及Vuex的使用二">
+                <i class="fa fa-chevron-left"></i> Vue音乐播放器开发（五）：歌手详情页开发以及Vuex的使用二
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#播放器内置组件开发"><span class="nav-number">1.</span> <span class="nav-text">播放器内置组件开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#播放器Vuex数据设计"><span class="nav-number">1.1.</span> <span class="nav-text">播放器Vuex数据设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#播放器组件开发"><span class="nav-number">1.2.</span> <span class="nav-text">播放器组件开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#控制播放器的展示"><span class="nav-number">1.2.1.</span> <span class="nav-text">控制播放器的展示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mini播放器的展示"><span class="nav-number">1.2.2.</span> <span class="nav-text">mini播放器的展示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#播放器展开收起动画"><span class="nav-number">1.2.3.</span> <span class="nav-text">播放器展开收起动画</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#最大化和最小化切换"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">最大化和最小化切换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#点击放大或缩小时的交互动画"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">点击放大或缩小时的交互动画</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#播放器歌曲播放功能实现"><span class="nav-number">1.2.4.</span> <span class="nav-text">播放器歌曲播放功能实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#音乐暂停功能实现"><span class="nav-number">1.2.5.</span> <span class="nav-text">音乐暂停功能实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态改变播放按钮样式"><span class="nav-number">1.2.6.</span> <span class="nav-text">动态改变播放按钮样式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cd图片旋转"><span class="nav-number">1.2.7.</span> <span class="nav-text">cd图片旋转</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#歌曲前进后退功能实现"><span class="nav-number">1.2.8.</span> <span class="nav-text">歌曲前进后退功能实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体源代码"><span class="nav-number">1.3.</span> <span class="nav-text">具体源代码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
