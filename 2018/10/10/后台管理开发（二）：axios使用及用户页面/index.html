@@ -1,0 +1,827 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="用户页面用户页面基础代码展示，user.vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="后台管理开发（二）：axios使用及用户页面">
+<meta property="og:url" content="http://kakajing.github.io/2018/10/10/后台管理开发（二）：axios使用及用户页面/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="用户页面用户页面基础代码展示，user.vue">
+<meta property="og:image" content="http://omux103p0.bkt.clouddn.com/h5.png">
+<meta property="og:image" content="http://omux103p0.bkt.clouddn.com/h6.png">
+<meta property="og:image" content="http://omux103p0.bkt.clouddn.com/h7.png">
+<meta property="og:image" content="http://omux103p0.bkt.clouddn.com/h8.png">
+<meta property="og:image" content="http://omux103p0.bkt.clouddn.com/h9.png">
+<meta property="og:image" content="http://omux103p0.bkt.clouddn.com/h10.png">
+<meta property="og:updated_time" content="2018-01-16T13:18:58.657Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="后台管理开发（二）：axios使用及用户页面">
+<meta name="twitter:description" content="用户页面用户页面基础代码展示，user.vue">
+<meta name="twitter:image" content="http://omux103p0.bkt.clouddn.com/h5.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2018/10/10/后台管理开发（二）：axios使用及用户页面/"/>
+
+
+
+
+
+  <title> 后台管理开发（二）：axios使用及用户页面 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/10/10/后台管理开发（二）：axios使用及用户页面/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                后台管理开发（二）：axios使用及用户页面
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-10T23:34:05+08:00">
+                2018-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index">
+                    <span itemprop="name">vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="用户页面"><a href="#用户页面" class="headerlink" title="用户页面"></a>用户页面</h2><p>用户页面基础代码展示，<strong>user.vue</strong></p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class=&quot;user-wrap&quot;&gt;</div><div class="line">    &lt;breadcr :meName=&quot;meName&quot;&gt;&lt;/breadcr&gt;</div><div class="line">    </div><div class="line">  	&lt;el-form :inline=&quot;true&quot; :model=&quot;searchForm&quot;&gt;</div><div class="line">      &lt;el-form-item label=&quot;姓名&quot;&gt;</div><div class="line">        &lt;el-input size=&quot;small&quot; v-model=&quot;searchForm.name$LIKE&quot;&gt;&lt;/el-input&gt;</div><div class="line">      &lt;/el-form-item&gt;</div><div class="line">      &lt;el-form-item label=&quot;用户名&quot;&gt;</div><div class="line">        &lt;el-input size=&quot;small&quot; v-model=&quot;searchForm.username$LIKE&quot;&gt;&lt;/el-input&gt;</div><div class="line">      &lt;/el-form-item&gt;</div><div class="line">      &lt;el-form-item&gt;</div><div class="line">        &lt;el-button type=&quot;primary&quot; icon=&quot;el-icon-search&quot; size=&quot;small&quot; @click=&quot;search&quot;&gt;搜索&lt;/el-button&gt;</div><div class="line">      &lt;/el-form-item&gt;</div><div class="line">      &lt;el-form-item&gt;</div><div class="line">        &lt;el-button type=&quot;primary&quot; size=&quot;small&quot; icon=&quot;el-icon-plus&quot; @click=&quot;showAndUser&quot;&gt;添加用户&lt;/el-button&gt;</div><div class="line">      &lt;/el-form-item&gt;</div><div class="line">    &lt;/el-form&gt;</div><div class="line">    </div><div class="line">    &lt;el-table :data=&quot;users&quot; highlight-current-row @current-change=&quot;currentChange&quot; height=&quot;500&quot; border</div><div class="line">              style=&quot;width: 100%&quot;&gt;</div><div class="line">      &lt;el-table-column sortable prop=&quot;name&quot; label=&quot;姓名&quot; align=&quot;center&quot;&gt;&lt;/el-table-column&gt;</div><div class="line">      &lt;el-table-column sortable prop=&quot;username&quot; label=&quot;用户名&quot; align=&quot;center&quot;&gt;&lt;/el-table-column&gt;</div><div class="line">      &lt;el-table-column prop=&quot;status&quot; label=&quot;是否启用&quot; :formatter=&quot;formatterColumn&quot; align=&quot;center&quot;&gt;&lt;/el-table-column&gt;</div><div class="line">      &lt;el-table-column prop=&quot;action&quot; label=&quot;操作&quot; align=&quot;center&quot;&gt;</div><div class="line">        &lt;template slot-scope=&quot;scope&quot;&gt;</div><div class="line">          &lt;el-button size=&quot;mini&quot; @click=&quot;showEditUser(scope.$index,scope.row)&quot; plain&gt;编辑&lt;/el-button&gt;</div><div class="line">          &lt;el-button size=&quot;mini&quot; icon=&quot;el-icon-edit&quot; type=&quot;info&quot; plain @click=&quot;showAuthorized&quot;&gt;用户赋权&lt;/el-button&gt;</div><div class="line">        &lt;/template&gt;</div><div class="line">      &lt;/el-table-column&gt;</div><div class="line">    &lt;/el-table&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<h2 id="代码分析："><a href="#代码分析：" class="headerlink" title="代码分析："></a>代码分析：</h2><p>接下来依次分析<strong>user.vue</strong>的代码。</p>
+<h3 id="路径展示区"><a href="#路径展示区" class="headerlink" title="路径展示区"></a>路径展示区</h3><p>在用户页面里首先需要展示当前页面的路径，可以快速返回之前的页面。</p>
+<h4 id="编写基础组件breadcr-vue"><a href="#编写基础组件breadcr-vue" class="headerlink" title="编写基础组件breadcr.vue"></a>编写基础组件breadcr.vue</h4><p>这里用到element-ui的Breadcrumb 面包屑。考虑到在其他页面也要用到次此组件，所以我把Breadcrumb组件抽取出来做基础组件，方便其他页面使用。</p>
+<p>组件路径在<code>/base/breadcr/breadcr.vue</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class=&quot;breadcr-wrap&quot;&gt;</div><div class="line">    &lt;el-breadcrumb separator-class=&quot;el-icon-arrow-right&quot;&gt;</div><div class="line">      &lt;el-breadcrumb-item :to=&quot;&#123; path: &apos;/&apos; &#125;&quot;&gt;首页&lt;/el-breadcrumb-item&gt;</div><div class="line">      &lt;el-breadcrumb-item :to=&quot;&#123; path: &apos;/&apos; &#125;&quot;&gt;系统设置&lt;/el-breadcrumb-item&gt;</div><div class="line">      &lt;el-breadcrumb-item&gt;&#123;&#123;meName&#125;&#125;&lt;/el-breadcrumb-item&gt;</div><div class="line">    &lt;/el-breadcrumb&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<p>在Vue里父组件向子组件中传送数据是通过props实现的。所以我在props里定义属性<code>meName</code>，默认为空，表示菜单名称。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</div><div class="line">    <span class="attr">props</span>: &#123;</div><div class="line">      <span class="attr">meName</span>: &#123;</div><div class="line">        <span class="attr">type</span>: <span class="built_in">String</span>,</div><div class="line">        <span class="attr">default</span>: <span class="string">''</span></div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>在user.vue组件里注册breadcr组件，并使用它。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class="user-wrap"&gt;</div><div class="line">    &lt;breadcr&gt;&lt;/breadcr&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">export default&#123;</div><div class="line">  components: &#123;</div><div class="line">      Breadcr</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们可以用 <code>v-bind</code> 来动态地将 props 绑定到父组件的数据。每当父组件的数据变化时，该变化也会传导给子组件。<code>v-bind</code>的缩写语法是<code>:</code></p>
+<p>在data里声明<code>meName</code>并赋值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;breadcr :meName=<span class="string">"meName"</span>&gt;&lt;/breadcr&gt;</div><div class="line"></div><div class="line">data () &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">	<span class="attr">meName</span>: <span class="string">'用户管理'</span>,</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>页面展示如下(红框部分)：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/h5.png" alt="5"></p>
+<h3 id="搜索区"><a href="#搜索区" class="headerlink" title="搜索区"></a>搜索区</h3><p>搜索区使用element-ui的Form表单实现，这里使用行内表单，可以把几个表单放置在一行内，以此来实现我想要的效果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;el-form :inline=&quot;true&quot; :model=&quot;searchForm&quot;&gt;</div><div class="line">      &lt;el-form-item label=&quot;姓名&quot;&gt;</div><div class="line">        &lt;el-input size=&quot;small&quot; v-model=&quot;searchForm.name$LIKE&quot;&gt;&lt;/el-input&gt;</div><div class="line">      &lt;/el-form-item&gt;</div><div class="line">      &lt;el-form-item label=&quot;用户名&quot;&gt;</div><div class="line">        &lt;el-input size=&quot;small&quot; v-model=&quot;searchForm.username$LIKE&quot;&gt;&lt;/el-input&gt;</div><div class="line">      &lt;/el-form-item&gt;</div><div class="line">      &lt;el-form-item&gt;</div><div class="line">        &lt;el-button type=&quot;primary&quot; icon=&quot;el-icon-search&quot; size=&quot;small&quot;&gt;搜索&lt;/el-button&gt;</div><div class="line">      &lt;/el-form-item&gt;</div><div class="line">      &lt;el-form-item&gt;</div><div class="line">        &lt;el-button type=&quot;primary&quot; size=&quot;small&quot; icon=&quot;el-icon-plus&quot;&gt;添加用户&lt;/el-button&gt;</div><div class="line">      &lt;/el-form-item&gt;</div><div class="line">&lt;/el-form&gt;</div></pre></td></tr></table></figure>
+<p><code>:inline</code>设置为<code>true</code>可以让表单域变为行内的表单域，<code>:model</code>表示绑定要输入的搜索数据，所以要在data里搜索数据对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">data() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    <span class="comment">// 搜索数据</span></div><div class="line">    searchForm: &#123;</div><div class="line">      <span class="attr">name$LIKE</span>: <span class="string">''</span>,</div><div class="line">      <span class="attr">username$LIKE</span>: <span class="string">''</span></div><div class="line">    &#125;,</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>页面效果如下（红框部分）：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/h6.png" alt="6"></p>
+<h3 id="用户表格区"><a href="#用户表格区" class="headerlink" title="用户表格区"></a>用户表格区</h3><p>使用element-ui的Table表格展示用户数据。<code>data</code>表示要显示的数据。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;el-table :data=<span class="string">""</span> highlight-current-row @current-change=<span class="string">"currentChange"</span> height=<span class="string">"500"</span> border</div><div class="line">              style=<span class="string">"width: 100%"</span>&gt;</div><div class="line">      &lt;el-table-column sortable prop="name" label="姓名" align="center"&gt;&lt;/el-table-column&gt;</div><div class="line">      &lt;el-table-column sortable prop="username" label="用户名" align="center"&gt;&lt;/el-table-column&gt;</div><div class="line">      &lt;el-table-column prop="status" label="是否启用" :formatter="formatterColumn" align="center"&gt;&lt;/el-table-column&gt;</div><div class="line">      &lt;el-table-column prop="action" label="操作" align="center"&gt;</div><div class="line">        &lt;template slot-scope="scope"&gt;</div><div class="line">          &lt;el-button size="mini" @click="showEditUser(scope.$index,scope.row)" plain&gt;编辑&lt;/el-button&gt;</div><div class="line">          &lt;el-button size="mini" icon="el-icon-edit" type="info" plain @click="showAuthorized"&gt;用户赋权&lt;/el-button&gt;</div><div class="line">        &lt;/template&gt;</div><div class="line">      &lt;/el-table-column&gt;</div><div class="line">&lt;/el-table&gt;</div></pre></td></tr></table></figure>
+<p><code>highlight-current-row</code>表示高亮当前行，同时当表格的当前行发生变化的时候会触发<code>@current-change</code>事件,在data里定义<code>currentRow</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">data() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    <span class="attr">currentRow</span>: <span class="literal">null</span>,</div><div class="line">  &#125;</div><div class="line">&#125;,</div><div class="line"><span class="attr">methods</span>: &#123;</div><div class="line">  currentChange (val) &#123;</div><div class="line">   <span class="keyword">this</span>.currentRow = val</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="跨域请求数据"><a href="#跨域请求数据" class="headerlink" title="跨域请求数据"></a>跨域请求数据</h2><h3 id="使用axios跨域请求数据"><a href="#使用axios跨域请求数据" class="headerlink" title="使用axios跨域请求数据"></a>使用axios跨域请求数据</h3><p>不同域名之间的访问，需要跨域才能正确请求。我们的项目是前后端分离，存在跨域问题。Vue-cli 创建的项目，可以直接利用 Node.js 代理服务器，实现跨域请求，我使用axios解决跨域。</p>
+<h4 id="axios简介"><a href="#axios简介" class="headerlink" title="axios简介"></a>axios简介</h4><p>vue2.0官方推荐axios进行ajax请求。axios 是一个基于Promise 用于浏览器和 nodejs 的 HTTP 客户端，它本身具有以下特征：</p>
+<ul>
+<li>从浏览器中创建 XMLHttpRequest</li>
+<li>从 node.js 发出 http 请求</li>
+<li>支持 Promise API</li>
+<li>拦截请求和响应</li>
+<li>转换请求和响应数据</li>
+<li>取消请求</li>
+<li>自动转换JSON数据</li>
+<li>客户端支持防止 <a href="http://baike.baidu.com/link?url=iUceAfgyfJOacUtjPgT4ifaSOxDULAc_MzcLEOTySflAn5iLlHfMGsZMtthBm5sK4y6skrSvJ1HOO2qKtV1ej_" target="_blank" rel="external">CSRF/XSRF</a></li>
+</ul>
+<p>废话不多说，直接开始使用</p>
+<h4 id="安装axios"><a href="#安装axios" class="headerlink" title="安装axios"></a>安装axios</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install axios</div></pre></td></tr></table></figure>
+<h4 id="封装axios方法"><a href="#封装axios方法" class="headerlink" title="封装axios方法"></a>封装axios方法</h4><p>一般情况下，我们会用到的方法有：GET，POST，PUT，PATCH，DELETE，封装方法如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span></div><div class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> v = <span class="keyword">new</span> Vue()</div><div class="line"></div><div class="line">axios.defaults.withCredentials = <span class="literal">true</span></div><div class="line">axios.defaults.baseURL = <span class="string">'/api'</span></div><div class="line">axios.create(&#123;</div><div class="line">  <span class="attr">headers</span>: &#123;<span class="string">'content-type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>&#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 添加一个响应拦截器</span></div><div class="line">axios.interceptors.response.use(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">if</span> (response.data &amp;&amp; response.data.errcode) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">parseInt</span>(response.data.errcode) === <span class="number">40001</span>) &#123;</div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'未登录'</span>)</div><div class="line">      <span class="comment">// 未登录</span></div><div class="line">      v.$emit(<span class="string">'go'</span>, <span class="string">'/'</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> response</div><div class="line">&#125;, error =&gt; &#123;</div><div class="line">  <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error)</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> POST = <span class="function">(<span class="params">url, params</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> axios.post(url, params).then(<span class="function"><span class="params">res</span> =&gt;</span> res.data)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> GET = <span class="function">(<span class="params">url, params</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> axios.get(url, params).then(<span class="function"><span class="params">res</span> =&gt;</span> <span class="built_in">JSON</span>.stringify(res.data))</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> PUT = <span class="function">(<span class="params">url, params</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> axios.put(url, params).then(<span class="function"><span class="params">res</span> =&gt;</span> res.data)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> DELETE = <span class="function">(<span class="params">url, params</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> axios.delete(url, params).then(<span class="function"><span class="params">res</span> =&gt;</span> res.data)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> PATCH = <span class="function">(<span class="params">url, params</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> axios.patch(url, params).then(<span class="function"><span class="params">res</span> =&gt;</span> res.data)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h4><p>在config/index.js文件中修改dev中的proxyTable</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">proxyTable: &#123;</div><div class="line">      <span class="string">'/api'</span>: &#123;</div><div class="line">        <span class="attr">target</span>: <span class="string">'http://localhost:8080'</span>,</div><div class="line">        <span class="attr">changeOrigin</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">pathRewrite</span>: &#123;</div><div class="line">          <span class="string">'^/api'</span>: <span class="string">'/'</span></div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中 ‘/api’ 为匹配项，target 为被请求的地址，因为在 ajax 的 url 中加了前缀 ‘/api’，而原本的接口是没有这个前缀的，所以需要<strong>通过 pathRewrite 来重写地址，将前缀 ‘/api’ 转为 ‘/‘</strong>，如果本身的接口地址就有 ‘/api’ 这种通用前缀，就可以把 pathRewrite 删掉。</p>
+<h3 id="获取用户列表"><a href="#获取用户列表" class="headerlink" title="获取用户列表"></a>获取用户列表</h3><p>这里我把用户相关的操作代码放在api文件下，使用时方便查找一目了然。</p>
+<p><strong>api/user.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> * <span class="keyword">as</span> API <span class="keyword">from</span> <span class="string">'./index'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">getUser</span> (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> url = <span class="string">'/user'</span></div><div class="line">  <span class="keyword">const</span> data = <span class="built_in">Object</span>.assign(&#123;&#125;, &#123;</div><div class="line">    <span class="attr">pageIndex</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">pageSize</span>: <span class="number">10</span>,</div><div class="line">    <span class="attr">sortField</span>: <span class="string">''</span>,</div><div class="line">    <span class="attr">sortOrder</span>: <span class="string">''</span></div><div class="line">  &#125;)</div><div class="line">  <span class="keyword">return</span> API.GET(url, &#123;</div><div class="line">    <span class="attr">params</span>: data</div><div class="line">  &#125;).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(<span class="built_in">JSON</span>.parse(res))</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在引入封装好的axios文件，执行GET请求，给出url和所需参数，url是接口地址。这里<code>url=&#39;/user&#39;</code>而不是<code>url=&#39;/api/user&#39;</code>，是因为我在index.js文件里设置<code>axios.defaults.baseURL = &#39;/api&#39;</code>，使用 axios可以全局配置一个 <code>baseURL</code>，所以无需再加上<code>/api</code>。</p>
+<p><strong>user.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; getUser &#125; <span class="keyword">from</span> <span class="string">'api/user'</span></div><div class="line"><span class="keyword">import</span> &#123; statusCode &#125; <span class="keyword">from</span> <span class="string">'common/js/config'</span></div><div class="line"></div><div class="line">methods: &#123;</div><div class="line">      _getUerList () &#123;</div><div class="line">        getUser().then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">          <span class="keyword">if</span> (res.status === statusCode) &#123;</div><div class="line">         <span class="comment">//   console.log(res.result.data)</span></div><div class="line">            <span class="keyword">this</span>.users = res.result.data</div><div class="line">          &#125;</div><div class="line">        &#125;)</div><div class="line">      &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>引入api/user.js文件，调用<code>getUser()</code>方法，判断response的状态码，如果正确，控制台输出用户列表，截图如下：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/h7.png" alt="7"></p>
+<p> 想要在页面展示数据，首先在data中定义<code>users</code>对象，默认为<code>[]</code>，同时设置<code>:data=&quot;users&quot;</code>，在table表格内填充数据。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;el-table :data=<span class="string">"users"</span> highlight-current-row @current-change=<span class="string">"currentChange"</span> height=<span class="string">"500"</span> border style=<span class="string">"width: 100%"</span>&gt;</div><div class="line"></div><div class="line">data() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    <span class="attr">users</span>: []</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>截图如下：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/h8.png" alt="8"></p>
+<p> 用户数据成功展示，完美~！ </p>
+<h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><p>前面已经创建搜索数据对象，接下来对搜索按钮进行操作，点击搜索按钮触发search事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;el-form-item&gt;</div><div class="line">   &lt;el-button type=&quot;primary&quot; icon=&quot;el-icon-search&quot; size=&quot;small&quot; @click=&quot;search&quot;&gt;搜索&lt;/el-button&gt;</div><div class="line">&lt;/el-form-item&gt;</div></pre></td></tr></table></figure>
+<p>在api/user.js里创建<code>searchUser()</code>，调用GET方法</p>
+<p><strong>api/user.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">searchUser</span> (<span class="params">queryParams, queryParamsIndex</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> url = <span class="string">'/user'</span></div><div class="line">  <span class="keyword">const</span> data = <span class="built_in">Object</span>.assign(&#123;&#125;, queryParams, queryParamsIndex)</div><div class="line">  <span class="keyword">return</span> API.GET(url, &#123;</div><div class="line">    <span class="attr">params</span>: data</div><div class="line">  &#125;).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(<span class="built_in">JSON</span>.parse(res))</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同样user.vue引入<code>searchUser()</code>方法。这里需要注意下，因为后台给出的数据与所得出的数据不同，需要先对数据处理得出我们想要的数据结构。数据处理方法可能会在其他组件中用到，所以我把它放在common包下，代码如下：</p>
+<p>common/js/utils.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">encodeQueryParam</span> (<span class="params">data</span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> queryParam = &#123;&#125;</div><div class="line">  <span class="keyword">let</span> index = <span class="number">0</span></div><div class="line">  <span class="keyword">let</span> temp = <span class="string">''</span></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> f <span class="keyword">in</span> data) &#123;</div><div class="line">    <span class="keyword">if</span> (data[f] === <span class="string">''</span>) <span class="keyword">continue</span></div><div class="line">    <span class="keyword">if</span> (f.indexOf(<span class="string">'$LIKE'</span>) !== <span class="number">-1</span> &amp;&amp; data[f].indexOf(<span class="string">'%'</span>) === <span class="number">-1</span>) temp = <span class="string">'%'</span> + data[f] + <span class="string">'%'</span></div><div class="line">    <span class="keyword">if</span> (f.indexOf(<span class="string">'$START'</span>) !== <span class="number">-1</span>) temp = <span class="string">'%'</span> + data[f]</div><div class="line">    <span class="keyword">if</span> (f.indexOf(<span class="string">'$END'</span>) !== <span class="number">-1</span>) temp = data[f] + <span class="string">'%'</span></div><div class="line">    queryParam[<span class="string">'terms['</span> + (index) + <span class="string">'].column'</span>] = f</div><div class="line">    queryParam[<span class="string">'terms['</span> + (index) + <span class="string">'].value'</span>] = temp</div><div class="line">    temp = <span class="string">''</span></div><div class="line">    index++</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> queryParam</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>user.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">import</span> &#123; encodeQueryParam &#125; <span class="keyword">from</span> <span class="string">'common/js/utils'</span>  </div><div class="line"></div><div class="line"> search () &#123;</div><div class="line">     <span class="keyword">this</span>.total = <span class="number">0</span></div><div class="line">     <span class="keyword">this</span>.pageIndex = <span class="number">1</span></div><div class="line">     <span class="keyword">this</span>.searchUser()</div><div class="line">   &#125;,</div><div class="line">searchUser () &#123;</div><div class="line">       <span class="keyword">let</span> that = <span class="keyword">this</span></div><div class="line">       <span class="keyword">let</span> queryParams = &#123;</div><div class="line">         <span class="attr">name</span>: encodeQueryParam(that.searchForm)</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">let</span> queryParamsPage = &#123;</div><div class="line">         <span class="attr">pageIndex</span>: that.pageIndex,</div><div class="line">         <span class="attr">pageSize</span>: that.pageSize,</div><div class="line">         <span class="attr">sortField</span>: <span class="string">''</span>,</div><div class="line">         <span class="attr">sortOrder</span>: <span class="string">''</span></div><div class="line">       &#125;</div><div class="line">       searchUser(queryParams.name, queryParamsPage).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">         <span class="keyword">if</span> (res.status === statusCode) &#123;</div><div class="line">           that.total = res.total</div><div class="line">           <span class="keyword">this</span>.users = res.result.data</div><div class="line">           <span class="comment">// this.users = that.data</span></div><div class="line">         &#125;</div><div class="line">       &#125;).catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</div><div class="line">         <span class="built_in">console</span>.log(error)</div><div class="line">         that.$message.error(&#123;</div><div class="line">           <span class="attr">message</span>: <span class="string">'请求出现异常'</span>,</div><div class="line">           <span class="attr">duration</span>: <span class="number">2000</span></div><div class="line">         &#125;)</div><div class="line">       &#125;)</div><div class="line">     &#125;,</div></pre></td></tr></table></figure>
+<p>截图效果如下：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/h9.png" alt="9"></p>
+<h3 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h3><p>对添加用户按钮进行操作，点击添加用户按钮触发<code>showAndUser</code>事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;el-form-item&gt;</div><div class="line">  &lt;el-button type=&quot;primary&quot; size=&quot;small&quot; icon=&quot;el-icon-plus&quot; @click=&quot;showAndUser&quot;&gt;添加用户&lt;/el-button&gt;</div><div class="line">&lt;/el-form-item&gt;</div></pre></td></tr></table></figure>
+<p>添加用户页面我使用element-ui里的Dialog 对话框来实现，点击按钮弹出添加用户页面。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;!--添加用户页面--&gt;</div><div class="line">&lt;el-dialog title=&quot;添加用户&quot; :visible.sync=&quot;dialogFormVisible&quot; center&gt;</div><div class="line">     &lt;el-form :model=&quot;addForm&quot; ref=&quot;addForm&quot;&gt;</div><div class="line">       &lt;el-form-item label=&quot;姓名：&quot; :label-width=&quot;formLabelWidth&quot;&gt;</div><div class="line">         &lt;el-input v-model=&quot;addForm.name&quot; auto-complete=&quot;off&quot; style=&quot;width: 240px&quot;&gt;&lt;/el-input&gt;</div><div class="line">       &lt;/el-form-item&gt;</div><div class="line">       &lt;el-form-item label=&quot;用户名：&quot; :label-width=&quot;formLabelWidth&quot;&gt;</div><div class="line">         &lt;el-input v-model=&quot;addForm.username&quot; auto-complete=&quot;off&quot; style=&quot;width: 240px&quot;&gt;&lt;/el-input&gt;</div><div class="line">       &lt;/el-form-item&gt;</div><div class="line">       &lt;el-form-item label=&quot;密码：&quot; :label-width=&quot;formLabelWidth&quot;&gt;</div><div class="line">         &lt;el-input v-model=&quot;addForm.password&quot; auto-complete=&quot;off&quot; style=&quot;width: 240px&quot;&gt;&lt;/el-input&gt;</div><div class="line">       &lt;/el-form-item&gt;</div><div class="line">       &lt;el-form-item label=&quot;备注：&quot; :label-width=&quot;formLabelWidth&quot;&gt;</div><div class="line">         &lt;el-input type=&quot;textarea&quot; v-model=&quot;addForm.describe&quot;&gt;&lt;/el-input&gt;</div><div class="line">       &lt;/el-form-item&gt;</div><div class="line">     &lt;/el-form&gt;</div><div class="line">     &lt;div slot=&quot;footer&quot; class=&quot;dialog-footer&quot;&gt;</div><div class="line">       &lt;el-button type=&quot;primary&quot; @click=&quot;saveUser&quot;&gt;保存&lt;/el-button&gt;</div><div class="line">     &lt;/div&gt;</div><div class="line">   &lt;/el-dialog&gt;</div></pre></td></tr></table></figure>
+<p><code>:visible.sync=&quot;dialogFormVisible&quot;</code>表示是否显示 Dialog，同时在data里定义<code>dialogFormVisible</code>，默认为<code>false</code>，表示是否显示添加页面。定义<code>addForm</code>对象表示添加数据。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">data() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">  	<span class="comment">// 添加相关数据</span></div><div class="line">    dialogFormVisible: <span class="literal">false</span>,  <span class="comment">// 添加页面是否显示</span></div><div class="line">    addForm: &#123;</div><div class="line">      <span class="attr">name</span>: <span class="string">''</span>,</div><div class="line">      <span class="attr">username</span>: <span class="string">''</span>,</div><div class="line">      <span class="attr">password</span>: <span class="string">''</span>,</div><div class="line">      <span class="attr">describe</span>: <span class="string">''</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">addFormRules</span>: &#123;</div><div class="line">      <span class="attr">name</span>: [&#123;<span class="attr">required</span>: <span class="literal">true</span>, <span class="attr">message</span>: <span class="string">'请输入姓名'</span>, <span class="attr">trigger</span>: <span class="string">'blur'</span>&#125;],</div><div class="line">      <span class="attr">username</span>: [&#123;<span class="attr">required</span>: <span class="literal">true</span>, <span class="attr">message</span>: <span class="string">'请输入用户名'</span>, <span class="attr">trigger</span>: <span class="string">'blur'</span>&#125;],</div><div class="line">      <span class="attr">password</span>: [&#123;<span class="attr">required</span>: <span class="literal">true</span>, <span class="attr">message</span>: <span class="string">'请输入密码'</span>, <span class="attr">trigger</span>: <span class="string">'blur'</span>&#125;],</div><div class="line">      <span class="attr">describe</span>: [&#123;<span class="attr">required</span>: <span class="literal">true</span>, <span class="attr">message</span>: <span class="string">'备注'</span>, <span class="attr">trigger</span>: <span class="string">'blur'</span>&#125;]</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用POST请求</p>
+<p><strong>api/user.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">addUser</span> (<span class="params">userParams</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> API.POST(<span class="string">'/user'</span>, userParams)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>user.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">showAndUser () &#123;</div><div class="line">  <span class="keyword">this</span>.dialogFormVisible = <span class="literal">true</span></div><div class="line">  <span class="keyword">this</span>.addForm = &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">''</span>,</div><div class="line">    <span class="attr">username</span>: <span class="string">''</span>,</div><div class="line">    <span class="attr">password</span>: <span class="string">''</span>,</div><div class="line">    <span class="attr">describe</span>: <span class="string">''</span></div><div class="line">  &#125;</div><div class="line">&#125;,</div><div class="line">saveUser () &#123;</div><div class="line">  <span class="keyword">let</span> that = <span class="keyword">this</span></div><div class="line">  <span class="keyword">this</span>.$refs.addForm.validate(<span class="function">(<span class="params">valid</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (valid) &#123;</div><div class="line">      <span class="keyword">this</span>.$confirm(<span class="string">'确定保存吗？'</span>, <span class="string">'提示'</span>, &#123;&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        <span class="keyword">let</span> userParams = <span class="built_in">Object</span>.assign(&#123;&#125;, <span class="keyword">this</span>.addForm)</div><div class="line">        addUser(userParams).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">          <span class="keyword">if</span> (res.status === statusCode) &#123;</div><div class="line">            that.$message.success(&#123;</div><div class="line">              <span class="attr">message</span>: <span class="string">'添加用户成功'</span>,</div><div class="line">              <span class="attr">duration</span>: <span class="number">2000</span></div><div class="line">            &#125;)</div><div class="line">            that.$refs[<span class="string">'addForm'</span>].resetFields()</div><div class="line">            that.dialogFormVisible = <span class="literal">false</span></div><div class="line">            that.search()</div><div class="line">          &#125; <span class="keyword">else</span> &#123;</div><div class="line">            that.$message.error(&#123;</div><div class="line">              <span class="attr">message</span>: <span class="string">'添加用户失败'</span>,</div><div class="line">              <span class="attr">duration</span>: <span class="number">2000</span></div><div class="line">            &#125;)</div><div class="line">          &#125;</div><div class="line">        &#125;).catch(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</div><div class="line">          <span class="built_in">console</span>.log(error)</div><div class="line">          that.$message.error(&#123;</div><div class="line">            <span class="attr">showClose</span>: <span class="literal">true</span>,</div><div class="line">            <span class="attr">message</span>: <span class="string">'请求出现异常'</span>,</div><div class="line">            <span class="attr">duration</span>: <span class="number">2000</span></div><div class="line">          &#125;)</div><div class="line">        &#125;)</div><div class="line">      &#125;)</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>页面展示：</p>
+<p> <img src="http://omux103p0.bkt.clouddn.com/h10.png" alt="10"></p>
+<p>具体代码看：<a href="https://github.com/hs-web/hsweb-ui-vue" target="_blank" rel="external">https://github.com/hs-web/hsweb-ui-vue</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/08/后台管理开发（一）：开发技术框架相关及home页面详解/" rel="next" title="后台管理开发（一）：开发技术框架相关及home页面详解">
+                <i class="fa fa-chevron-left"></i> 后台管理开发（一）：开发技术框架相关及home页面详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户页面"><span class="nav-number">1.</span> <span class="nav-text">用户页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码分析："><span class="nav-number">2.</span> <span class="nav-text">代码分析：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#路径展示区"><span class="nav-number">2.1.</span> <span class="nav-text">路径展示区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#编写基础组件breadcr-vue"><span class="nav-number">2.1.1.</span> <span class="nav-text">编写基础组件breadcr.vue</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索区"><span class="nav-number">2.2.</span> <span class="nav-text">搜索区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户表格区"><span class="nav-number">2.3.</span> <span class="nav-text">用户表格区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跨域请求数据"><span class="nav-number">3.</span> <span class="nav-text">跨域请求数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用axios跨域请求数据"><span class="nav-number">3.1.</span> <span class="nav-text">使用axios跨域请求数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#axios简介"><span class="nav-number">3.1.1.</span> <span class="nav-text">axios简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装axios"><span class="nav-number">3.1.2.</span> <span class="nav-text">安装axios</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#封装axios方法"><span class="nav-number">3.1.3.</span> <span class="nav-text">封装axios方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置代理"><span class="nav-number">3.1.4.</span> <span class="nav-text">设置代理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取用户列表"><span class="nav-number">3.2.</span> <span class="nav-text">获取用户列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索"><span class="nav-number">3.3.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加用户"><span class="nav-number">3.4.</span> <span class="nav-text">添加用户</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
