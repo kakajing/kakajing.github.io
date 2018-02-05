@@ -382,7 +382,7 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class="user-wrap"&gt;</div><div class="line">    &lt;breadcr&gt;&lt;/breadcr&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">export default&#123;</div><div class="line">  components: &#123;</div><div class="line">      Breadcr</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>我们可以用 <code>v-bind</code> 来动态地将 props 绑定到父组件的数据。每当父组件的数据变化时，该变化也会传导给子组件。<code>v-bind</code>的缩写语法是<code>:</code></p>
 <p>在data里声明<code>meName</code>并赋值</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;breadcr :meName=<span class="string">"meName"</span>&gt;&lt;/breadcr&gt;</div><div class="line"></div><div class="line">data () &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">	<span class="attr">meName</span>: <span class="string">'用户管理'</span>,</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;breadcr :meName=<span class="string">"meName"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">breadcr</span>&gt;</span></span></div><div class="line"></div><div class="line">data () &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">	<span class="attr">meName</span>: <span class="string">'用户管理'</span>,</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>页面展示如下(红框部分)：</p>
 <p> <img src="http://omux103p0.bkt.clouddn.com/h5.png" alt="5"></p>
 <h3 id="搜索区"><a href="#搜索区" class="headerlink" title="搜索区"></a>搜索区</h3><p>搜索区使用element-ui的Form表单实现，这里使用行内表单，可以把几个表单放置在一行内，以此来实现我想要的效果。</p>
@@ -586,7 +586,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
