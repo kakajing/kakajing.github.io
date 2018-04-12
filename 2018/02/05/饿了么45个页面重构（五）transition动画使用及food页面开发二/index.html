@@ -86,21 +86,21 @@
 
 
 
-<meta name="description" content="接饿了么商城开发（四）：vuex的使用和food页面开发
+<meta name="description" content="接饿了么45个页面重构（四）：vuex的使用和food页面开发一
 排序同理，与分类一样，添加个chooseType()点击事件展示排序内容。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="饿了么商城开发（五）food页面开发二">
-<meta property="og:url" content="http://kakajing.github.io/2018/02/05/饿了么商城开发（五）food页面开发二/index.html">
+<meta property="og:title" content="饿了么45个页面重构（五）transition动画使用及food页面开发二">
+<meta property="og:url" content="http://kakajing.github.io/2018/02/05/饿了么45个页面重构（五）transition动画使用及food页面开发二/index.html">
 <meta property="og:site_name" content="余鸢">
-<meta property="og:description" content="接饿了么商城开发（四）：vuex的使用和food页面开发
+<meta property="og:description" content="接饿了么45个页面重构（四）：vuex的使用和food页面开发一
 排序同理，与分类一样，添加个chooseType()点击事件展示排序内容。">
 <meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/e13.png">
 <meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F%E6%96%B9%E5%BC%8F.gif">
 <meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/%E7%AD%9B%E9%80%89.gif">
-<meta property="og:updated_time" content="2018-03-13T16:07:16.995Z">
+<meta property="og:updated_time" content="2018-04-12T07:16:44.202Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="饿了么商城开发（五）food页面开发二">
-<meta name="twitter:description" content="接饿了么商城开发（四）：vuex的使用和food页面开发
+<meta name="twitter:title" content="饿了么45个页面重构（五）transition动画使用及food页面开发二">
+<meta name="twitter:description" content="接饿了么45个页面重构（四）：vuex的使用和food页面开发一
 排序同理，与分类一样，添加个chooseType()点击事件展示排序内容。">
 <meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/e13.png">
 
@@ -130,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://kakajing.github.io/2018/02/05/饿了么商城开发（五）food页面开发二/"/>
+  <link rel="canonical" href="http://kakajing.github.io/2018/02/05/饿了么45个页面重构（五）transition动画使用及food页面开发二/"/>
 
 
 
 
 
-  <title> 饿了么商城开发（五）food页面开发二 | 余鸢 </title>
+  <title> 饿了么45个页面重构（五）transition动画使用及food页面开发二 | 余鸢 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -271,7 +271,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/02/05/饿了么商城开发（五）food页面开发二/">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/02/05/饿了么45个页面重构（五）transition动画使用及food页面开发二/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="余鸢">
@@ -295,7 +295,7 @@
             
             
               
-                饿了么商城开发（五）food页面开发二
+                饿了么45个页面重构（五）transition动画使用及food页面开发二
               
             
           </h1>
@@ -368,7 +368,7 @@
       
 
       
-        <p>接<a href="https://kakajing.github.io/2018/02/04/%E9%A5%BF%E4%BA%86%E4%B9%88%E5%95%86%E5%9F%8E%E5%BC%80%E5%8F%91%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9Avuex%E7%9A%84%E4%BD%BF%E7%94%A8%E5%92%8Cfood%E9%A1%B5%E9%9D%A2%E5%BC%80%E5%8F%91%E4%B8%80/">饿了么商城开发（四）：vuex的使用和food页面开发</a></p>
+        <p>接<a href="https://kakajing.github.io/2018/02/04/%E9%A5%BF%E4%BA%86%E4%B9%88%E5%95%86%E5%9F%8E%E5%BC%80%E5%8F%91%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9Avuex%E7%9A%84%E4%BD%BF%E7%94%A8%E5%92%8Cfood%E9%A1%B5%E9%9D%A2%E5%BC%80%E5%8F%91%E4%B8%80/">饿了么45个页面重构（四）：vuex的使用和food页面开发一</a></p>
 <h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><p>同理，与分类一样，添加个<code>chooseType()</code>点击事件展示排序内容。</p>
 <a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;sort_item&quot; :class=&quot;&#123;choose_type:sortBy == &apos;sort&apos;&#125;&quot;&gt;</div><div class="line">  &lt;div class=&quot;sort_item_container&quot; @click=&quot;chooseType(&apos;sort&apos;)&quot;&gt;</div><div class="line">    &lt;div class=&quot;sort_item_border&quot;&gt;</div><div class="line">      &lt;span :class=&quot;&#123;category_title: sortBy == &apos;sort&apos;&#125;&quot;&gt;排序&lt;/span&gt;</div><div class="line">      &lt;svg width=&quot;10&quot; height=&quot;10&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; version=&quot;1.1&quot; class=&quot;sort_icon&quot;&gt;</div><div class="line">        &lt;polygon points=&quot;0,3 10,3 5,8&quot;/&gt;</div><div class="line">      &lt;/svg&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
@@ -455,8 +455,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/04/饿了么商城开发（四）：vuex的使用和food页面开发一/" rel="next" title="饿了么商城开发（四）：vuex的使用和food页面开发一">
-                <i class="fa fa-chevron-left"></i> 饿了么商城开发（四）：vuex的使用和food页面开发一
+              <a href="/2018/02/04/饿了么45个页面重构（四）：vuex的使用和food页面开发一/" rel="next" title="饿了么45个页面重构（四）：vuex的使用和food页面开发一">
+                <i class="fa fa-chevron-left"></i> 饿了么45个页面重构（四）：vuex的使用和food页面开发一
               </a>
             
           </div>
@@ -464,6 +464,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/12/饿了么45个页面重构（六）：搜索页面开发/" rel="prev" title="饿了么45个页面重构（六）：搜索页面开发">
+                饿了么45个页面重构（六）：搜索页面开发 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -556,7 +560,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -1,0 +1,762 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="点击首页的搜索图标跳转到搜索页面，效果如图：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="饿了么45个页面重构（六）：搜索页面开发">
+<meta property="og:url" content="http://kakajing.github.io/2018/02/12/饿了么45个页面重构（六）：搜索页面开发/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="点击首页的搜索图标跳转到搜索页面，效果如图：">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/%E7%82%B9%E5%87%BB%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE%E8%B7%B3%E8%BD%AC.gif">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/%E6%90%9C%E7%B4%A2.gif">
+<meta property="og:updated_time" content="2018-04-12T07:21:24.070Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="饿了么45个页面重构（六）：搜索页面开发">
+<meta name="twitter:description" content="点击首页的搜索图标跳转到搜索页面，效果如图：">
+<meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/%E7%82%B9%E5%87%BB%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE%E8%B7%B3%E8%BD%AC.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2018/02/12/饿了么45个页面重构（六）：搜索页面开发/"/>
+
+
+
+
+
+  <title> 饿了么45个页面重构（六）：搜索页面开发 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/02/12/饿了么45个页面重构（六）：搜索页面开发/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                饿了么45个页面重构（六）：搜索页面开发
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-12T23:02:41+08:00">
+                2018-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index">
+                    <span itemprop="name">vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>点击首页的搜索图标跳转到搜索页面，效果如图：</p>
+<a id="more"></a>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/%E7%82%B9%E5%87%BB%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE%E8%B7%B3%E8%BD%AC.gif" alt="点击搜索按钮跳转"></p>
+<h2 id="搜索组件"><a href="#搜索组件" class="headerlink" title="搜索组件"></a>搜索组件</h2><p>搜索页面分为四个部分：头部、搜索框、商家列表、搜索历史。输入搜索内容展示搜索数据，搜索食品或者餐厅时隐藏搜索历史。</p>
+<h3 id="头部"><a href="#头部" class="headerlink" title="头部"></a>头部</h3><p>引入e-header.vue组件，设置头部名称，返回按钮。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class=&quot;paddingTop search_page&quot;&gt;</div><div class="line">  	&lt;e-header :head-title=&quot;headTitle&quot; :go-back=&quot;goBack&quot;&gt;&lt;/e-header&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">export default&#123;</div><div class="line">  data()&#123;</div><div class="line">    return &#123;</div><div class="line">      headTitle: &apos;搜索&apos;,</div><div class="line">      goBack: true</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="搜索框"><a href="#搜索框" class="headerlink" title="搜索框"></a>搜索框</h3><p>添加输入框和提交按钮dom，绑定搜索内容<code>v-model=&quot;searchValue&quot;</code>，在输入框内输入搜索内容直接显示搜索到的数据。点击提交按钮，搜索结果并显示。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">&lt;form <span class="class"><span class="keyword">class</span></span>=<span class="string">"search_form"</span>&gt;</div><div class="line">  <span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"search"</span> <span class="attr">name</span>=<span class="string">"search"</span> <span class="attr">:placeholder</span>=<span class="string">"placeholder"</span> <span class="attr">v-model</span>=<span class="string">"searchValue"</span> <span class="attr">class</span>=<span class="string">"search_input"</span>&gt;</span></span></div><div class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">name</span>=<span class="string">"submit"</span> <span class="attr">class</span>=<span class="string">"search_submit"</span> @<span class="attr">click.prevent</span>=<span class="string">"searchTarget('')"</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></div><div class="line"></div><div class="line">import &#123; searchRestaurant &#125; from 'api/search'</div><div class="line"></div><div class="line">data () &#123;</div><div class="line">  return &#123;</div><div class="line">    placeholder: '请输入商家或美食名称',</div><div class="line">	searchValue: '',</div><div class="line">    extras: '',</div><div class="line">    restaurant: [],      // 搜索返回结果中的餐厅</div><div class="line">    restaurantList: [],  // 搜索返回的结果</div><div class="line">    restaurantFood: []  // 搜索返回结果中的food</div><div class="line">  &#125;</div><div class="line">&#125;,</div><div class="line">computed: &#123;</div><div class="line">  ...mapState([</div><div class="line">    'latitude', 'longitude'</div><div class="line">  ])</div><div class="line">&#125;,</div><div class="line">methods: &#123;</div><div class="line">  searchTarget () &#123;</div><div class="line">    this.extras = ['activities', 'coupon']</div><div class="line"></div><div class="line">    // 获取搜索结果</div><div class="line">    searchRestaurant(this.searchValue, this.latitude, this.longitude, this.extras).then((res) =&gt; &#123;</div><div class="line">      this.restaurantList = res.inside[3].restaurant_with_foods</div><div class="line">      this.restaurantList.forEach(item =&gt; &#123;</div><div class="line">        this.restaurant = item.restaurant</div><div class="line">        this.restaurantFood = item.foods</div><div class="line">        //  console.log(this.restaurantList)</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>searchRestaurant()</code>方法中需要用到参数<code>latitude</code>和<code>longitude</code>，我直接通过vuex mapState获取到它们的值。</p>
+<h3 id="搜索结果商家列表"><a href="#搜索结果商家列表" class="headerlink" title="搜索结果商家列表"></a>搜索结果商家列表</h3><p>对搜索到的数据渲染在dom上。使用具有路由功能的router-link应用（点击）导航，通过 <code>to</code> 属性指定目标地址，默认渲染成带有正确链接的 <code>&lt;a&gt;</code> 标签，可以通过配置 <code>tag</code> 属性生成别的标签.。另外，当目标路由成功激活时，链接元素自动设置一个表示激活的 CSS 类名。对搜索结果<code>restaurantFood</code>进行遍历获取 <code>v-for=&quot;item in restaurantFood&quot;</code>，设置key值<code>:key=&quot;item.id&quot;</code>。设置路由路径<code>:to=&quot;{path: &#39;/shop&#39;, query: {id:item.id}}&quot;</code>，query是带查询参数，结果为 <code>/shop?id=xxx</code>。对获取到的每个Item进行dom填充数据渲染。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;div class=&quot;paddingTop search_page&quot;&gt;</div><div class="line">    ...</div><div class="line">    &lt;section v-if=&quot;restaurantList.length&quot;&gt;</div><div class="line">      &lt;h4 class=&quot;title_restaurant&quot;&gt;商家&lt;/h4&gt;</div><div class="line">      &lt;ul class=&quot;list_container&quot;&gt;</div><div class="line">        &lt;router-link :to=&quot;&#123;path: &apos;/shop&apos;, query: &#123;id:item.id&#125;&#125;&quot; tag=&quot;li&quot; v-for=&quot;item in restaurantFood&quot; :key=&quot;item.id&quot; class=&quot;list_li&quot;&gt;</div><div class="line">          &lt;section class=&quot;item_left&quot;&gt;</div><div class="line">            &lt;img :src=&quot;getImgPath(item.image_path)&quot; class=&quot;restaurant_img&quot;&gt;</div><div class="line">          &lt;/section&gt;</div><div class="line">          &lt;section class=&quot;item_right&quot;&gt;</div><div class="line">            &lt;div class=&quot;item_right_text&quot;&gt;</div><div class="line">              &lt;p&gt;</div><div class="line">                &lt;span&gt;&#123;&#123;item.name&#125;&#125;&lt;/span&gt;</div><div class="line">                &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; version=&quot;1.1&quot; width=&quot;24&quot; height=&quot;14&quot; class=&quot;pay_icon&quot;&gt;</div><div class="line">                  &lt;polygon points=&quot;0,14 4,0 24,0 20,14&quot; style=&quot;fill:none;stroke:#FF6000;stroke-width:1&quot;/&gt;</div><div class="line">                  &lt;line x1=&quot;1.5&quot; y1=&quot;12&quot; x2=&quot;20&quot; y2=&quot;12&quot; style=&quot;stroke:#FF6000;stroke-width:1.5&quot;/&gt;</div><div class="line">                  &lt;text x=&quot;3.5&quot; y=&quot;9&quot; style=&quot;fill:#FF6000;font-size:9px;font-weight:bold;&quot;&gt;支付&lt;/text&gt;</div><div class="line">                &lt;/svg&gt;</div><div class="line">              &lt;/p&gt;</div><div class="line">              &lt;p&gt;月售 &#123;&#123;item.month_sales&#125;&#125; 单&lt;/p&gt;</div><div class="line">              &lt;!--&lt;p&gt;&#123;&#123;item.delivery_fee&#125;&#125; 元起送 / 距离&#123;&#123;item.distance&#125;&#125;&lt;/p&gt;--&gt;</div><div class="line">              &lt;p&gt;¥&#123;&#123;item.price&#125;&#125;&lt;/p&gt;</div><div class="line">            &lt;/div&gt;</div><div class="line">            &lt;ul class=&quot;item_right_detail&quot;&gt;</div><div class="line">              &lt;li v-for=&quot;activitiy in item.activities&quot; :key=&quot;activitiy.id&quot;&gt;</div><div class="line">                &lt;span :style=&quot;&#123;backgroundColor: &apos;#&apos; + activitiy.icon_color&#125;&quot;</div><div class="line">                      class=&quot;activities_icon&quot;&gt;&#123;&#123;activitiy.icon_name&#125;&#125;&lt;/span&gt;</div><div class="line">                &lt;span&gt;&#123;&#123;activitiy.name&#125;&#125;&lt;/span&gt;</div><div class="line">                &lt;span class=&quot;only_phone&quot;&gt;(手机客户端专享)&lt;/span&gt;</div><div class="line">              &lt;/li&gt;</div><div class="line">            &lt;/ul&gt;</div><div class="line">          &lt;/section&gt;</div><div class="line">        &lt;/router-link&gt;</div><div class="line">      &lt;/ul&gt;</div><div class="line">    &lt;/section&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<h3 id="搜索历史"><a href="#搜索历史" class="headerlink" title="搜索历史"></a>搜索历史</h3><p>每次把输入的搜索内容记录下来并保存。修改searchTarget方法，在获取搜索结果之前先判断是否有搜索历史记录historyValue，如果有添加到searchHistory里，同时隐藏历史记录。点击搜索结果进入下一页面时进行判断是否已经有一样的历史记录，如果没有则新增，如果有则不做重复储存，判断完成后进入下一页。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">searchTarget (historyValue) &#123;</div><div class="line">  <span class="keyword">this</span>.extras = [<span class="string">'activities'</span>, <span class="string">'coupon'</span>]</div><div class="line">  <span class="keyword">if</span> (historyValue) &#123;</div><div class="line">    <span class="keyword">this</span>.searchHistory = historyValue</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="keyword">this</span>.searchValue) &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 隐藏历史记录</span></div><div class="line">  <span class="keyword">this</span>.showHistory = <span class="literal">false</span></div><div class="line"></div><div class="line">  <span class="comment">// 获取搜索结果</span></div><div class="line">  searchRestaurant(<span class="keyword">this</span>.searchValue, <span class="keyword">this</span>.latitude, <span class="keyword">this</span>.longitude, <span class="keyword">this</span>.extras).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">this</span>.restaurantList = res.inside[<span class="number">3</span>].restaurant_with_foods</div><div class="line">    <span class="keyword">this</span>.restaurantList.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</div><div class="line">      <span class="keyword">this</span>.restaurant = item.restaurant</div><div class="line">      <span class="keyword">this</span>.restaurantFood = item.foods</div><div class="line">      <span class="comment">//  console.log(this.restaurantList)</span></div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.emptyResult = !<span class="keyword">this</span>.restaurantList.length</div><div class="line">  &#125;)</div><div class="line">  <span class="comment">/**</span></div><div class="line">         * 点击搜索结果进入下一页面时进行判断是否已经有一样的历史记录</div><div class="line">         * 如果没有则新增，如果有则不做重复储存，判断完成后进入下一页</div><div class="line">         */</div><div class="line">  <span class="keyword">let</span> history = getStore(<span class="string">'searchHistory'</span>)</div><div class="line">  <span class="keyword">if</span> (history) &#123;</div><div class="line">    <span class="keyword">let</span> checkRepeat = <span class="literal">false</span></div><div class="line">    <span class="keyword">this</span>.searchHistory = <span class="built_in">JSON</span>.parse(history)</div><div class="line">    <span class="keyword">this</span>.searchHistory.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</div><div class="line">      <span class="keyword">if</span> (item === <span class="keyword">this</span>.searchValue) &#123;</div><div class="line">        checkRepeat = <span class="literal">true</span></div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line">    <span class="keyword">if</span> (!checkRepeat) &#123;</div><div class="line">      <span class="keyword">this</span>.searchHistory.push(<span class="keyword">this</span>.searchValue)</div><div class="line">    &#125;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">this</span>.searchHistory.push(<span class="keyword">this</span>.searchValue)</div><div class="line">  &#125;</div><div class="line">  setStore(<span class="string">'searchHistory'</span>, <span class="keyword">this</span>.searchHistory)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>在dom中渲染数据。首先判断是否存在searchHistory，如果有显示搜索历史块<code>v-if=&quot;searchHistory.length&amp;&amp;showHistory&quot;</code>。遍历searchHistory得出每个item，当点击某个item时进入下一页<code>@click=&quot;searchTarget(item)&quot;</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;section class=&quot;search_history&quot; v-if=&quot;searchHistory.length&amp;&amp;showHistory&quot;&gt;</div><div class="line">  &lt;h4 class=&quot;title_restaurant&quot;&gt;搜索历史&lt;/h4&gt;</div><div class="line">  &lt;ul&gt;</div><div class="line">    &lt;li v-for=&quot;(item, index) in searchHistory&quot; :key=&quot;index&quot; class=&quot;history_list&quot;&gt;</div><div class="line">      &lt;span class=&quot;history_text ellipsis&quot; @click=&quot;searchTarget(item)&quot;&gt;&#123;&#123;item&#125;&#125;&lt;/span&gt;</div><div class="line">      &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; version=&quot;1.1&quot; class=&quot;delete_icon&quot; @click=&quot;deleteHistory(index)&quot;&gt;</div><div class="line">        &lt;line x1=&quot;8&quot; y1=&quot;8&quot; x2=&quot;18&quot; y2=&quot;18&quot; style=&quot;stroke:#999;stroke-width:3&quot; /&gt;</div><div class="line">        &lt;line x1=&quot;18&quot; y1=&quot;8&quot; x2=&quot;8&quot; y2=&quot;18&quot; style=&quot;stroke:#999;stroke-width:3&quot; /&gt;</div><div class="line">      &lt;/svg&gt;</div><div class="line">    &lt;/li&gt;</div><div class="line">  &lt;/ul&gt;</div><div class="line">  &lt;footer class=&quot;clear_history&quot; @click=&quot;clearAllHistory&quot;&gt;清空搜索历史&lt;/footer&gt;</div><div class="line">&lt;/section&gt;</div><div class="line">&lt;div class=&quot;search_none&quot; v-if=&quot;emptyResult&quot;&gt;很抱歉！无搜索结果&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p>对每个搜索历史添加个删除按钮，删除某个搜索历史，创建<code>deleteHistory(index)</code>事件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">deleteHistory (index) &#123;</div><div class="line">  <span class="comment">// 点击删除按钮，删除当前历史记录</span></div><div class="line">  <span class="keyword">this</span>.searchHistory.splice(index, <span class="number">1</span>)</div><div class="line">  setStore(<span class="string">'searchHistory'</span>, <span class="keyword">this</span>.searchHistory)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>删除当前历史记录同时再对搜索历史进行存储。</p>
+<p>点击清空搜索历史，也就是清除全部搜索历史，对<code>searchHistory</code>置空同时再对搜索历史进行存储。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">clearAllHistory () &#123;</div><div class="line">  <span class="keyword">this</span>.searchHistory = []</div><div class="line">  setStore(<span class="string">'searchHistory'</span>, <span class="keyword">this</span>.searchHistory)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 搜索结束后，删除搜索内容直到为空时清空搜索结果，并显示历史记录。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">checkInput () &#123;</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.searchValue === <span class="string">''</span>) &#123;</div><div class="line">    <span class="keyword">this</span>.showHistory = <span class="literal">true</span>  <span class="comment">// 显示历史记录</span></div><div class="line">    <span class="keyword">this</span>.restaurantList = []  <span class="comment">// 清空搜索结果</span></div><div class="line">    <span class="keyword">this</span>.emptyResult = <span class="literal">false</span>  <span class="comment">// 隐藏搜索为空提示</span></div><div class="line">  &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>功能实现如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/%E6%90%9C%E7%B4%A2.gif" alt="搜索"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/05/饿了么45个页面重构（五）transition动画使用及food页面开发二/" rel="next" title="饿了么45个页面重构（五）transition动画使用及food页面开发二">
+                <i class="fa fa-chevron-left"></i> 饿了么45个页面重构（五）transition动画使用及food页面开发二
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#搜索组件"><span class="nav-number">1.</span> <span class="nav-text">搜索组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#头部"><span class="nav-number">1.1.</span> <span class="nav-text">头部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索框"><span class="nav-number">1.2.</span> <span class="nav-text">搜索框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索结果商家列表"><span class="nav-number">1.3.</span> <span class="nav-text">搜索结果商家列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索历史"><span class="nav-number">1.4.</span> <span class="nav-text">搜索历史</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
