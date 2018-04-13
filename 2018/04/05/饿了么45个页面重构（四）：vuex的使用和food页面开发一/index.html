@@ -91,7 +91,7 @@
 Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。这是官网的解释。个人理解为在data中的属性需要共享给其他vue组件使用的部分叫做状态。简单的说就是data中需要共用的属性。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="饿了么45个页面重构（四）：vuex的使用和food页面开发一">
-<meta property="og:url" content="http://kakajing.github.io/2018/04/02/饿了么45个页面重构（四）：vuex的使用和food页面开发一/index.html">
+<meta property="og:url" content="http://kakajing.github.io/2018/04/05/饿了么45个页面重构（四）：vuex的使用和food页面开发一/index.html">
 <meta property="og:site_name" content="余鸢">
 <meta property="og:description" content="Vuex在进入项目之前先学习一下Vuex。
 
@@ -101,7 +101,7 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
 <meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/e11.png">
 <meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/categoryDetail.gif">
 <meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/e12.png">
-<meta property="og:updated_time" content="2018-04-13T12:37:45.196Z">
+<meta property="og:updated_time" content="2018-04-13T12:42:46.306Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="饿了么45个页面重构（四）：vuex的使用和food页面开发一">
 <meta name="twitter:description" content="Vuex在进入项目之前先学习一下Vuex。
@@ -135,7 +135,7 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
 
 
 
-  <link rel="canonical" href="http://kakajing.github.io/2018/04/02/饿了么45个页面重构（四）：vuex的使用和food页面开发一/"/>
+  <link rel="canonical" href="http://kakajing.github.io/2018/04/05/饿了么45个页面重构（四）：vuex的使用和food页面开发一/"/>
 
 
 
@@ -276,7 +276,7 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/04/02/饿了么45个页面重构（四）：vuex的使用和food页面开发一/">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/04/05/饿了么45个页面重构（四）：vuex的使用和food页面开发一/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="余鸢">
@@ -315,8 +315,8 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-02T14:17:26+08:00">
-                2018-04-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-05T14:17:26+08:00">
+                2018-04-05
               </time>
             
 
@@ -405,7 +405,7 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
 <h2 id="food页面-1"><a href="#food页面-1" class="headerlink" title="food页面"></a>food页面</h2><p>food页面分为三个部分：对应头部名称、选项排序、餐厅列表。</p>
 <h3 id="头部名称"><a href="#头部名称" class="headerlink" title="头部名称"></a>头部名称</h3><p>首先设置它的头部名称，我们可以直接根据router-link配置中的查询参数获取相应参数。代码如下：</p>
 <p><strong>food.vue</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">    <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"food_container"</span>&gt;</span></span></div><div class="line">    	<span class="tag">&lt;<span class="name">head-top</span> <span class="attr">:head-title</span>=<span class="string">"headTitle"</span> <span class="attr">goBack</span>=<span class="string">"true"</span>&gt;</span><span class="tag">&lt;/<span class="name">head-top</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span>    </div><div class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</div><div class="line">  <span class="keyword">import</span> EHeader <span class="keyword">from</span> <span class="string">'components/e-header/e-header'</span></div><div class="line"></div><div class="line">  data () &#123;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">      <span class="attr">headTitle</span>: <span class="string">''</span>,</div><div class="line">      <span class="attr">goBack</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  created() &#123;</div><div class="line">    <span class="keyword">this</span>.headTitle = <span class="keyword">this</span>.$route.query.title</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">components</span>: &#123;</div><div class="line">      EHeader</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">    &lt;div class="food_container"&gt;</div><div class="line">    	&lt;head-top :head-title="headTitle" goBack="true"&gt;&lt;/head-top&gt;</div><div class="line">    &lt;/div&gt;    </div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span>&#123;</div><div class="line">  <span class="keyword">import</span> EHeader <span class="keyword">from</span> <span class="string">'components/e-header/e-header'</span></div><div class="line"></div><div class="line">  data () &#123;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">      <span class="attr">headTitle</span>: <span class="string">''</span>,</div><div class="line">      <span class="attr">goBack</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  created() &#123;</div><div class="line">    <span class="keyword">this</span>.headTitle = <span class="keyword">this</span>.$route.query.title</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">components</span>: &#123;</div><div class="line">      EHeader</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="选项排序"><a href="#选项排序" class="headerlink" title="选项排序"></a>选项排序</h3><p>选项排序又分为三部分：分类、排序、筛选。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;section class=&quot;sort_container&quot;&gt;</div><div class="line">	&lt;div class=&quot;sort_item&quot; :class=&quot;&#123;choose_type:sortBy == &apos;food&apos;&#125;&quot;&gt;&lt;/div&gt;</div><div class="line">	&lt;div class=&quot;sort_item&quot; :class=&quot;&#123;choose_type:sortBy == &apos;sort&apos;&#125;&quot;&gt;&lt;/div&gt;</div><div class="line">	&lt;div class=&quot;sort_item&quot; :class=&quot;&#123;choose_type:sortBy == &apos;activity&apos;&#125;&quot;&gt;&lt;/div&gt;</div><div class="line">&lt;/section&gt;</div></pre></td></tr></table></figure>
 <p><code>:class</code>表示被绑定的DOM 将与数据保持同步，每当数据有改动，相应的DOM视图也会更新。也就是说当choose_type发生改变时<code>sortBy</code>会更新对应的数据。<code>sortBy</code>表示为筛选条件。</p>
@@ -494,8 +494,8 @@ Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/27/饿了么45个页面重构（一）框架搭建/" rel="next" title="饿了么45个页面重构（一）框架搭建">
-                <i class="fa fa-chevron-left"></i> 饿了么45个页面重构（一）框架搭建
+              <a href="/2018/03/24/饿了么45个页面重构（三）轮播图及msite页面开发/" rel="next" title="饿了么45个页面重构（三）轮播图及msite页面开发">
+                <i class="fa fa-chevron-left"></i> 饿了么45个页面重构（三）轮播图及msite页面开发
               </a>
             
           </div>
