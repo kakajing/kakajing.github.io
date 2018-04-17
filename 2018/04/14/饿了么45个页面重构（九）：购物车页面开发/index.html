@@ -1,0 +1,816 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引入buyCart组件回到shop.vue组件中，将buyCart.vue引入这个组件中，传入相关数据，以及要实现的监听小球是否进入购物车事件。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="饿了么45个页面重构（九）：购物车页面开发">
+<meta property="og:url" content="http://kakajing.github.io/2018/04/14/饿了么45个页面重构（九）：购物车页面开发/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="引入buyCart组件回到shop.vue组件中，将buyCart.vue引入这个组件中，传入相关数据，以及要实现的监听小球是否进入购物车事件。">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/%E9%AB%98%E4%BA%AE%E5%8E%BB%E7%BB%93%E7%AE%97.gif">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/e24.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/e25.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/e26.png">
+<meta property="og:updated_time" content="2018-04-17T07:32:23.107Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="饿了么45个页面重构（九）：购物车页面开发">
+<meta name="twitter:description" content="引入buyCart组件回到shop.vue组件中，将buyCart.vue引入这个组件中，传入相关数据，以及要实现的监听小球是否进入购物车事件。">
+<meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/%E9%AB%98%E4%BA%AE%E5%8E%BB%E7%BB%93%E7%AE%97.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2018/04/14/饿了么45个页面重构（九）：购物车页面开发/"/>
+
+
+
+
+
+  <title> 饿了么45个页面重构（九）：购物车页面开发 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/04/14/饿了么45个页面重构（九）：购物车页面开发/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                饿了么45个页面重构（九）：购物车页面开发
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-14T22:57:33+08:00">
+                2018-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index">
+                    <span itemprop="name">vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引入buyCart组件"><a href="#引入buyCart组件" class="headerlink" title="引入buyCart组件"></a>引入buyCart组件</h1><p>回到shop.vue组件中，将buyCart.vue引入这个组件中，传入相关数据，以及要实现的监听小球是否进入购物车事件。<br><a id="more"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;buy-cart :foods=&quot;food&quot; :shopId=&quot;shopId&quot; @moveInCart=&quot;listenInCart&quot;&gt;&lt;/buy-cart&gt;</div><div class="line"></div><div class="line">methods: &#123;</div><div class="line">  listenInCart () &#123;</div><div class="line">    if (!this.receiveInCart) &#123;</div><div class="line">      this.receiveInCart = true</div><div class="line">      this.$refs.cartContainer.addEventListener(&apos;animationend&apos;, () =&gt; &#123;</div><div class="line">      	this.receiveInCart = false</div><div class="line">      &#125;)</div><div class="line">      this.$refs.cartContainer.addEventListener(&apos;webkitAnimationEnd&apos;, () =&gt; &#123;</div><div class="line">      	this.receiveInCart = false</div><div class="line">      &#125;)</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="底部购物车结算"><a href="#底部购物车结算" class="headerlink" title="底部购物车结算"></a>底部购物车结算</h1><p>展示购物车商品数量和总价，同时购物车商品的数量和总价会随着购物车中的商品增加或减少改变而改变。计算购物车里的商品总数量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">  totalNum () &#123;</div><div class="line">    <span class="keyword">let</span> num = <span class="number">0</span></div><div class="line">    <span class="keyword">this</span>.cartFoodList.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</div><div class="line">    	num += item.num</div><div class="line">    &#125;)</div><div class="line">    <span class="keyword">return</span> num</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同时购物车商品数量有值时改变class的状态，绑定class，data中定义<code>totalPrice</code>表示总价。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;cart_icon_container&quot; </div><div class="line">     :class=&quot;&#123;cart_icon_activity: totalPrice &gt; 0, move_in_cart:receiveInCart&#125;&quot;&gt;</div></pre></td></tr></table></figure>
+<p>当购物车商品有数量时，显示购物车商品总数量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;span class=&quot;cart_list_length&quot; v-if=&quot;totalNum&quot;&gt;&#123;&#123;totalNum&#125;&#125;&lt;/span&gt;</div></pre></td></tr></table></figure>
+<p>展示总价和配送费</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;cart_num&quot;&gt;</div><div class="line">   &lt;div&gt;¥ &#123;&#123;totalPrice&#125;&#125;&lt;/div&gt;</div><div class="line">  &lt;div&gt;配送费¥&#123;&#123;deliveryFee&#125;&#125;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">methods: &#123;</div><div class="line">  deliveryFee () &#123;</div><div class="line">    if (this.shopDetailData) &#123;</div><div class="line">    	return this.shopDetailData.float_delivery_fee</div><div class="line">    &#125; else &#123;</div><div class="line">    	return null</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>还差多少元起送，在computed钩子中计算差价。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"> &lt;section class=&quot;goToPay&quot; :class=&quot;&#123;goToPay_activity: minimumOrderAmount &lt; 0&#125;&quot;&gt;</div><div class="line">    &lt;span class=&quot;goToPay_button_style&quot; v-if=&quot;minimumOrderAmount &gt; 0&quot;&gt;还差¥&#123;&#123;minimumOrderAmount&#125;&#125;起送&lt;/span&gt;</div><div class="line">    &lt;!--&lt;span class=&quot;goToPay_button_style&quot; v-else &gt;去结算&lt;/span&gt;--&gt;</div><div class="line">    &lt;router-link :to=&quot;&#123;path:&apos;/confirmOrder&apos;, query:&#123;geohash, shopId&#125;&#125;&quot; class=&quot;goToPay_button_style&quot; v-else&gt;去结算&lt;/router-link&gt;</div><div class="line">&lt;/section&gt;</div><div class="line"></div><div class="line">computed: &#123;</div><div class="line">  minimumOrderAmount () &#123;</div><div class="line">    if (this.shopDetailData) &#123;</div><div class="line">    	return this.shopDetailData.float_minimum_order_amount - this.totalPrice</div><div class="line">    &#125; else &#123;</div><div class="line">    	return null</div><div class="line">    &#125;</div><div class="line"> &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当差价小于0时高亮去结算按钮的样式，绑定class <code>:class=&quot;{goToPay_activity: minimumOrderAmount &lt; 0}&quot;&gt;</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;</div><div class="line">	.goToPay_acitvity&#123;</div><div class="line">      background-color: #4cd964;</div><div class="line">    &#125;</div><div class="line">&lt;/style&gt;</div></pre></td></tr></table></figure>
+<p>监听购物车中商铺列表的变化，当length为0时将列表隐藏。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">watch: &#123;</div><div class="line">  cartFoodList (value) &#123;</div><div class="line">    <span class="keyword">if</span> (!value.length) &#123;</div><div class="line">    	<span class="keyword">this</span>.showCartList = <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>效果如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/%E9%AB%98%E4%BA%AE%E5%8E%BB%E7%BB%93%E7%AE%97.gif" alt="高亮去结算"></p>
+<h1 id="购物车展示商品列表"><a href="#购物车展示商品列表" class="headerlink" title="购物车展示商品列表"></a>购物车展示商品列表</h1><p>点击购物车小图标，展示购物车中的商品列表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;transition name=&quot;fade&quot;&gt;</div><div class="line">  &lt;div class=&quot;screen_cover&quot; v-show=&quot;showCartList&amp;&amp;cartFoodList.length&quot; @click=&quot;toggleCartList&quot;&gt;	   &lt;/div&gt;</div><div class="line">&lt;/transition&gt;</div><div class="line"></div><div class="line">methods: &#123;</div><div class="line">  toggleCartList () &#123;</div><div class="line">    this.showCartList = !this.showCartList</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当然先要判断购物车里是否有商品<code>v-show=&quot;showCartList&amp;&amp;cartFoodList.length&quot;</code>。如果有商品遍历它们依次展示商品详情，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&lt;section class=&quot;cart_food_details&quot;&gt;</div><div class="line">  &lt;ul&gt;</div><div class="line">    &lt;li v-for=&quot;(item, index) in cartFoodList&quot; :key=&quot;index&quot; class=&quot;cart_food_li&quot;&gt;</div><div class="line">      &lt;div class=&quot;cart_list_num&quot;&gt;</div><div class="line">        &lt;p class=&quot;ellipsis&quot;&gt;&#123;&#123;item.name&#125;&#125;&lt;/p&gt;</div><div class="line">        &lt;p class=&quot;ellipsis&quot;&gt;&#123;&#123;item.specs&#125;&#125;&lt;/p&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      &lt;div class=&quot;cart_list_price&quot;&gt;</div><div class="line">        &lt;span&gt;¥&lt;/span&gt;</div><div class="line">        &lt;span&gt;&#123;&#123;item.price&#125;&#125;&lt;/span&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">      &lt;section class=&quot;cart_list_control&quot;&gt;</div><div class="line">        &lt;svg @click=&quot;removeOutCart(item.category_id, item.item_id, item.food_id, item.name, item.price, item.specs)&quot;&gt;</div><div class="line">        	&lt;use xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xlink:href=&quot;#cart-minus&quot;&gt;&lt;/use&gt;</div><div class="line">        &lt;/svg&gt;</div><div class="line">        &lt;span class=&quot;cart_num&quot;&gt;&#123;&#123;item.num&#125;&#125;&lt;/span&gt;</div><div class="line">        &lt;svg class=&quot;cart_add&quot; @click=&quot;addToCart(item.category_id, item.item_id, item.food_id, item.name, item.price, item.specs)&quot;&gt;</div><div class="line">        	&lt;use xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xlink:href=&quot;#cart-add&quot;&gt;&lt;/use&gt;</div><div class="line">        &lt;/svg&gt;</div><div class="line">      &lt;/section&gt;</div><div class="line">    &lt;/li&gt;</div><div class="line">  &lt;/ul&gt;</div><div class="line">&lt;/section&gt;</div></pre></td></tr></table></figure>
+<h3 id="购物车减少和增加按钮事件"><a href="#购物车减少和增加按钮事件" class="headerlink" title="购物车减少和增加按钮事件"></a>购物车减少和增加按钮事件</h3><p>对购物车商品的增加和减少图标绑定事件动态的控制。<code>removeOutCart()</code>减少事件，<code>addToCart()</code>增加事件。</p>
+<p>依次添加所需要的参数，分别是商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">  addToCart (category_id, item_id, food_id, name, price, specs) &#123;</div><div class="line">  	<span class="keyword">this</span>.ADD_CART(&#123;<span class="attr">shopId</span>:<span class="keyword">this</span>.shopId, category_id, item_id, food_id, name, price, specs&#125;)</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  removeOutCart (category_id, item_id, food_id, name, price, specs) &#123;</div><div class="line">  	<span class="keyword">this</span>.REDUCE_CART(&#123;<span class="attr">shopId</span>:<span class="keyword">this</span>.shopId, category_id, item_id, food_id, name, price, specs&#125;)</div><div class="line">  &#125;,</div><div class="line">  ...mapMutations([</div><div class="line">    <span class="string">'ADD_CART'</span>, <span class="string">'REDUCE_CART'</span>, <span class="string">'CLEAR_CART'</span>,</div><div class="line">  ])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="清空购物车列表"><a href="#清空购物车列表" class="headerlink" title="清空购物车列表"></a>清空购物车列表</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&lt;header&gt;</div><div class="line">  &lt;h4&gt;购物车&lt;/h4&gt;</div><div class="line">  &lt;div @click=&quot;clearCart&quot;&gt;</div><div class="line">    &lt;svg&gt;</div><div class="line">      &lt;use xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xlink:href=&quot;#cart-remove&quot;&gt;&lt;/use&gt;</div><div class="line">    &lt;/svg&gt;</div><div class="line">  	&lt;span class=&quot;clear_cart&quot;&gt;清空&lt;/span&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/header&gt;</div><div class="line"></div><div class="line">methods: &#123;</div><div class="line">  clearCart () &#123;</div><div class="line">    this.toggleCartList()</div><div class="line">    this.CLEAR_CART(this.shopId)</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="评价"><a href="#评价" class="headerlink" title="评价"></a>评价</h1><p>当点击评价时显示评价页<code>v-show=&quot;changeShowType == &#39;rating&#39;&quot;</code></p>
+<h3 id="获取评价总体分数数据"><a href="#获取评价总体分数数据" class="headerlink" title="获取评价总体分数数据"></a>获取评价总体分数数据</h3><p><strong>shop.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">ratingScores</span> (<span class="params">id</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> url = <span class="string">'/restapi/ugc/v2/restaurants/'</span> + id + <span class="string">'/ratings/scores'</span></div><div class="line"></div><div class="line">  <span class="keyword">return</span> axios.get(url).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(res.data)</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>data中定义<code>ratingScores</code>表示评价总分数。</p>
+<p><strong>shop.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">  getRatingScores () &#123;</div><div class="line">    ratingScores(<span class="keyword">this</span>.shopId).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</div><div class="line">      <span class="keyword">this</span>.ratingScoresData = res</div><div class="line">    &#125;)</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>设置综合评价</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;section class=&quot;rating_header_left&quot;&gt;</div><div class="line">  &lt;p&gt;&#123;&#123;shopDetailData.rating&#125;&#125;&lt;/p&gt;</div><div class="line">  &lt;p&gt;综合评价&lt;/p&gt;</div><div class="line">  &lt;p&gt;高于周边商家&#123;&#123;(ratingScoresData.compare_rating*100).toFixed(1)&#125;&#125;%&lt;/p&gt;</div><div class="line">&lt;/section&gt;</div></pre></td></tr></table></figure>
+<p>设置服务态度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;p&gt;</div><div class="line">  &lt;span&gt;服务态度&lt;/span&gt;</div><div class="line">  &lt;rating-star :rating=&quot;ratingScoresData.service_score&quot;&gt;&lt;/rating-star&gt;</div><div class="line">  &lt;span class=&quot;rating_num&quot;&gt;&#123;&#123;ratingScoresData.service_score.toFixed(1)&#125;&#125;&lt;/span&gt;</div><div class="line">&lt;/p&gt;</div></pre></td></tr></table></figure>
+<p>设置菜品评价</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;p&gt;</div><div class="line">  &lt;span&gt;菜品评价&lt;/span&gt;</div><div class="line">  &lt;rating-star :rating=&quot;ratingScoresData.overall_score&quot;&gt;&lt;/rating-star&gt;</div><div class="line">  &lt;span class=&quot;rating_num&quot;&gt;&#123;&#123;ratingScoresData.overall_score.toFixed(1)&#125;&#125;&lt;/span&gt;</div><div class="line">&lt;/p&gt;</div></pre></td></tr></table></figure>
+<p>设置送达时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;p&gt;</div><div class="line">  &lt;span&gt;送达时间&lt;/span&gt;</div><div class="line">  &lt;span class=&quot;delivery_time&quot;&gt;&#123;&#123;shopDetailData.order_lead_time&#125;&#125;分钟&lt;/span&gt;</div><div class="line">&lt;/p&gt;</div></pre></td></tr></table></figure>
+<p>效果如下：<br> <img src="http://oxkc6g4t4.bkt.clouddn.com/e24.png" alt="e24"></p>
+<h3 id="获取评价分类"><a href="#获取评价分类" class="headerlink" title="获取评价分类"></a>获取评价分类</h3><p><strong>shop.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">ratingTags</span> (<span class="params">id</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> url = <span class="string">'/restapi/ugc/v2/restaurants/'</span> + id + <span class="string">'/ratings/tags'</span></div><div class="line"></div><div class="line">  <span class="keyword">return</span> axios.get(url).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(res.data)</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>data中定义<code>ratingTagsList</code>表示评价分类列表。</p>
+<p><strong>shop.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">  getRatingTags () &#123;</div><div class="line">    ratingTags(<span class="keyword">this</span>.shopId).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</div><div class="line">    	<span class="keyword">this</span>.ratingTagsList = res</div><div class="line">    &#125;)</div><div class="line"> &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>遍历<code>ratingTagsList</code>，设置默认当前评价分类的index</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;ul class=&quot;tag_list_ul&quot;&gt;</div><div class="line">  &lt;li v-for=&quot;(item, index) in ratingTagsList&quot; :key=&quot;index&quot;</div><div class="line">      :class=&quot;&#123;unsatisfied: item.unsatisfied, tagActivity: ratingTagsIndex == index&#125;&quot;</div><div class="line">      @click=&quot;changeTagIndex(index, item.name)&quot;</div><div class="line">  &gt;</div><div class="line">  	&#123;&#123;item.name&#125;&#125;(&#123;&#123;item.count&#125;&#125;)</div><div class="line">  &lt;/li&gt;</div><div class="line">&lt;/ul&gt;</div></pre></td></tr></table></figure>
+<p>效果如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/e25.png" alt="e25"></p>
+<h3 id="获取商铺评价列表"><a href="#获取商铺评价列表" class="headerlink" title="获取商铺评价列表"></a>获取商铺评价列表</h3><p><strong>shop.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">ratings</span> (<span class="params">id</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> url = <span class="string">'/restapi/ugc/v3/restaurants/'</span> + id + <span class="string">'/ratings'</span></div><div class="line">  <span class="keyword">const</span> data = <span class="built_in">Object</span>.assign(&#123;&#125;, &#123;</div><div class="line">    <span class="attr">has_content</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">offset</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">limit</span>: <span class="number">8</span></div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  <span class="keyword">return</span> axios.get(url, &#123;<span class="attr">params</span>: data&#125;).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(res.data)</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>data中定义<code>ratingList</code>表示评价列表。</p>
+<p><strong>shop.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">  getRatingList () &#123;</div><div class="line">    ratings(<span class="keyword">this</span>.shopId).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</div><div class="line">    	<span class="keyword">this</span>.ratingList = res</div><div class="line">    &#125;)</div><div class="line"> &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>遍历ratingList：<code>&lt;li v-for=&quot;(item, index) in ratingList&quot; :key=&quot;index&quot; class=&quot;rating_list_li&quot;&gt;</code></p>
+<p>设置头像：<code>&lt;img :src=&quot;getImgPath(item.avatar)&quot; class=&quot;user_avatar&quot;&gt;</code></p>
+<p>设置用户名称：<code>&lt;p class=&quot;username&quot;&gt;&lt;/p&gt;</code></p>
+<p>设置星级和日期：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;p <span class="class"><span class="keyword">class</span></span>=<span class="string">"star_desc"</span>&gt;</div><div class="line">  &lt;rating-star :rating="item.rating"&gt;&lt;/rating-star&gt;</div><div class="line">  &lt;span class="time_spent_desc"&gt;&#123;&#123;item.time_spent_desc&#125;&#125;&lt;/span&gt;</div><div class="line">&lt;/p&gt;</div><div class="line">&lt;time <span class="class"><span class="keyword">class</span></span>=<span class="string">"rated_at"</span>&gt;&#123;&#123;item.rated_at&#125;&#125;&lt;<span class="regexp">/time&gt;</span></div></pre></td></tr></table></figure>
+<p>设置商品图片，图片有多个需要做遍历：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;ul class=&quot;food_img_ul&quot;&gt;</div><div class="line">  &lt;li v-for=&quot;(foodItem, index) in item.order_images&quot; :key=&quot;index&quot;&gt;</div><div class="line">  	&lt;img :src=&quot;getImgPath(foodItem.image_hash)&quot; v-if=&quot;foodItem.image_hash&quot;&gt;</div><div class="line">  &lt;/li&gt;</div><div class="line">&lt;/ul&gt;</div></pre></td></tr></table></figure>
+<p>设置商品名称，和图片一样也需要做遍历：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;ul class=&quot;food_name_ul&quot;&gt;</div><div class="line">  &lt;li class=&quot;ellipsis&quot; v-for=&quot;(foodItem, index) in item.food_ratings&quot; :key=&quot;index&quot;&gt;</div><div class="line">  	&#123;&#123;foodItem.rate_name&#125;&#125;</div><div class="line">  &lt;/li&gt;</div><div class="line">&lt;/ul&gt;</div></pre></td></tr></table></figure>
+<p>效果如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/e26.png" alt="e26"></p>
+<h1 id="初始化数据"><a href="#初始化数据" class="headerlink" title="初始化数据"></a>初始化数据</h1><p>页面初始化时会获取到从本地缓存购物车数据，重新获取购物车改变过的数据。初始化数据同样我也通过vuex管理。</p>
+<p><strong>mutations.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[types.INIT_BUYCART] (state) &#123;</div><div class="line">    <span class="keyword">let</span> initCart = getStore(<span class="string">'buyCart'</span>)</div><div class="line">    <span class="keyword">if</span> (initCart) &#123;</div><div class="line">      state.cartList = <span class="built_in">JSON</span>.parse(initCart)</div><div class="line">    &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p><strong>shop.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">  initCategoryNum ()  &#123;</div><div class="line">        <span class="comment">//左侧食品列表当前分类中已加入购物车的商品数量</span></div><div class="line">        <span class="keyword">let</span> newArr = []</div><div class="line">        <span class="keyword">let</span> cartFoodNum = <span class="number">0</span></div><div class="line">        <span class="comment">//购物车总共的价格</span></div><div class="line">        <span class="keyword">this</span>.totalPrice = <span class="number">0</span></div><div class="line">        <span class="comment">//购物车中所有商品的详细信息列表</span></div><div class="line">        <span class="keyword">this</span>.cartFoodList = []</div><div class="line">        <span class="keyword">this</span>.menuList.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</div><div class="line">          <span class="keyword">if</span> (<span class="keyword">this</span>.shopCart &amp;&amp; <span class="keyword">this</span>.shopCart[item.foods[<span class="number">0</span>].category_id]) &#123;</div><div class="line">            <span class="keyword">let</span> num = <span class="number">0</span></div><div class="line">            <span class="built_in">Object</span>.keys(<span class="keyword">this</span>.shopCart[item.foods[<span class="number">0</span>].category_id]).forEach(<span class="function"><span class="params">itemId</span> =&gt;</span> &#123;</div><div class="line">              <span class="built_in">Object</span>.keys(<span class="keyword">this</span>.shopCart[item.foods[<span class="number">0</span>].category_id][itemId]).forEach(<span class="function"><span class="params">foodId</span> =&gt;</span> &#123;</div><div class="line">                <span class="keyword">let</span> foodItem = <span class="keyword">this</span>.shopCart[item.foods[<span class="number">0</span>].category_id][itemId][foodId]</div><div class="line">                num += foodItem.num</div><div class="line">                <span class="keyword">if</span> (item.type === <span class="number">1</span>) &#123;</div><div class="line">                  <span class="keyword">this</span>.totalPrice += foodItem.num * foodItem.price</div><div class="line">                  <span class="keyword">if</span> (foodItem.num &gt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">this</span>.cartFoodList[cartFoodNum] = &#123;&#125;</div><div class="line">                    <span class="keyword">this</span>.cartFoodList[cartFoodNum].category_id = item.foods[<span class="number">0</span>].category_id</div><div class="line">                    <span class="keyword">this</span>.cartFoodList[cartFoodNum].item_id = itemId</div><div class="line">                    <span class="keyword">this</span>.cartFoodList[cartFoodNum].food_id = foodId</div><div class="line">                    <span class="keyword">this</span>.cartFoodList[cartFoodNum].num = foodItem.num</div><div class="line">                    <span class="keyword">this</span>.cartFoodList[cartFoodNum].price = foodItem.price</div><div class="line">                    <span class="keyword">this</span>.cartFoodList[cartFoodNum].name = foodItem.name</div><div class="line">                    <span class="keyword">this</span>.cartFoodList[cartFoodNum].specs = foodItem.specs</div><div class="line">                    cartFoodNum ++</div><div class="line">                  &#125;</div><div class="line">                &#125;</div><div class="line">              &#125;)</div><div class="line">            &#125;)</div><div class="line">            newArr[index] = num</div><div class="line">          &#125; <span class="keyword">else</span> &#123;</div><div class="line">            newArr[index] = <span class="number">0</span></div><div class="line">          &#125;</div><div class="line">        &#125;)</div><div class="line">        <span class="keyword">this</span>.categoryNum = newArr.concat([])</div><div class="line">      &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>监听购物车列表的变化</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">watch: &#123;</div><div class="line">  shopCart (value) &#123;</div><div class="line">    <span class="keyword">this</span>.initCategoryNum()</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="具体代码见："><a href="#具体代码见：" class="headerlink" title="具体代码见："></a>具体代码见：</h1><p><a href="https://github.com/kakajing/vue-elmm" target="_blank" rel="external">https://github.com/kakajing/vue-elmm</a></p>
+<p>如有什么疑问或者不懂之处，可以加这个群交流：</p>
+<p>QQ群：157028081</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/12/饿了么45个页面重构（八）：appear的用法和购物车按钮组件开发/" rel="next" title="饿了么45个页面重构（八）：appear的用法和购物车按钮组件开发">
+                <i class="fa fa-chevron-left"></i> 饿了么45个页面重构（八）：appear的用法和购物车按钮组件开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引入buyCart组件"><span class="nav-number">1.</span> <span class="nav-text">引入buyCart组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#底部购物车结算"><span class="nav-number">2.</span> <span class="nav-text">底部购物车结算</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#购物车展示商品列表"><span class="nav-number">3.</span> <span class="nav-text">购物车展示商品列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#购物车减少和增加按钮事件"><span class="nav-number">3.0.1.</span> <span class="nav-text">购物车减少和增加按钮事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#清空购物车列表"><span class="nav-number">3.0.2.</span> <span class="nav-text">清空购物车列表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#评价"><span class="nav-number">4.</span> <span class="nav-text">评价</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取评价总体分数数据"><span class="nav-number">4.0.1.</span> <span class="nav-text">获取评价总体分数数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取评价分类"><span class="nav-number">4.0.2.</span> <span class="nav-text">获取评价分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取商铺评价列表"><span class="nav-number">4.0.3.</span> <span class="nav-text">获取商铺评价列表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#初始化数据"><span class="nav-number">5.</span> <span class="nav-text">初始化数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#具体代码见："><span class="nav-number">6.</span> <span class="nav-text">具体代码见：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
