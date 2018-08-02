@@ -1,0 +1,897 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Nodejs安装Nodejs生产环境centos下登录服务器，通过yum安装项目运行中包括服务器日常维护要用到的
+命令：
+1sudo yum install git vim openssl build-essential libssh-dev wget curl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信公众号开发(一)：环境配置">
+<meta property="og:url" content="http://kakajing.github.io/2018/08/03/微信公众号开发(一)：环境配置/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="Nodejs安装Nodejs生产环境centos下登录服务器，通过yum安装项目运行中包括服务器日常维护要用到的
+命令：
+1sudo yum install git vim openssl build-essential libssh-dev wget curl">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx16.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx17.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx18.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx19.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx20.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx21.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx1.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx2.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx3.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx4.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx5.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx6.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx7.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx9.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx10.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx11.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx12.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx13.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx14.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx15.png">
+<meta property="og:updated_time" content="2018-08-02T18:21:44.509Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微信公众号开发(一)：环境配置">
+<meta name="twitter:description" content="Nodejs安装Nodejs生产环境centos下登录服务器，通过yum安装项目运行中包括服务器日常维护要用到的
+命令：
+1sudo yum install git vim openssl build-essential libssh-dev wget curl">
+<meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx16.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2018/08/03/微信公众号开发(一)：环境配置/"/>
+
+
+
+
+
+  <title> 微信公众号开发(一)：环境配置 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/08/03/微信公众号开发(一)：环境配置/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                微信公众号开发(一)：环境配置
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-03T02:20:35+08:00">
+                2018-08-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Nodejs"><a href="#Nodejs" class="headerlink" title="Nodejs"></a>Nodejs</h1><h2 id="安装Nodejs生产环境"><a href="#安装Nodejs生产环境" class="headerlink" title="安装Nodejs生产环境"></a>安装Nodejs生产环境</h2><p>centos下登录服务器，通过yum安装项目运行中包括服务器日常维护要用到的</p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install git vim openssl build-essential libssh-dev wget curl</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>环境安装后，通过git安装部署项目到服务器，生成SSR证书。</p>
+<p>找到<a href="https://github.com/creationix/nvm" target="_blank" rel="external">nvm</a>的仓库，复制安装脚本然后运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash</div></pre></td></tr></table></figure>
+<p>通过<code>nvm ls</code>命令查看</p>
+<h2 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install v8.11.2</div></pre></td></tr></table></figure>
+<p>安装完成后执行命令来设置服务器使用node当前版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nvm user v8.11.2</div></pre></td></tr></table></figure>
+<p>如图：</p>
+<p><img src="http://oxkc6g4t4.bkt.clouddn.com/wx16.png" alt="wx16"></p>
+<p> 设置v8.11.2为服务器默认版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nvm alias default v8.11.2</div></pre></td></tr></table></figure>
+<p>如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx17.png" alt="wx17"></p>
+<h2 id="访问服务"><a href="#访问服务" class="headerlink" title="访问服务"></a>访问服务</h2><p>示例：运行server.js</p>
+<p>通过<code>node server</code>命令访问服务，首先要关闭防火墙</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service iptables stop</div></pre></td></tr></table></figure>
+<p>关闭防火墙重新执行node server命令，在另一个终端上执行命令访问服务器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl http://127.0.0.1:3000</div></pre></td></tr></table></figure>
+<p>控制台上打印出信息，说明访问成功！如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx18.png" alt="wx18"></p>
+<p>安装之后检查bash脚本有没有加上一下代码，如果没有加上即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export NVM_DIR=&quot;$HOME/.nvm&quot;</div><div class="line">[ -s &quot;$NVM_DIR/nvm.sh&quot; ] &amp;&amp; \. &quot;$NVM_DIR/nvm.sh&quot; # This loads nvm</div></pre></td></tr></table></figure>
+<h1 id="yarn"><a href="#yarn" class="headerlink" title="yarn"></a>yarn</h1><p>这个项目最后会上线，所以尽量做到从工具到代码能够严谨和规范，就不再用npm安装相应的本地模块，而是使用约束更苛刻的yarn，需要分别在本地和线上安装yarn。</p>
+<h2 id="本地安装yarn"><a href="#本地安装yarn" class="headerlink" title="本地安装yarn"></a>本地安装yarn</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install yarn</div></pre></td></tr></table></figure>
+<h2 id="服务器上安装yarn"><a href="#服务器上安装yarn" class="headerlink" title="服务器上安装yarn"></a>服务器上安装yarn</h2><p><a href="https://yarn.bootcss.com/docs/install.html#linux-tab" target="_blank" rel="external">安装yarn</a>选择相应的系统安装即可。这里是Linux平台安装</p>
+<p>执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo wget https://dl.yarnpkg.com/rpm/yarn.repo -O /etc/yum.repos.d/yarn.repo</div></pre></td></tr></table></figure>
+<p>然后再次执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install yarn</div></pre></td></tr></table></figure>
+<p>查看yarn版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yarn -v</div></pre></td></tr></table></figure>
+<p>使用yarn替代了npm安装，为了不影响速度，可以把源指向国内，执行命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yarn config set registry https://registry.npm.taobao.org</div></pre></td></tr></table></figure>
+<p>设置完成后，用npm安装全局模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install vue-cli pm2 -g</div></pre></td></tr></table></figure>
+<p>全部安装完成，如图：</p>
+<p><img src="http://oxkc6g4t4.bkt.clouddn.com/wx19.png" alt="wx19"></p>
+<h2 id="测试服务"><a href="#测试服务" class="headerlink" title="测试服务"></a>测试服务</h2><p>当我们正在当前运行一个进程时，如果直接关闭终端窗口或者关闭当前进程就会导致当前服务被挂起，不能持续稳定的对外进行Nodejs，尤其是Nodejs本身如果有异常导致它挂起后就不能自动重启，这样的工作就交给pm2来维护。</p>
+<p>示例：运行server.js</p>
+<p>执行命令<code>node server.js</code>运行server.js然后取消，通过执行命令<code>pm2 start server.js</code>让服务跑起来同时自动维护这个进程。这样就可以在外面访问到这个服务，执行命令<code>curl http://127.0.0.1:3000</code>。如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx20.png" alt="wx20"></p>
+<p>访问成功！</p>
+<p>查看当前运行的服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pm2 list</div></pre></td></tr></table></figure>
+<p>查看更加详细的服务信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pm2 show server</div></pre></td></tr></table></figure>
+<p>查看日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pm2 logs</div></pre></td></tr></table></figure>
+<p>重启服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pm2 restart server</div></pre></td></tr></table></figure>
+<p>关闭服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pm2 stop server</div></pre></td></tr></table></figure>
+<p>以下截图就是这个项目要用到的工具</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx21.png" alt="wx21"></p>
+<h1 id="Mongodb"><a href="#Mongodb" class="headerlink" title="Mongodb"></a>Mongodb</h1><h2 id="Linux下安装MongoDB"><a href="#Linux下安装MongoDB" class="headerlink" title="Linux下安装MongoDB"></a>Linux下安装MongoDB</h2><p>进入<a href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/" target="_blank" rel="external">官网</a>选择相应的Linux环境，我这里选择Red Hat，通过yum安装的，64位centos系统</p>
+<h3 id="创建MongoDB安装源"><a href="#创建MongoDB安装源" class="headerlink" title="创建MongoDB安装源"></a>创建MongoDB安装源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/yum.repos.d/mongodb-org-3.6.repo</div></pre></td></tr></table></figure>
+<p>然后复制下面配置写入mongodb-org-3.6.repo，保存退出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[mongodb-org-3.6]</div><div class="line">name=MongoDB Repository</div><div class="line">baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.6/x86_64/</div><div class="line">gpgcheck=1</div><div class="line">enabled=1</div><div class="line">gpgkey=https://www.mongodb.org/static/pgp/server-3.6.asc</div></pre></td></tr></table></figure>
+<h3 id="安装MongoDB"><a href="#安装MongoDB" class="headerlink" title="安装MongoDB"></a>安装MongoDB</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install -y mongodb-org</div></pre></td></tr></table></figure>
+<p>安装完毕后修改配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/mongod.conf</div></pre></td></tr></table></figure>
+<p>修改/etc/yum.conf，将一下代码将以下添加到/etc/yum.conf文件中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">exclude=mongodb-org,mongodb-org-server,mongodb-org-shell,mongodb-org-mongos,mongodb-org-tools</div></pre></td></tr></table></figure>
+<p>其中端口被修改为20008（随意），并且允许远程访问，不允许则修改bandIp为：127.0.0.1</p>
+<p>修改/etc/mongod.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/mongod.conf</div></pre></td></tr></table></figure>
+<h2 id="Windows下安装MongoDB"><a href="#Windows下安装MongoDB" class="headerlink" title="Windows下安装MongoDB"></a>Windows下安装MongoDB</h2><p>进入<a href="https://www.mongodb.com/download-center?jmp=nav#community" target="_blank" rel="external">官网</a>下载自己对应的平台。</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx1.png" alt="wx1"></p>
+<p>下载后直接next安装，点击finish完成安装。</p>
+<h2 id="启动Mongodb"><a href="#启动Mongodb" class="headerlink" title="启动Mongodb"></a>启动Mongodb</h2><p>进入mongodb文件目录下，创建data\db和logs目录及log.txt文件。</p>
+<p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt; cd D:\mongodb</div><div class="line">d\mongodb&gt; mkdir data</div><div class="line">d\mongodb&gt; mkdir logs</div><div class="line">d\mongodb\logs&gt; touch log.txt</div></pre></td></tr></table></figure>
+<p><strong>以管理员模式启动CMD，切换到MongoDB的安装目录，并执行命令：mongod –dbpath “D:\mongodb\data\db”  –logpath “D:\mongodb\logs\log.txt”  –install -serviceName “MongoDB”  </strong></p>
+<p>如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx2.png" alt="wx2"></p>
+<p>关于命令中的参数说明</p>
+<p>参数 　　　　　　　　　　　描述<br>–bind_ip　　 　　　　　　绑定服务IP，若绑定127.0.0.1，则只能本机访问，不指定默认本地所有IP<br>–logpath    　　　　　　　　定MongoDB日志文件，注意是指定文件不是目录<br>–logappend    　　 　　　　 使用追加的方式写日志<br>–dbpath    　　　　　　　　 指定数据库路径<br>–port    　　　　　 　　　　 指定服务端口号，默认端口27017<br>–serviceName    　　　　  指定服务名称<br>–serviceDisplayName    　　指定服务名称，有多个mongodb服务时执行。<br>–install    　　　　　　　　   指定作为一个Windows服务安装。</p>
+<p>启动MongoDB服务</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx3.png" alt="wx3"></p>
+<p>右键点击我的电脑—&gt;管理—&gt;服务和应用程序—&gt;服务，找到MongoDB可以看到是启动状态。</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx4.png" alt="wx4"></p>
+<p> 进入MongoDB数据库shell</p>
+<p><img src="http://oxkc6g4t4.bkt.clouddn.com/wx5.png" alt="wx5"></p>
+<p> 退出MongoDB数据库执行命令exit</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx6.png" alt="wx6"></p>
+<p> <strong>下次用之前记得检查Mongodb服务是否启动状态。</strong></p>
+<h1 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h1><h2 id="Linux下安装Nginx"><a href="#Linux下安装Nginx" class="headerlink" title="Linux下安装Nginx"></a>Linux下安装Nginx</h2><p>前面安装步骤先忽略了，直接进入重点。</p>
+<p>复制nginx.conf到/etc/nginx/conf.d目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -a nginx.conf /etc/nginx/conf.d/kaka.conf</div></pre></td></tr></table></figure>
+<p>修改kaka.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim kaka.conf</div></pre></td></tr></table></figure>
+<h2 id="windos下安装Nginx"><a href="#windos下安装Nginx" class="headerlink" title="windos下安装Nginx"></a>windos下安装Nginx</h2><p>进入<a href="http://nginx.org/en/download.html" target="_blank" rel="external">官网</a>选择要安装的平台，在这里同样是Windows下安装。</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx7.png" alt="wx7"></p>
+<p> 下载解压即可。</p>
+<h2 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h2><p>nginx配置文件在nginx-1.13.12\conf\nginx.conf</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">http &#123;</div><div class="line">     gzip  on;</div><div class="line"></div><div class="line">    #html文件</div><div class="line">    server &#123;</div><div class="line">        listen       80;</div><div class="line">        server_name  127.0.0.1 localhost;</div><div class="line"></div><div class="line">        location / &#123;</div><div class="line">            root   html;</div><div class="line">            index  index.html index.htm;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="启动nginx"><a href="#启动nginx" class="headerlink" title="启动nginx"></a>启动nginx</h2><p>不能直接双击nginx.exe，这样会导致修改配置后重启、停止nginx无效，需要手动关闭任务管理器内的所有nginx进程。</p>
+<p>start nginx : 启动nginx</p>
+<p>nginx -s reload  ：修改配置后重新加载生效</p>
+<p>nginx -s reopen  ：重新打开日志文件<br>nginx -t -c /path/to/nginx.conf 测试nginx配置文件是否正确</p>
+<p><strong>Not：</strong></p>
+<p>如果遇到报错：bash: nginx: command not found，有可能是你在linux命令行环境下运行了windows命令，</p>
+<p>改成用windows系统自带命令行工具运行。</p>
+<h1 id="Sunny-Ngrok"><a href="#Sunny-Ngrok" class="headerlink" title="Sunny-Ngrok"></a>Sunny-Ngrok</h1><p>使用Sunny-Ngrok赠送的免费域名进行http服务映射。</p>
+<h2 id="1、进入官网注册账号"><a href="#1、进入官网注册账号" class="headerlink" title="1、进入官网注册账号"></a>1、进入<a href="https://www.ngrok.cc/" target="_blank" rel="external">官网</a>注册账号</h2><h2 id="2、开通隧道"><a href="#2、开通隧道" class="headerlink" title="2、开通隧道"></a>2、开通隧道</h2><p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx9.png" alt="wx9"></p>
+<h2 id="3、点击立即购买后进入编辑页面"><a href="#3、点击立即购买后进入编辑页面" class="headerlink" title="3、点击立即购买后进入编辑页面"></a>3、点击立即购买后进入编辑页面</h2><p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx10.png" alt="wx10"></p>
+<p> 在上图中表单信息解释：</p>
+<pre><code>隧道名称：可以随便填写，只是为了使用者在往后之后这个隧道是干嘛的
+
+前置域名：服务器免费赠送的域名，请不要带上后缀，如果要nuxtss.ngrok.cc 只需要填写 nuxtss即可 ，千万不要填写成nuxtss.ngrok.cc否则域名会是nuxtss.ngrok.cc.ngrok.cc
+
+本地端口：可以为同一个局域网内任意一台机器进行映射，只需要填对ip和端口就行，例如：192.168.1.1:80
+
+http验证用户名：非必填项，在需要的时候填写，否则可以不填
+
+http验证密码：非必填项，在需要的时候填写，否则可以不填
+</code></pre><p>依次填入点击确定添加，然后确定购买。</p>
+<h2 id="4、下载客户端"><a href="#4、下载客户端" class="headerlink" title="4、下载客户端"></a>4、下载客户端</h2><p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx11.png" alt="wx11"></p>
+<p> 根据自己的操作系统需求下载相对于版本。</p>
+<h2 id="5、启动映射服务"><a href="#5、启动映射服务" class="headerlink" title="5、启动映射服务"></a>5、启动映射服务</h2><h3 id="Windows环境下启动服务"><a href="#Windows环境下启动服务" class="headerlink" title="Windows环境下启动服务"></a>Windows环境下启动服务</h3><p>1、打开命令提示符，进入下载好的软件目录 ，输入sunny.exe clientid + 隧道id<br><img src="http://oxkc6g4t4.bkt.clouddn.com/wx12.png" alt="wx12"></p>
+<p>命令解释：</p>
+<p>​     sunny.exe 下载的软件内网映射隧道工具</p>
+<pre><code>clientid  通过隧道id启动，后面跟上隧道id，如果有多个隧道要一起启动那么使用英文逗号隔开第三个红色剪头所指的地方就是为了启动多个隧道
+</code></pre><p>输入命令回车后可以看到服务已经启动</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx13.png" alt="wx13"></p>
+<p>域名为<a href="http://nuxtssr.free.ngrok.cc" target="_blank" rel="external">http://nuxtssr.free.ngrok.cc</a></p>
+<h3 id="Linux环境下启动服务"><a href="#Linux环境下启动服务" class="headerlink" title="Linux环境下启动服务"></a>Linux环境下启动服务</h3><p>打开命令提示符，进入下载好的软件目录 ，输入命令 ./sunny.exe clientid + 隧道id</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx14.png" alt="wx14"></p>
+<p> 同样，域名为<a href="http://nuxtssr.free.ngrok.cc" target="_blank" rel="external">http://nuxtssr.free.ngrok.cc</a></p>
+<p>测试输入域名访问成功！</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx15.png" alt="wx15"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/16/饿了么45个页面重构（十）：router传参和详情页面开发/" rel="next" title="饿了么45个页面重构（十）：router传参和详情页面开发">
+                <i class="fa fa-chevron-left"></i> 饿了么45个页面重构（十）：router传参和详情页面开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nodejs"><span class="nav-number">1.</span> <span class="nav-text">Nodejs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Nodejs生产环境"><span class="nav-number">1.1.</span> <span class="nav-text">安装Nodejs生产环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装nodejs"><span class="nav-number">1.2.</span> <span class="nav-text">安装nodejs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问服务"><span class="nav-number">1.3.</span> <span class="nav-text">访问服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#yarn"><span class="nav-number">2.</span> <span class="nav-text">yarn</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#本地安装yarn"><span class="nav-number">2.1.</span> <span class="nav-text">本地安装yarn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器上安装yarn"><span class="nav-number">2.2.</span> <span class="nav-text">服务器上安装yarn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试服务"><span class="nav-number">2.3.</span> <span class="nav-text">测试服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mongodb"><span class="nav-number">3.</span> <span class="nav-text">Mongodb</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux下安装MongoDB"><span class="nav-number">3.1.</span> <span class="nav-text">Linux下安装MongoDB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建MongoDB安装源"><span class="nav-number">3.1.1.</span> <span class="nav-text">创建MongoDB安装源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装MongoDB"><span class="nav-number">3.1.2.</span> <span class="nav-text">安装MongoDB</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows下安装MongoDB"><span class="nav-number">3.2.</span> <span class="nav-text">Windows下安装MongoDB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动Mongodb"><span class="nav-number">3.3.</span> <span class="nav-text">启动Mongodb</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx"><span class="nav-number">4.</span> <span class="nav-text">Nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux下安装Nginx"><span class="nav-number">4.1.</span> <span class="nav-text">Linux下安装Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windos下安装Nginx"><span class="nav-number">4.2.</span> <span class="nav-text">windos下安装Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改配置文件"><span class="nav-number">4.3.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动nginx"><span class="nav-number">4.4.</span> <span class="nav-text">启动nginx</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Sunny-Ngrok"><span class="nav-number">5.</span> <span class="nav-text">Sunny-Ngrok</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、进入官网注册账号"><span class="nav-number">5.1.</span> <span class="nav-text">1、进入官网注册账号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、开通隧道"><span class="nav-number">5.2.</span> <span class="nav-text">2、开通隧道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、点击立即购买后进入编辑页面"><span class="nav-number">5.3.</span> <span class="nav-text">3、点击立即购买后进入编辑页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、下载客户端"><span class="nav-number">5.4.</span> <span class="nav-text">4、下载客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、启动映射服务"><span class="nav-number">5.5.</span> <span class="nav-text">5、启动映射服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows环境下启动服务"><span class="nav-number">5.5.1.</span> <span class="nav-text">Windows环境下启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux环境下启动服务"><span class="nav-number">5.5.2.</span> <span class="nav-text">Linux环境下启动服务</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
