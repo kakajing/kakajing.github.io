@@ -1,0 +1,843 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="获取token请求官方API的地址将获取到的数据存到数据库，除此之外还有很多与微信服务器之间的交互场景，最好是把token和其他异步请求封装到一个文件里，就可以把这个文件统一看做微信请求的构造函数，一切与微信交互的功能都放到这个文件里，把它当做一个入口。
+新建server/wechat-lib/index.js作为整个微信异步场景的入口文件，统一管理微信API地址。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信公众号开发(三)：微信消息中间件和素材处理">
+<meta property="og:url" content="http://kakajing.github.io/2018/08/05/微信公众号开发(三)：微信消息中间件和素材处理/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="获取token请求官方API的地址将获取到的数据存到数据库，除此之外还有很多与微信服务器之间的交互场景，最好是把token和其他异步请求封装到一个文件里，就可以把这个文件统一看做微信请求的构造函数，一切与微信交互的功能都放到这个文件里，把它当做一个入口。
+新建server/wechat-lib/index.js作为整个微信异步场景的入口文件，统一管理微信API地址。">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx24.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx25.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx26.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx28.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx27.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx29.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx30.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx31.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx32.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx33.png">
+<meta property="og:updated_time" content="2018-08-04T16:11:18.095Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微信公众号开发(三)：微信消息中间件和素材处理">
+<meta name="twitter:description" content="获取token请求官方API的地址将获取到的数据存到数据库，除此之外还有很多与微信服务器之间的交互场景，最好是把token和其他异步请求封装到一个文件里，就可以把这个文件统一看做微信请求的构造函数，一切与微信交互的功能都放到这个文件里，把它当做一个入口。
+新建server/wechat-lib/index.js作为整个微信异步场景的入口文件，统一管理微信API地址。">
+<meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx24.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2018/08/05/微信公众号开发(三)：微信消息中间件和素材处理/"/>
+
+
+
+
+
+  <title> 微信公众号开发(三)：微信消息中间件和素材处理 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/08/05/微信公众号开发(三)：微信消息中间件和素材处理/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                微信公众号开发(三)：微信消息中间件和素材处理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-05T00:10:10+08:00">
+                2018-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="获取token"><a href="#获取token" class="headerlink" title="获取token"></a>获取token</h1><p>请求官方API的地址将获取到的数据存到数据库，除此之外还有很多与微信服务器之间的交互场景，最好是把token和其他异步请求封装到一个文件里，就可以把这个文件统一看做微信请求的构造函数，一切与微信交互的功能都放到这个文件里，把它当做一个入口。</p>
+<p>新建server/wechat-lib/index.js作为整个微信异步场景的入口文件，统一管理微信API地址。</p>
+<a id="more"></a>
+<p><strong>server/wechat-lib/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> request <span class="keyword">from</span> <span class="string">'request-promise'</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> base = <span class="string">'https://api.weixin.qq.com/cgi-bin/'</span></div><div class="line"><span class="keyword">const</span> api = &#123;</div><div class="line">    <span class="attr">accessToken</span>: base + <span class="string">'token?grant_type=client_credential'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">wechat</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span> (opts) &#123;</div><div class="line">        <span class="keyword">this</span>.opts = <span class="built_in">Object</span>.assign(&#123;&#125;, opts)</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.appID = opts.appID</div><div class="line">        <span class="keyword">this</span>.appSecret = opts.appSecret</div><div class="line">        <span class="keyword">this</span>.getAccessToken = opts.getAccessToken</div><div class="line">        <span class="keyword">this</span>.saveAccessToken = opts.saveAccessToken</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.fetchAccessToken()</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">async</span> request (options) &#123;</div><div class="line">        options = <span class="built_in">Object</span>.assign(&#123;&#125;, options, &#123;<span class="attr">json</span>: <span class="literal">true</span>&#125;)</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">const</span> response = <span class="keyword">await</span> request(options)</div><div class="line">            <span class="built_in">console</span>.log(response)</div><div class="line">            <span class="keyword">return</span> response</div><div class="line">        &#125; <span class="keyword">catch</span> (error) &#123;</div><div class="line">            <span class="built_in">console</span>.error(error)</div><div class="line">        &#125; </div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 获取token</span></div><div class="line">    <span class="keyword">async</span> fetchAccessToken () &#123;</div><div class="line">        <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="keyword">this</span>.getAccessToken()</div><div class="line">        <span class="comment">// 验证token是否正确</span></div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.isValidAccessToken(data)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">await</span> <span class="keyword">this</span>.updateAccessToken()</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">await</span> <span class="keyword">this</span>.saveAccessToken()</div><div class="line">        <span class="keyword">return</span> data</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 更新token</span></div><div class="line">    <span class="keyword">async</span> updateAccessToken () &#123;</div><div class="line">        <span class="keyword">const</span> url = api.accessToken + <span class="string">'&amp;appid='</span> + <span class="keyword">this</span>.appID + <span class="string">'&amp;secret='</span> + <span class="keyword">this</span>.appSecret</div><div class="line"></div><div class="line">        <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="keyword">this</span>.request(&#123;<span class="attr">url</span>: url&#125;)</div><div class="line">        <span class="keyword">const</span> now = (<span class="keyword">new</span> <span class="built_in">Date</span>().getTime())</div><div class="line">        <span class="keyword">const</span> expiresIn = now + (data.expires_in - <span class="number">20</span>) * <span class="number">1000</span></div><div class="line"></div><div class="line">        data.expires_in = expiresIn</div><div class="line"></div><div class="line">        <span class="keyword">return</span> data</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 验证token</span></div><div class="line">    isValidAccessToken (data) &#123;</div><div class="line">        <span class="keyword">if</span> (!data || !data.accessToken || !data.expires_in) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">const</span> expiresIn = data.expires_in</div><div class="line">        <span class="keyword">const</span> now = (<span class="keyword">new</span> <span class="built_in">Date</span>().getTime())</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (now &lt; expiresIn) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>定义api地址，request方法，所有的异步函数都通过它统一管理，获取access_token，更新access_token。</p>
+<p>新建server/wechat/index.js对微信异步场景函数做初始化。传递配置参数及方法，生成wechat实例。</p>
+<p><strong>server/wechat/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> mongoose <span class="keyword">from</span> <span class="string">'mongoose'</span></div><div class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">'../config'</span></div><div class="line"><span class="keyword">import</span> Wechat <span class="keyword">from</span> <span class="string">'../wechat-lib'</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> Token = mongoose.model(<span class="string">'Token'</span>)</div><div class="line"></div><div class="line"><span class="keyword">const</span> wechatConfig = &#123;</div><div class="line">    <span class="attr">wechat</span>: &#123;</div><div class="line">        <span class="attr">appID</span>: config.wechat.appID,</div><div class="line">        <span class="attr">appSecret</span>: config.wechat.appSecret,</div><div class="line">        <span class="attr">token</span>: config.wechat.token,</div><div class="line">        <span class="attr">getAccessToken</span>: <span class="keyword">async</span> () =&gt; <span class="keyword">await</span> Token.getAccessToken(),</div><div class="line">        <span class="attr">saveAccessToken</span>: <span class="keyword">async</span>() =&gt; <span class="keyword">await</span> Token.saveAccessToken()</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> getWechat = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> wechatClient = <span class="keyword">new</span> Wechat(wechatConfig.wechat)</div><div class="line">    <span class="keyword">return</span> wechatClient</div><div class="line">&#125; </div><div class="line"></div><div class="line">getWechat()</div></pre></td></tr></table></figure>
+<p>在server/middlewares/router.js引入</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'../wechat'</span></div></pre></td></tr></table></figure>
+<p>引入这个文件就会去通过执行<code>getWechat()</code>创建Wechat实例<code>new Wechat(wechatConfig.wechat)</code>，然后调用<code>fetchAccessToken()</code>方法获取access_token。在控制台成功打印出access_token，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx24.png" alt="wx24"></p>
+<h1 id="保存access-token"><a href="#保存access-token" class="headerlink" title="保存access_token"></a>保存access_token</h1><p>获取access_token后判断access_token是否过期，后期的话重启获取一次，再次保存access_token，修改代码：</p>
+<p><strong>server/wechat-lib/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> fetchAccessToken () &#123;</div><div class="line">        <span class="comment">// 获取当前token</span></div><div class="line">        <span class="keyword">let</span> data = <span class="keyword">await</span> <span class="keyword">this</span>.getAccessToken()</div><div class="line">        <span class="comment">// 验证token是否正确</span></div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.isValidAccessToken(data)) &#123;</div><div class="line">            data = <span class="keyword">await</span> <span class="keyword">this</span>.updateAccessToken()</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">await</span> <span class="keyword">this</span>.saveAccessToken(data)</div><div class="line">        <span class="keyword">return</span> data</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p><strong>server/wechat/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> wechatConfig = &#123;</div><div class="line">    <span class="attr">wechat</span>: &#123;</div><div class="line">        <span class="attr">appID</span>: config.wechat.appID,</div><div class="line">        <span class="attr">appSecret</span>: config.wechat.appSecret,</div><div class="line">        <span class="attr">token</span>: config.wechat.token,</div><div class="line">        <span class="attr">getAccessToken</span>: <span class="keyword">async</span> () =&gt; <span class="keyword">await</span> Token.getAccessToken(),</div><div class="line">        <span class="attr">saveAccessToken</span>: <span class="keyword">async</span> (data) =&gt; <span class="keyword">await</span> Token.saveAccessToken(data)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>server/database/schema/token.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> getAccessToken () &#123;</div><div class="line">        <span class="keyword">const</span> token = <span class="keyword">await</span> <span class="keyword">this</span>.findOne(&#123;<span class="attr">name</span>: <span class="string">'access_token'</span>&#125;).exec()</div><div class="line">        <span class="keyword">if</span> (token &amp;&amp; token.token) &#123;</div><div class="line">            token.access_token = token.token</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> token</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>等数据库连接成功之后再做微信初始化，<code>require(&#39;../wechat&#39;)</code>的时间应该是整个项目跑起来对外提供服务的时候</p>
+<p><strong>server/middlewares/router.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">router.get(<span class="string">'/wx'</span>, (ctx, next) =&gt; &#123;</div><div class="line">        <span class="built_in">require</span>(<span class="string">'../wechat'</span>)</div><div class="line">        <span class="keyword">const</span> token = config.wechat.token</div><div class="line">        <span class="comment">// 参数</span></div><div class="line">        <span class="keyword">const</span> &#123;signature, nonce, timestamp, echostr&#125; = ctx.query</div><div class="line"></div><div class="line">        <span class="comment">// 对参数进行排序加密</span></div><div class="line">        <span class="keyword">const</span> str = [token, timestamp, nonce].sort().join(<span class="string">''</span>)</div><div class="line">        <span class="keyword">const</span> sha = sha1(str)</div><div class="line">        <span class="keyword">if</span> (sha === signature) &#123;</div><div class="line">            ctx.body = echostr</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            ctx.body = <span class="string">'Failed'</span></div><div class="line">        &#125;</div><div class="line">    &#125;)</div></pre></td></tr></table></figure>
+<p>保存新增access_token成功，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx25.png" alt="wx25"></p>
+<h1 id="微信消息中间件"><a href="#微信消息中间件" class="headerlink" title="微信消息中间件"></a>微信消息中间件</h1><p>通过access_token和消息中间件结合就可以给用户回复了。无论http是get或post请求都要对query里的参数进行排序加密比对，比对正确的话进行数据分析。这里直接改成<code>router.all()</code>，无论是get、post还是delete都可以拿到请求。写个中间件<code>wechatMiddle(opts, reply)</code></p>
+<ul>
+<li>opts：配置参数。描述了微信公众号对access_token的外部获取方式</li>
+<li>reply：回复策略。</li>
+</ul>
+<p><strong>server/middlewares/router.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> router = <span class="function"><span class="params">app</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> router = <span class="keyword">new</span> Router()</div><div class="line">    router.get(<span class="string">'/wx'</span>, wechatMiddle(config.wechat, reply))</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>消息中间件函数，<strong>server/wechat-lib/middleware.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sha1 <span class="keyword">from</span> <span class="string">'sha1'</span></div><div class="line"><span class="keyword">import</span> getRawBody <span class="keyword">from</span> <span class="string">'raw-body'</span></div><div class="line"><span class="keyword">import</span> * <span class="keyword">as</span> util <span class="keyword">from</span> <span class="string">'./util'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> (<span class="params">opts, reply</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">wechatMiddel</span> (<span class="params">ctx, next</span>) </span>&#123;       </div><div class="line">        <span class="keyword">const</span> token = opts.token</div><div class="line">        <span class="comment">// 参数</span></div><div class="line">        <span class="keyword">const</span> &#123;signature, nonce, timestamp, echostr&#125; = ctx.query</div><div class="line"></div><div class="line">        <span class="comment">// 对参数进行排序加密</span></div><div class="line">        <span class="keyword">const</span> str = [token, timestamp, nonce].sort().join(<span class="string">''</span>)</div><div class="line">        <span class="keyword">const</span> sha = sha1(str)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (ctx.method === <span class="string">'GET'</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (sha === signature) &#123;</div><div class="line">                ctx.body = echostr</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                ctx.body = <span class="string">'Failed'</span></div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ctx.method === <span class="string">'POST'</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (sha !== signature) &#123;</div><div class="line">                ctx.body = <span class="string">'Failed'</span></div><div class="line">                <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">const</span> data = <span class="keyword">await</span> getRawBody(ctx.req, &#123;</div><div class="line">                <span class="attr">length</span>: ctx.length,</div><div class="line">                <span class="attr">limit</span>: <span class="string">'1mb'</span>,</div><div class="line">                <span class="attr">encoding</span>: ctx.charset</div><div class="line">            &#125;)</div><div class="line"></div><div class="line">            <span class="keyword">const</span> content = <span class="keyword">await</span> util.parseXML(data)</div><div class="line">           <span class="comment">// const message = util.formatMessage(content,xml)</span></div><div class="line"></div><div class="line">            <span class="built_in">console</span>.log(content)</div><div class="line">            ctx.weixin = &#123;&#125;</div><div class="line"></div><div class="line">            <span class="keyword">await</span> reply.apply(ctx, [ctx, next])</div><div class="line"></div><div class="line">            <span class="keyword">const</span> replyBody = ctx.body</div><div class="line">            <span class="keyword">const</span> msg = ctx.weixin</div><div class="line">          <span class="comment">//  const xml = util.tpl(replyBody, msg)</span></div><div class="line">			<span class="built_in">console</span>.log(replyBody)</div><div class="line">            </div><div class="line">            <span class="keyword">const</span> xml = <span class="string">`&lt;xml&gt; </span></div><div class="line">                            &lt;ToUserName&gt;&lt; ![CDATA[toUser] ]&gt;&lt;/ToUserName&gt; </div><div class="line">                            &lt;FromUserName&gt;&lt; ![CDATA[fromUser] ]&gt;&lt;/FromUserName&gt; </div><div class="line">                            &lt;CreateTime&gt;12345678&lt;/CreateTime&gt; </div><div class="line">                            &lt;MsgType&gt;&lt; ![CDATA[text] ]&gt;&lt;/MsgType&gt; </div><div class="line">                            &lt;Content&gt;&lt; ![CDATA[你好] ]&gt;&lt;/Content&gt; </div><div class="line">                        &lt;/xml&gt;`</div><div class="line">            </div><div class="line">            ctx.status = <span class="number">200</span></div><div class="line">            ctx.type = <span class="string">'application/xml'</span></div><div class="line">            ctx.body = xml</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因为前面用的是<code>router.all</code>所以在使用时要对请求方法做个判断，方法匹配成功后先拿到请求过来的数据，然后把它解析成xml <code>util.parseXML(data)</code>，再对它转换成json或者对象格式<code>util.formatMessage(content,xml)</code>，这样就能拿到对应的key和value。解析后的数据挂到<code>context.weixin</code>上，在后面的代码单元就能访问到<code>context.weixin</code>，转义上下文<code>reply.apply(ctx, [ctx, next])</code>。在router.js引入middleware.js</p>
+<p><strong>server/middlewares/router.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> wechatMiddle <span class="keyword">from</span> <span class="string">'../wechat-lib/middleware'</span></div></pre></td></tr></table></figure>
+<p>回复策略<strong>server/wechat/reply.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> tip = <span class="string">'亲爱的黑虎，欢迎来到青青大草原\n'</span> + <span class="string">'点击 &lt;a href="http://coding.imooc.com"&gt;一起放风筝啊&lt;/a&gt;'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">async</span> (ctx, next) =&gt; &#123;</div><div class="line">    <span class="keyword">const</span> message = ctx.weixin</div><div class="line">    <span class="built_in">console</span>.log(message)</div><div class="line">    ctx.body = tip</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>重启项目，微信扫公众测试号二维码</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx26.png" alt="wx26"></p>
+<p>扫码之后在会出现与测试号的对话窗口，随便打个字会看到自动回复内容，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx28.png" alt="wx28"></p>
+<p>同时我也在控制台打印出回复内容，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx27.png" alt="wx27"></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>如果键入内容没有自动回复消息而是出现“该公众号提供的服务出现故障请稍后再试”这样的提示，可能是你的接口配置url无法启用，就需要你再次修改url。我之前用Sunny-Ngrok配置的url但是突然不能用了，于是就是换了ngrok，可以从<a href="http://ngrok.ciqiuwl.cn/" target="_blank" rel="external">这里</a>下载客户端，解压即可。</p>
+<p>在命令（cmd）行下进入到ngrok客户端目录下，执行 ngrok -config=ngrok.cfg -subdomain xxx 80  (xxx 是你自定义的域名前缀)，建议批处理</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx29.png" alt="wx29"></p>
+<p> 如果连接成功，会提示如下信息：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx30.png" alt="wx30"></p>
+<h2 id="微信消息解析"><a href="#微信消息解析" class="headerlink" title="微信消息解析"></a>微信消息解析</h2><p>把xml格式的数据转成Object。先判断如果数据是object的话进行遍历，得到一个key对应的一条数据item，接着遍历某一条数据的key。判断item是否是数组或者item的长度为0，继续执行，如果item的长度为1，取出值判断如果类型是object进行深层的遍历。</p>
+<p><strong>server/wechat-lib/util.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">formatMessage</span> (<span class="params">result</span>) </span>&#123;</div><div class="line">    <span class="keyword">let</span> message = &#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> result === <span class="string">'object'</span>) &#123;</div><div class="line">        <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(result)</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keys.length; i++) &#123;</div><div class="line">            <span class="keyword">let</span> item = result[keys[i]]</div><div class="line">            <span class="keyword">let</span> key = keys[i]</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (!(item <span class="keyword">instanceof</span> <span class="built_in">Array</span>) || item.length === <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (item.length === <span class="number">1</span>) &#123;</div><div class="line">                <span class="keyword">let</span> val = item[<span class="number">0</span>]</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (<span class="keyword">typeof</span> val === <span class="string">'object'</span>) &#123;</div><div class="line">                   message[key] = formatMessage(val)</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    message[key] = (val || <span class="string">''</span>).trim()</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                message[key] = []</div><div class="line">                <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; item.length; j++) &#123;</div><div class="line">                    message[key].push(formatMessage(item(j)))</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> message</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>将xml格式的数据转化为Object，挂在ctx.weixin，再将回复内容解析出来，得到解析后的微信消息，修改<strong>middleware.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> content = <span class="keyword">await</span> util.parseXML(data)</div><div class="line"><span class="keyword">const</span> message = util.formatMessage(content.xml)</div><div class="line"></div><div class="line">ctx.weixin = message</div><div class="line"><span class="keyword">await</span> reply.apply(ctx, [ctx, next])</div><div class="line"></div><div class="line"><span class="keyword">const</span> replyBody = ctx.body</div><div class="line"><span class="keyword">const</span> msg = ctx.weixin</div><div class="line"><span class="keyword">const</span> xml = util.tpl(replyBody, msg)</div></pre></td></tr></table></figure>
+<p>通过套模板渲染出xml的数据。</p>
+<h2 id="封装回复消息模板"><a href="#封装回复消息模板" class="headerlink" title="封装回复消息模板"></a>封装回复消息模板</h2><p>回复用户消息类型包括回复文本消息、回复图片消息、回复语音消息、回复视频消息、回复音乐消息、回复图文消息，这里使用ejs模板。</p>
+<p><strong>server/wechat-lib/tpi.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> ejs <span class="keyword">from</span> <span class="string">'ejs'</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> tpl = <span class="string">`</span></div><div class="line">    &lt;xml&gt;</div><div class="line">        &lt;ToUserName&gt;&lt;![CDATA[&lt;%= toUserName %&gt;]]&gt;&lt;/ToUserName&gt;</div><div class="line">        &lt;FromUserName&gt;&lt;![CDATA[&lt;%= fromUser %&gt;]]&gt;&lt;/FromUserName&gt;</div><div class="line">        &lt;CreateTime&gt;&lt;%= createTime %&gt;&lt;/CreateTime&gt;</div><div class="line">        &lt;MsgType&gt;&lt;![CDATA[&lt;%= msgType %&gt;]]&gt;&lt;/MsgType&gt;</div><div class="line">        </div><div class="line">        &lt;% if (msgType === 'text') &#123; %&gt;</div><div class="line">            &lt;Content&gt;&lt;![CDATA[&lt;%- content%&gt;]]&gt;&lt;/Content&gt;</div><div class="line">        &lt;% &#125; else if (msgType === 'image') &#123;%&gt;          </div><div class="line">            ...</div><div class="line">		&lt;% &#125; else if (msgType === 'voice') &#123;%&gt;</div><div class="line">			...</div><div class="line">		&lt;% &#125; else if (msgType === 'video') &#123;%&gt;</div><div class="line">			...</div><div class="line">		&lt;% &#125; else if (msgType === 'music') &#123;%&gt;</div><div class="line">			...</div><div class="line">		&lt;% &#125; else if (msgType === 'news') &#123;%&gt; </div><div class="line">			...</div><div class="line">        &lt;% &#125; %&gt;</div><div class="line">    &lt;/xml&gt;</div><div class="line">`</div><div class="line"></div><div class="line"><span class="keyword">const</span> compiled = ejs.compile(tpl)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> compiled</div></pre></td></tr></table></figure>
+<p>把所有的消息类型放到一个模板中，根据msgType的值匹配相应的模板。</p>
+<p>重启服务，在手机上发送消息1，控制台打印消息的类型、内容以及消息id，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx31.png" alt="wx31"></p>
+<h2 id="七种微信普通消息的接收"><a href="#七种微信普通消息的接收" class="headerlink" title="七种微信普通消息的接收"></a>七种微信普通消息的接收</h2><p>先对消息类型进行筛选。修改<strong>reply.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">async</span> (ctx, next) =&gt; &#123;</div><div class="line">    <span class="keyword">const</span> message = ctx.weixin</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.log(message)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (message.MsgType === <span class="string">'text'</span>) &#123;</div><div class="line">        ctx.body = message.Content</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.MsgType === <span class="string">'image'</span>) &#123;</div><div class="line">        ctx.body = &#123;</div><div class="line">            <span class="attr">type</span>: <span class="string">'image'</span>,</div><div class="line">            <span class="attr">mediaId</span>: message.MediaId</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.MsgType === <span class="string">'voice'</span>) &#123;</div><div class="line">        ctx.body = &#123;</div><div class="line">            <span class="attr">type</span>: <span class="string">'voice'</span>,</div><div class="line">            <span class="attr">mediaId</span>: message.MediaId</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.MsgType === <span class="string">'video'</span>) &#123;</div><div class="line">        ctx.body = &#123;</div><div class="line">            <span class="attr">title</span>: message.ThumbMediaId,</div><div class="line">            <span class="attr">type</span>: <span class="string">'video'</span>,</div><div class="line">            <span class="attr">mediaId</span>: message.MediaId</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.MsgType === <span class="string">'location'</span>) &#123;</div><div class="line">        ctx.body = message.Location_X + <span class="string">' : '</span> + message.Location_Y + <span class="string">' : '</span> + message.Label</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.MsgType === <span class="string">'link'</span>) &#123;</div><div class="line">        ctx.body = [&#123;</div><div class="line">            <span class="attr">title</span>: message.Title,</div><div class="line">            <span class="attr">description</span>: message.Description,</div><div class="line">            <span class="attr">picUrl</span>: <span class="string">'http://mmbiz.qpic.cn/mmbiz_jpg/8U36YTkvibWtRgIHqiacSLeSJpANdafutLibrEvXlLQNhxToj45wyj5FemhzRRppp4mC8nRFd9n4kV3vgCXXDRXicw/0'</span>,</div><div class="line">            <span class="attr">url</span>: message.url</div><div class="line">        &#125;]  </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>微信对测试号发送消息回复成功，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx32.png" alt="wx32"></p>
+<h2 id="关注-取消关注事件"><a href="#关注-取消关注事件" class="headerlink" title="关注/取消关注事件"></a>关注/取消关注事件</h2><p>关注和取消关注事件是根据MsgType区分的，但event不一样，修改<strong>server/wechat/reply.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">async</span> (ctx, next) =&gt; &#123;</div><div class="line">    <span class="keyword">const</span> message = ctx.weixin</div><div class="line"></div><div class="line">    <span class="comment">// 关注/取消关注</span></div><div class="line">    <span class="keyword">if</span> (message.MsgType === <span class="string">'event'</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (message.Event === <span class="string">'subscribe'</span>) &#123;</div><div class="line">            ctx.body = tip</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.Event === <span class="string">'unsubscribe'</span>) &#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="string">'取消关注'</span>)</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.Event === <span class="string">'LOCATION'</span>) &#123;</div><div class="line">            ctx.body = message.Latitude + <span class="string">' : '</span> + message.Longitude</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (message.MsgType === <span class="string">'text'</span>) &#123;</div><div class="line">        ctx.body = message.Content</div><div class="line">    &#125;</div><div class="line">  	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="多媒体与图文素材处理"><a href="#多媒体与图文素材处理" class="headerlink" title="多媒体与图文素材处理"></a>多媒体与图文素材处理</h2><p>项目中可能会用到图片上传图片处理，所以要把图像素材管理的相关接口获取到。</p>
+<h3 id="上传素材"><a href="#上传素材" class="headerlink" title="上传素材"></a>上传素材</h3><p>增加素材系列相关的请求地址，修改<strong>server/wechat-lib/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> api = &#123;</div><div class="line">    <span class="attr">accessToken</span>: base + <span class="string">'token?grant_type=client_credential'</span>,</div><div class="line">    <span class="attr">temporary</span>: &#123;</div><div class="line">        <span class="attr">upload</span>: base + <span class="string">'media/upload?'</span>,          <span class="comment">// 新增临时素材</span></div><div class="line">        fetch: base + <span class="string">'media/get?'</span>               <span class="comment">// 获取临时素材</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">permanent</span>: &#123;</div><div class="line">        <span class="attr">upload</span>: base + <span class="string">'material/add_material?'</span>,   <span class="comment">// 新增其他类型永久素材</span></div><div class="line">        uploadNews: base + <span class="string">'material/add_news?'</span>,   <span class="comment">// 新增永久图文素材</span></div><div class="line">        uploadNewsPic: base + <span class="string">'media/uploadimg?'</span>,  <span class="comment">// 上传图文消息内的图片</span></div><div class="line">        fetch: base + <span class="string">'material/get_material?'</span>,    <span class="comment">// 获取永久素材</span></div><div class="line">        del: base + <span class="string">'material/del_material?'</span>,      <span class="comment">// 删除永久素材</span></div><div class="line">        update: base + <span class="string">'material/update_news?'</span>,    <span class="comment">// 修改永久图文素材</span></div><div class="line">        count: base + <span class="string">'material/get_materialcount?'</span>, <span class="comment">// 获取素材总数</span></div><div class="line">        batch: base + <span class="string">'material/batchget_material?'</span>  <span class="comment">// 获取素材列表</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上传参数：token，类型type，素材路径material，标识永久素材还是临时素材permanent。上传素材其实就是构建表单，声明对象form，拿到上传地址url，默认是临时素材地址<code>api.temporary.upload</code>。如果指定是永久素材就改成永久素材地址<code>api.permanent.upload</code>，通过loadsh继承permanent数据，如果类型是pic修改成上传图片的地址<code>api.permanent.uploadNewsPic</code>，如果类型是news修改成上传图文地址<code>api.permanent.uploadNews</code>，，同时form修改成material。；反之，如果不是图文类型素材的话可能是图片或者视频，这时就需要构建表单了。通过<code>formsteam()</code>生成表单对象，声明statFile()函数读取文件大小，拿到图片的大小通过<code>form.file()</code>增加字段media。如果不是永久类型， uploadUrl后面追加type，反之，把access_token加到表单里。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">uploadMaterial (token, type, material, permanent) &#123;</div><div class="line">        <span class="keyword">let</span> form = &#123;&#125;</div><div class="line">        <span class="keyword">let</span> url = api.temporary.upload</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (permanent) &#123;</div><div class="line">            url = api.permanent.upload</div><div class="line">            _.extend(form, permanent)</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (type === <span class="string">'pic'</span>) &#123;</div><div class="line">            url = api.permanent.uploadNewsPic</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (type === <span class="string">'news'</span>) &#123;</div><div class="line">            url = api.permanent.uploadNews</div><div class="line">            form = material</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            form = formsteam()</div><div class="line">            <span class="keyword">const</span> stat = <span class="keyword">await</span> statFile(material)</div><div class="line">            form.file(<span class="string">'media'</span>, material, path.basename(material), stat.size)</div><div class="line">        &#125;</div><div class="line">  		<span class="keyword">let</span> uploadUrl = url + <span class="string">'assess_token'</span> + token</div><div class="line">        <span class="keyword">if</span> (!permanent) &#123;</div><div class="line">            uploadUrl += <span class="string">'&amp;type='</span> + type</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            form.field(<span class="string">'access_token'</span>, token)</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 构建上传需要的对象</span></div><div class="line">        <span class="keyword">const</span> options = &#123;</div><div class="line">            <span class="attr">method</span>: <span class="string">'POST'</span>,</div><div class="line">            <span class="attr">url</span>: uploadUrl,</div><div class="line">            <span class="attr">json</span>: <span class="literal">true</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (type === <span class="string">'news'</span>) &#123;</div><div class="line">            options.body = form</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            options.formData = form</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> options</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>构建上传需要的对象，如果type是图文类型news的话，设置options.body为当前form，否则上传图片的表单域，最后返回options。也就是说<code>uploadMaterial()</code>不会真正上传，只是配置好它要上传的参数。</p>
+<p>封装上传动作：传进operation和参数args，拿到token和哪种类型的options，通过<code>request()</code>获取数据。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> handle (operation, ...args) &#123;</div><div class="line">  <span class="keyword">const</span> tokenData = <span class="keyword">await</span> <span class="keyword">this</span>.fetchAccessToken()</div><div class="line">  <span class="keyword">const</span> options = <span class="keyword">this</span>[operation](tokenData.access_token, ...args)</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="keyword">this</span>.request(options)</div><div class="line"></div><div class="line">  <span class="keyword">return</span> data</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试上传视频临时素材，修改router.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> router = <span class="function"><span class="params">app</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> router = <span class="keyword">new</span> Router()</div><div class="line">    router.all(<span class="string">'/wx'</span>, wechatMiddle(config.wechat, reply))</div><div class="line"></div><div class="line">    router.get(<span class="string">'/upload'</span>, (ctx, next) =&gt; &#123;</div><div class="line">        <span class="keyword">let</span> mp = <span class="built_in">require</span>(<span class="string">'../wechat'</span>)</div><div class="line">        <span class="keyword">let</span> client = mp.getWechat()</div><div class="line"></div><div class="line">        client.handle(<span class="string">'uploadMaterial'</span>, <span class="string">'video'</span>, resolve(__dirname, <span class="string">'../../hu.mp4'</span>))</div><div class="line">    &#125;)</div><div class="line"> </div><div class="line">    app</div><div class="line">        .use(router.routes())</div><div class="line">        .use(router.allowedMethods())</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试上传视频永久素材，修改router.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> router = <span class="function"><span class="params">app</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> router = <span class="keyword">new</span> Router() </div><div class="line">    router.all(<span class="string">'/wx'</span>, wechatMiddle(config.wechat, reply))</div><div class="line"></div><div class="line">    router.get(<span class="string">'/upload'</span>, <span class="keyword">async</span> (ctx, next) =&gt; &#123;</div><div class="line">        <span class="keyword">let</span> mp = <span class="built_in">require</span>(<span class="string">'../wechat'</span>)</div><div class="line">        <span class="keyword">let</span> client = mp.getWechat()</div><div class="line"></div><div class="line">        <span class="keyword">const</span> data = <span class="keyword">await</span> client.handle(<span class="string">'uploadMaterial'</span>, <span class="string">'video'</span>,  </div><div class="line">                        resolve(__dirname, <span class="string">'../../hu.mp4'</span>), </div><div class="line">                        &#123;<span class="attr">type</span>: <span class="string">'video'</span>, <span class="attr">description</span>: <span class="string">'&#123;"title": "haha", "introduction": "heihei"&#125;'</span>&#125;)</div><div class="line">        <span class="built_in">console</span>.log(data)</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'#################'</span>)</div><div class="line">    &#125;)</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试上传图片永久素材，修改router.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> data = <span class="keyword">await</span> client.handle(<span class="string">'uploadMaterial'</span>, <span class="string">'image'</span>,  </div><div class="line">                        resolve(__dirname, <span class="string">'../../hu.jpg'</span>), </div><div class="line">                        &#123;<span class="attr">type</span>: <span class="string">'iamge'</span>&#125;)</div><div class="line"><span class="built_in">console</span>.log(data)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'#################'</span>)</div></pre></td></tr></table></figure>
+<p>测试上传图片临时素材，修改router.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> data = <span class="keyword">await</span> client.handle(<span class="string">'uploadMaterial'</span>, <span class="string">'image'</span>,  </div><div class="line">                        resolve(__dirname, <span class="string">'../../hu.jpg'</span>))</div><div class="line"><span class="built_in">console</span>.log(data)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'#################'</span>)</div></pre></td></tr></table></figure>
+<p>每次修改router.js后重启项目，输入localhost:8080，看到控制台打印信息，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx33.png" alt="wx33"></p>
+<h3 id="图文创建"><a href="#图文创建" class="headerlink" title="图文创建"></a>图文创建</h3><p>图文素材必须是永久素材</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">router.get(<span class="string">'/upload'</span>, <span class="keyword">async</span> (ctx, next) =&gt; &#123;</div><div class="line">        <span class="keyword">let</span> mp = <span class="built_in">require</span>(<span class="string">'../wechat'</span>)</div><div class="line">        <span class="keyword">let</span> client = mp.getWechat()</div><div class="line"></div><div class="line">        <span class="keyword">const</span> news = &#123;</div><div class="line">            <span class="attr">articles</span>: [</div><div class="line">                &#123;</div><div class="line">                    <span class="string">"title"</span>: <span class="string">'SSR1'</span>,</div><div class="line">                    <span class="string">"thumb_media_id"</span>: <span class="string">'MS9ix5MrmsSADOa6HKBpofmkA-LY8ddiEljpegn2P2M'</span>,</div><div class="line">                    <span class="string">"author"</span>: <span class="string">'kakajing'</span>,</div><div class="line">                    <span class="string">"digest"</span>: <span class="string">'无摘要'</span>,</div><div class="line">                    <span class="string">"show_cover_pic"</span>: <span class="number">1</span>,</div><div class="line">                    <span class="string">"content"</span>: <span class="string">'无内容'</span>,</div><div class="line">                    <span class="string">"content_source_url"</span>: <span class="string">'https://www.baidu.com/'</span></div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    <span class="string">"title"</span>: <span class="string">'SSR2'</span>,</div><div class="line">                    <span class="string">"thumb_media_id"</span>: <span class="string">'MS9ix5MrmsSADOa6HKBpofmkA-LY8ddiEljpegn2P2M'</span>,</div><div class="line">                    <span class="string">"author"</span>: <span class="string">'kakajing'</span>,</div><div class="line">                    <span class="string">"digest"</span>: <span class="string">'无摘要'</span>,</div><div class="line">                    <span class="string">"show_cover_pic"</span>: <span class="number">0</span>,</div><div class="line">                    <span class="string">"content"</span>: <span class="string">'无内容'</span>,</div><div class="line">                    <span class="string">"content_source_url"</span>: <span class="string">'https://www.baidu.com/'</span></div><div class="line">                &#125;</div><div class="line">            ]</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">const</span> data = <span class="keyword">await</span> client.handle(<span class="string">'uploadMaterial'</span>, <span class="string">'news'</span>,  news, &#123;&#125;)</div><div class="line">        <span class="built_in">console</span>.log(data)</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'#################'</span>)</div><div class="line">    &#125;)</div></pre></td></tr></table></figure>
+<h3 id="获取永久素材"><a href="#获取永久素材" class="headerlink" title="获取永久素材"></a>获取永久素材</h3><p>获取素材要区分是临时素材还是永久素材</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">fetchMaterial (token, mediaId, type, permanent) &#123;</div><div class="line">        <span class="keyword">let</span> form = &#123;&#125;</div><div class="line">        <span class="keyword">let</span> fetchUrl = api.temporary.fetch</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (permanent) &#123;</div><div class="line">            fetchUrl = api.permanent.fetch</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">let</span> url = fetchUrl + <span class="string">'access_token='</span> + token</div><div class="line">        <span class="keyword">let</span> options = &#123;<span class="attr">method</span>: <span class="string">"POST"</span>, <span class="attr">url</span>: url&#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (permanent) &#123;</div><div class="line">            form.media_id = mediaId</div><div class="line">            form.access_token = token</div><div class="line">            options.body = form</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">if</span> (type === <span class="string">'video'</span>) &#123;</div><div class="line">                url = url.replace(<span class="string">'https://'</span>, <span class="string">'http://'</span>)</div><div class="line">            &#125;</div><div class="line">            url += <span class="string">'&amp;media_id'</span> + mediaId</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> options</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h3 id="删除永久素材"><a href="#删除永久素材" class="headerlink" title="删除永久素材"></a>删除永久素材</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">deleteMaterial (token, mediaId) &#123;</div><div class="line">        <span class="keyword">const</span> form = &#123;<span class="attr">media_id</span>: mediaId&#125;</div><div class="line">        <span class="keyword">const</span> url = api.permanent.del + <span class="string">'access_token='</span> + token + <span class="string">'&amp;media_id='</span> + mediaId</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> &#123;<span class="attr">method</span>: <span class="string">'POST'</span>, <span class="attr">url</span>: url, <span class="attr">body</span>: form&#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h3 id="修改永久图文素材"><a href="#修改永久图文素材" class="headerlink" title="修改永久图文素材"></a>修改永久图文素材</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">updateMaterial (token, mediaId, news) &#123;</div><div class="line">  <span class="keyword">const</span> form = &#123;<span class="attr">media_id</span>: mediaId&#125;</div><div class="line">  _.extend(form, news)</div><div class="line">  <span class="keyword">const</span> url = api.permanent.update + <span class="string">'access_token='</span> + token + <span class="string">'&amp;media_id='</span> + mediaId</div><div class="line">  <span class="keyword">return</span> &#123;<span class="attr">method</span>: <span class="string">'POST'</span>, <span class="attr">url</span>: url, <span class="attr">body</span>: form&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="获取素材总数"><a href="#获取素材总数" class="headerlink" title="获取素材总数"></a>获取素材总数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">countMaterial (token) &#123;</div><div class="line">  <span class="keyword">const</span> url = api.permanent.count + <span class="string">'access_token='</span> + token</div><div class="line">  <span class="keyword">return</span> &#123;<span class="attr">method</span>: <span class="string">'GET'</span>, <span class="attr">url</span>: url&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="获取素材列表"><a href="#获取素材列表" class="headerlink" title="获取素材列表"></a>获取素材列表</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">batchMaterial (token, options) &#123;</div><div class="line">  options.type = options.type || <span class="string">'iamge'</span></div><div class="line">  options.offset = options.offset || <span class="number">0</span></div><div class="line">  options.count = options.count || <span class="number">10</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/04/微信公众号开发(二)：构建公众号服务器/" rel="next" title="微信公众号开发(二)：构建公众号服务器">
+                <i class="fa fa-chevron-left"></i> 微信公众号开发(二)：构建公众号服务器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#获取token"><span class="nav-number">1.</span> <span class="nav-text">获取token</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#保存access-token"><span class="nav-number">2.</span> <span class="nav-text">保存access_token</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#微信消息中间件"><span class="nav-number">3.</span> <span class="nav-text">微信消息中间件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">3.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信消息解析"><span class="nav-number">3.2.</span> <span class="nav-text">微信消息解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#封装回复消息模板"><span class="nav-number">3.3.</span> <span class="nav-text">封装回复消息模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七种微信普通消息的接收"><span class="nav-number">3.4.</span> <span class="nav-text">七种微信普通消息的接收</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关注-取消关注事件"><span class="nav-number">3.5.</span> <span class="nav-text">关注/取消关注事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多媒体与图文素材处理"><span class="nav-number">3.6.</span> <span class="nav-text">多媒体与图文素材处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#上传素材"><span class="nav-number">3.6.1.</span> <span class="nav-text">上传素材</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图文创建"><span class="nav-number">3.6.2.</span> <span class="nav-text">图文创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取永久素材"><span class="nav-number">3.6.3.</span> <span class="nav-text">获取永久素材</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除永久素材"><span class="nav-number">3.6.4.</span> <span class="nav-text">删除永久素材</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改永久图文素材"><span class="nav-number">3.6.5.</span> <span class="nav-text">修改永久图文素材</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取素材总数"><span class="nav-number">3.6.6.</span> <span class="nav-text">获取素材总数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取素材列表"><span class="nav-number">3.6.7.</span> <span class="nav-text">获取素材列表</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
