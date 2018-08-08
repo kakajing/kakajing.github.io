@@ -1,0 +1,853 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="定义测试接口通过RAP对主要的页面定义测试接口，这里不多讲，有兴趣的同学看文档即可操作。进入RAP主页搜索团队：稻米影视，就可以看到相关的接口及参数，点击链接查看相关接口。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信公众号开发(五)：页面开发">
+<meta property="og:url" content="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="定义测试接口通过RAP对主要的页面定义测试接口，这里不多讲，有兴趣的同学看文档即可操作。进入RAP主页搜索团队：稻米影视，就可以看到相关的接口及参数，点击链接查看相关接口。">
+<meta property="og:image" content="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\wx39.png">
+<meta property="og:image" content="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\主页跳转.gif">
+<meta property="og:image" content="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\个人详情页跳转.gif">
+<meta property="og:image" content="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\wx40.png">
+<meta property="og:image" content="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\wx41.png">
+<meta property="og:image" content="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\wx42.png">
+<meta property="og:updated_time" content="2018-08-08T10:43:46.638Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微信公众号开发(五)：页面开发">
+<meta name="twitter:description" content="定义测试接口通过RAP对主要的页面定义测试接口，这里不多讲，有兴趣的同学看文档即可操作。进入RAP主页搜索团队：稻米影视，就可以看到相关的接口及参数，点击链接查看相关接口。">
+<meta name="twitter:image" content="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\wx39.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/"/>
+
+
+
+
+
+  <title> 微信公众号开发(五)：页面开发 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/08/08/微信公众号开发(五)：页面开发/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                微信公众号开发(五)：页面开发
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-08T18:43:12+08:00">
+                2018-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="定义测试接口"><a href="#定义测试接口" class="headerlink" title="定义测试接口"></a>定义测试接口</h1><p>通过RAP对主要的页面定义测试接口，这里不多讲，有兴趣的同学看文档即可操作。进入RAP主页搜索团队：稻米影视，就可以看到相关的接口及参数，点击<a href="http://rapapi.org/org/team/teams.do?keyword=%E7%A8%BB%E7%B1%B3%E5%BD%B1%E8%A7%86" target="_blank" rel="external">链接</a>查看相关接口。</p>
+<a id="more"></a>
+<h1 id="pug模板"><a href="#pug模板" class="headerlink" title="pug模板"></a>pug模板</h1><p>使用标签的形式比较繁琐，这里我选择使用Pug，它是基于缩进嵌套的dom结构而不是以标签的形式。Pug原名不叫Pug，原来是jade，后来由于商标的原因，改为Pug，其实只是换个名字，语法都与jade一样。</p>
+<h2 id="安装pug"><a href="#安装pug" class="headerlink" title="安装pug"></a>安装pug</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yarn add pug</div></pre></td></tr></table></figure>
+<p>在vue中使用pug模板，需要在template标签中设置<code>lang=&quot;pug&quot;</code>即可。</p>
+<h1 id="首页"><a href="#首页" class="headerlink" title="首页"></a>首页</h1><p>使用pug模板，同时填充数据。修改<strong>page/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&lt;template lang=<span class="string">"pug"</span>&gt;</div><div class="line">.container</div><div class="line">  .house(ref=<span class="string">'house'</span>)</div><div class="line">    .items(v-<span class="keyword">for</span>=<span class="string">'(item, index) in houses'</span> :key=<span class="string">'index'</span> @click=<span class="string">'showHouse(item)'</span>)</div><div class="line">      .desc</div><div class="line">        .words &#123;&#123;item.words&#125;&#125;</div><div class="line">        .cname &#123;&#123;item.name&#125;&#125;</div><div class="line">        .name &#123;&#123;item.cname&#125;&#125;</div><div class="line"></div><div class="line">  .character</div><div class="line">    .title 主要人物 </div><div class="line">    .section</div><div class="line">      .items(v-<span class="keyword">for</span>=<span class="string">'(item, index) in characters'</span> :key=<span class="string">'index'</span> @click=<span class="string">'showCharacter(item)'</span>)</div><div class="line">        img(:src=<span class="string">'item.profile'</span>)</div><div class="line">        .desc</div><div class="line">          .playedBy &#123;&#123;item.playedBy&#125;&#125;</div><div class="line">          .cname &#123;&#123;item.name&#125;&#125;</div><div class="line">          .name &#123;&#123;item.cname&#125;&#125;</div><div class="line">  .city</div><div class="line">    .title 维斯特洛</div><div class="line">    .intro 坐落于已知世界的最西端，狭长的维斯特洛大陆由北部的极地冰盖起向南延绵约<span class="number">3</span>,<span class="number">000</span>英里。绝境长城是一座巍峨挺立的不可逾越之物，横跨<span class="number">300</span>英里，将最北的塞外地区与七大王国相互分离。一个统一的政治实体领导着南方的广阔土地，并形成九块相互联系又相互割据的区域。</div><div class="line">    .items(v-<span class="keyword">for</span>=<span class="string">'(item, index) in cities'</span> :key=<span class="string">'index'</span>)</div><div class="line">      .city-item-title &#123;&#123; item.title &#125;&#125;</div><div class="line">      .city-item-body &#123;&#123; item.body &#125;&#125;</div><div class="line">&lt;<span class="regexp">/template&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="首页名称"><a href="#首页名称" class="headerlink" title="首页名称"></a>首页名称</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">head() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">  	<span class="attr">title</span>: <span class="string">'稻米影视'</span></div><div class="line">  &#125;</div><div class="line"> &#125;,</div></pre></td></tr></table></figure>
+<p>创建<code>showHouse(item)</code>和<code>showCharacter(item)</code>点击事件，点击后跳转页面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">  showHouse(item) &#123;</div><div class="line">    <span class="keyword">this</span>.$router.push(&#123;</div><div class="line">    <span class="attr">path</span>: <span class="string">'/house'</span>,</div><div class="line">    <span class="attr">query</span>: &#123;<span class="attr">id</span>: item._id&#125;</div><div class="line">    &#125;)</div><div class="line">  &#125;,</div><div class="line">  showCharacter(item) &#123;</div><div class="line">    <span class="keyword">this</span>.$router.push(&#123;</div><div class="line">      <span class="attr">path</span>: <span class="string">'/character'</span>,</div><div class="line">      <span class="attr">query</span>: &#123;<span class="attr">id</span>: item._id&#125;</div><div class="line">    &#125;)</div><div class="line">  &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>在页面加载之前请求到数据</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">beforeCreate() &#123;</div><div class="line">  <span class="keyword">this</span>.$store.dispatch(<span class="string">'fetchHouses'</span>)</div><div class="line">  <span class="keyword">this</span>.$store.dispatch(<span class="string">'fetchCharacters'</span>)</div><div class="line">  <span class="keyword">this</span>.$store.dispatch(<span class="string">'fetchCities'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h2><p>state中定义数据，修改<strong>store/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> createStore = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">new</span> Vuex.Store(&#123;</div><div class="line">    <span class="attr">state</span>: &#123;</div><div class="line">      <span class="attr">houses</span>: [],</div><div class="line">      <span class="attr">characters</span>: [],</div><div class="line">      <span class="attr">cities</span>: []</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>添加获取数据的services，修改<strong>store/actions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> fetchHouses(&#123; state &#125;) &#123;</div><div class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> Services.fetchHouses()</div><div class="line">    state.houses = res.data.data</div><div class="line">    <span class="keyword">return</span> res</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  <span class="keyword">async</span> fetchCharacters(&#123; state &#125;) &#123;</div><div class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> Services.fetchCharacters()</div><div class="line">    state.characters = res.data.data</div><div class="line">    <span class="keyword">return</span> res</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  <span class="keyword">async</span> fetchCities(&#123; state &#125;) &#123;</div><div class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> Services.fetchCities()</div><div class="line">    state.cities = res.data.data</div><div class="line">    <span class="keyword">return</span> res</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>复制RAP中定义的接口地址，拼接请求地址通过axios获取数据。修改<strong>store/services.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> apiUrl = <span class="string">'http://rapapi.org/mockjsdata/34647'</span></div><div class="line"></div><div class="line">fetchHouses() &#123;</div><div class="line">    <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;apiUrl&#125;</span>/wiki/houses`</span>)</div><div class="line"> &#125;</div><div class="line">fetchCharacters() &#123;</div><div class="line">  <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;apiUrl&#125;</span>/wiki/characters`</span>)</div><div class="line"> &#125;</div><div class="line">fetchCities() &#123;</div><div class="line">  <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;apiUrl&#125;</span>/wiki/cities`</span>)</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>通过辅助函数mapState获取数据。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">  ...mapState([</div><div class="line">    <span class="string">'houses'</span>,</div><div class="line">    <span class="string">'characters'</span>,</div><div class="line">    <span class="string">'cities'</span></div><div class="line">  ])</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>数据获取成功，如图：</p>
+<p> <img src="/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\wx39.png" alt="wx39"></p>
+<h1 id="样式"><a href="#样式" class="headerlink" title="样式"></a>样式</h1><p>这个项目使用sass，具体不多讲了，直接上过程。</p>
+<h2 id="安装sass"><a href="#安装sass" class="headerlink" title="安装sass"></a>安装sass</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yarn add node-sass sass-loader sass</div></pre></td></tr></table></figure>
+<p>sass文件全都放在static/sass目录下，依次添加基础样式文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">base.sass</div><div class="line">color.sass</div><div class="line">icon.sass</div><div class="line">minxin.sass</div><div class="line">var.sass</div></pre></td></tr></table></figure>
+<p>编辑index.sass，具体代码不贴了，在项目看源码就成。</p>
+<p>配置sass，修改<strong>nuxt.config.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">css: [</div><div class="line">  &#123;</div><div class="line">    <span class="attr">src</span>: <span class="string">'static/sass/base.sass'</span>,</div><div class="line">    <span class="attr">lang</span>: <span class="string">'sass?indentedSyntax=true'</span></div><div class="line">  &#125;</div><div class="line">],</div></pre></td></tr></table></figure>
+<h1 id="团队主页"><a href="#团队主页" class="headerlink" title="团队主页"></a>团队主页</h1><p><strong>pages/house/index.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;template lang=<span class="string">"pug"</span>&gt;</div><div class="line">.container</div><div class="line">  .house-media</div><div class="line">    .desc</div><div class="line">      .words &#123;&#123;house.words&#125;&#125;</div><div class="line">      .name &#123;&#123;house.name&#125;&#125;</div><div class="line"></div><div class="line">  .house-body</div><div class="line">    .title &#123;&#123;house.cname&#125;&#125;</div><div class="line">    .body &#123;&#123;house.intro&#125;&#125;</div><div class="line">    .title 主要角色</div><div class="line">    .body(v-<span class="keyword">for</span>=<span class="string">'(item, index) in house.swornMembers'</span> :key=<span class="string">"index"</span>)</div><div class="line">      .members</div><div class="line">        img(:src=<span class="string">'item.profile'</span>)</div><div class="line">        .desc</div><div class="line">          .cname &#123;&#123;item.cname&#125;&#125;</div><div class="line">          .intro &#123;&#123;item.text&#125;&#125;</div><div class="line">  </div><div class="line">    .house-history(v-<span class="keyword">for</span>=<span class="string">'(item, index) in house.sections'</span> :key=<span class="string">'index'</span>)</div><div class="line">      .title &#123;&#123;item.title&#125;&#125;</div><div class="line">      .content(v-<span class="keyword">for</span>=<span class="string">'text in item.content'</span>) &#123;&#123;text&#125;&#125;</div><div class="line">&lt;<span class="regexp">/template&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="主页名称"><a href="#主页名称" class="headerlink" title="主页名称"></a>主页名称</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">head() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    <span class="attr">title</span>: <span class="string">'团队详情'</span></div><div class="line">  &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>页面加载之前请求数据，通过 <code>this.$route.query.id</code>获取上个页面传过来的id值，通过id获取相应的数据。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">beforeCreate() &#123;</div><div class="line">  <span class="keyword">let</span> id = <span class="keyword">this</span>.$route.query.id</div><div class="line">  <span class="keyword">this</span>.$store.dispatch(<span class="string">'showHouse'</span>, id)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="获取数据-1"><a href="#获取数据-1" class="headerlink" title="获取数据"></a>获取数据</h2><p>同理，通过mapState获取house数据</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">  ...mapState(&#123;</div><div class="line">  	<span class="attr">house</span>: <span class="string">'currentHouse'</span></div><div class="line">  &#125;)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>定义点击当前的house，修改<strong>store/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">currentHouse: &#123;&#125;</div></pre></td></tr></table></figure>
+<p>获取数据，修改<strong>store/actions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> showHouse(&#123; state &#125;, _id) &#123;</div><div class="line">  <span class="keyword">if</span> (_id === state.currentHouse._id) <span class="keyword">return</span></div><div class="line">  <span class="keyword">const</span> res = <span class="keyword">await</span> Services.fetchHouse(_id)</div><div class="line">  state.currentHouse = res.data.data</div><div class="line">  <span class="keyword">return</span> res</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>store/service.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fetchHouse(id) &#123;</div><div class="line">  <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;apiUrl&#125;</span>/wiki/houses/<span class="subst">$&#123;id&#125;</span>`</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>页面效果如图：</p>
+<p> <img src="/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\主页跳转.gif" alt="主页跳转"></p>
+<h1 id="团队角色主页"><a href="#团队角色主页" class="headerlink" title="团队角色主页"></a>团队角色主页</h1><p>个人主页主要分两大部分：一是头像及个人信息，二是个人技能。</p>
+<p><strong>pages/character/index.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;template lang=<span class="string">"pug"</span>&gt;</div><div class="line">.container</div><div class="line">  .character-header</div><div class="line">    img.background(v-<span class="keyword">if</span>=<span class="string">'character.images'</span>, :src=<span class="string">'character.images[character.images.length - 1]'</span>)</div><div class="line">    .media</div><div class="line">      img(v-<span class="keyword">if</span>=<span class="string">'character.profile'</span>, :src=<span class="string">'character.profile'</span>)</div><div class="line">      .desc</div><div class="line">        .names</div><div class="line">          p.cname &#123;&#123;character.cname&#125;&#125;</div><div class="line">          p.name &#123;&#123;character.name&#125;&#125;</div><div class="line"></div><div class="line">  .character-body</div><div class="line">    .intro</div><div class="line">      p(v-<span class="keyword">for</span>=<span class="string">'item in character.intro'</span>) &#123;&#123;item&#125;&#125;</div><div class="line"></div><div class="line">      .stills</div><div class="line">        img(v-<span class="keyword">for</span>=<span class="string">'(item, index) in character.images'</span>, :src=<span class="string">'item'</span>, :key=<span class="string">'index'</span>)</div><div class="line"></div><div class="line">      .items(v-<span class="keyword">for</span>=<span class="string">'item in character.sections'</span>)</div><div class="line">        .title &#123;&#123;item.title&#125;&#125;</div><div class="line">        .body(v-<span class="keyword">for</span>=<span class="string">'text in item.content'</span>) &#123;&#123;text&#125;&#125;</div><div class="line">&lt;<span class="regexp">/template&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="主页名称-1"><a href="#主页名称-1" class="headerlink" title="主页名称"></a>主页名称</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">head() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    <span class="attr">title</span>: <span class="string">'团队成员详情'</span></div><div class="line">  &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>获取id值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">beforeCreate() &#123;</div><div class="line">  <span class="keyword">let</span> id = <span class="keyword">this</span>.$route.query.id</div><div class="line">  <span class="keyword">this</span>.$store.dispatch(<span class="string">'showCharacter'</span>, id)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="获取数据-2"><a href="#获取数据-2" class="headerlink" title="获取数据"></a>获取数据</h2><p>同理，通过mapState获取character数据</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">  ...mapState(&#123;</div><div class="line">  	<span class="attr">character</span>: <span class="string">'currentCharacter'</span></div><div class="line">  &#125;)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>定义点击当前的character，修改<strong>store/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">currentCharacter: &#123;&#125;</div></pre></td></tr></table></figure>
+<p>获取数据，修改<strong>store/actions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> showCharacter(&#123; state &#125;, _id) &#123;</div><div class="line">    <span class="keyword">if</span> (_id === state.currentCharacter._id) <span class="keyword">return</span></div><div class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> Services.fetchCharacter(_id)</div><div class="line">    state.currentCharacter = res.data.data</div><div class="line">    <span class="keyword">return</span> res</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p><strong>store/service.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fetchCharacter(id) &#123;</div><div class="line">  <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;apiUrl&#125;</span>/wiki/characters/<span class="subst">$&#123;id&#125;</span>`</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>页面效果如图：</p>
+<p> <img src="/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\个人详情页跳转.gif" alt="个人详情页跳转"></p>
+<h1 id="导航"><a href="#导航" class="headerlink" title="导航"></a>导航</h1><p>导航分为三部分：首页、周边、我的账户。</p>
+<p><strong>components/nav.vue</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;template lang="pug"&gt;</div><div class="line">  nav#nav(v-if='navVisible')</div><div class="line">    nuxt-link(v-for='(item, index) in navList' :to='item.path' :key='index')</div><div class="line">      div(v-if='index === 0')</div><div class="line">        img(v-if='activeRoute !== item.name' src='../static/img/home.png')</div><div class="line">        img(v-else src='../static/img/home-selected.png')</div><div class="line">      div(v-else-if='index === 1')</div><div class="line">        img(v-if='activeRoute !== item.name' src='../static/img/shopping.png')</div><div class="line">        img(v-else src='../static/img/shopping-selected.png')</div><div class="line">      div(v-else)</div><div class="line">        img(v-if='activeRoute !== item.name' src='../static/img/user.png')</div><div class="line">        img(v-else src='../static/img/user-selected.png')</div><div class="line">      p &#123;&#123; item.text &#125;&#125;</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<p>添加导航数据名称</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">data() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">  	<span class="attr">navList</span>: [</div><div class="line">      &#123;</div><div class="line">        <span class="string">'path'</span>: <span class="string">'/'</span>,</div><div class="line">        <span class="string">'name'</span>: <span class="string">'index'</span>,</div><div class="line">        <span class="string">'text'</span>: <span class="string">'稻米首页'</span></div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        <span class="string">'path'</span>: <span class="string">'/shopping'</span>,</div><div class="line">        <span class="string">'name'</span>: <span class="string">'shopping'</span>,</div><div class="line">        <span class="string">'text'</span>: <span class="string">'周边手边'</span></div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        <span class="string">'path'</span>: <span class="string">'/user'</span>,</div><div class="line">        <span class="string">'name'</span>: <span class="string">'user'</span>,</div><div class="line">        <span class="string">'text'</span>: <span class="string">'个人中心'</span></div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>动态设置route名称</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">  activeRoute() &#123;</div><div class="line">  	<span class="keyword">return</span> <span class="keyword">this</span>.$route.name</div><div class="line">  &#125;,</div><div class="line">  navVisible() &#123;</div><div class="line">    <span class="keyword">return</span> [<span class="string">'index'</span>, <span class="string">'shopping'</span>, <span class="string">'user'</span>].indexOf(<span class="keyword">this</span>.activeRouter) &gt; <span class="number">-1</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>页面效果：<br> <img src="/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\wx40.png" alt="wx40"></p>
+<h1 id="周边手办商城页"><a href="#周边手办商城页" class="headerlink" title="周边手办商城页"></a>周边手办商城页</h1><p><strong>pages/shopping/index.vue</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;template lang=&quot;pug&quot;&gt;</div><div class="line">.container</div><div class="line">  .shopping</div><div class="line">    .title 商城周边</div><div class="line">    .list</div><div class="line">      .items(v-for=&apos;(item, index) in products&apos; :key=&apos;index&apos; @click=&apos;showProduct(item)&apos;)</div><div class="line">        img(:src=&apos;item.images[0]&apos;)</div><div class="line">        .body</div><div class="line">          .title &#123;&#123;item.title&#125;&#125;</div><div class="line">          .content &#123;&#123;item.intro&#125;&#125;</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<h2 id="主页名称-2"><a href="#主页名称-2" class="headerlink" title="主页名称"></a>主页名称</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">head() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    <span class="attr">title</span>: <span class="string">'周边手办'</span></div><div class="line">  &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>在页面加载之前请求数据</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">beforeCreate() &#123;</div><div class="line">	<span class="keyword">this</span>.$store.dispatch(<span class="string">'fetchProducts'</span>)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<h2 id="获取数据-3"><a href="#获取数据-3" class="headerlink" title="获取数据"></a>获取数据</h2><p>获取products数据</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">  ...mapState([</div><div class="line">    <span class="string">'products'</span></div><div class="line">  ])</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>定义products，修改<strong>store/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">products: []</div></pre></td></tr></table></figure>
+<p><strong>store/actions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> fetchProducts(&#123; state &#125;) &#123;</div><div class="line">  <span class="keyword">const</span> res = <span class="keyword">await</span> Services.fetchProducts()</div><div class="line">  state.products = res.data.data</div><div class="line">  <span class="keyword">return</span> res</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>store/service.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fetchProducts() &#123;</div><div class="line">	<span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;apiUrl&#125;</span>/wiki/products`</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>页面展示如图：</p>
+<p> <img src="/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\wx41.png" alt="wx41"></p>
+<h1 id="商品详情页"><a href="#商品详情页" class="headerlink" title="商品详情页"></a>商品详情页</h1><p>商品详情页会用到轮播图展示，这里使用vue-awesome-swiper插件。</p>
+<p>安装vue-awesome-swiper</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yarn add vue-awesome-swiper</div></pre></td></tr></table></figure>
+<p>修改nuxt.config.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">head: &#123;</div><div class="line">	<span class="attr">meta</span>: [</div><div class="line">      &#123; <span class="attr">charset</span>: <span class="string">'utf-8'</span> &#125;,</div><div class="line">      &#123; <span class="attr">hid</span>: <span class="string">'description'</span>, <span class="attr">name</span>: <span class="string">'description'</span>, <span class="attr">content</span>: <span class="string">'Nuxt.js project'</span> &#125;</div><div class="line">    ]</div><div class="line">&#125;,</div><div class="line"><span class="attr">css</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">src</span>: <span class="string">'swiper/dist/css/swiper.css'</span></div><div class="line">    &#125;</div><div class="line">],</div><div class="line"><span class="attr">plugins</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">src</span>: <span class="string">'~plugins/swiper.js'</span>, <span class="attr">ssr</span>: <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<p><strong>pages/deal/index.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&lt;template lang=<span class="string">"pug"</span>&gt;</div><div class="line">.container</div><div class="line">  .product</div><div class="line">    .swiper(v-swiper:mySwiper=<span class="string">'swiperConfig'</span>)</div><div class="line">      .swiper-wrapper</div><div class="line">        .swiper-slide(v-<span class="keyword">for</span>=<span class="string">'item in product.images'</span>)</div><div class="line">          img(:src=<span class="string">'item'</span>)</div><div class="line"></div><div class="line">      .swiper-pagination.swiper-pagination-bullets</div><div class="line"></div><div class="line">    .content</div><div class="line">      .price(v-<span class="keyword">if</span>=<span class="string">'product.price'</span>)</div><div class="line">        span.main-price &#123;&#123;product.price.toFixed(<span class="number">2</span>) - product.price.toFixed(<span class="number">2</span>).substr(<span class="number">-3</span>)&#125;&#125;</div><div class="line">        span.other-price &#123;&#123;product.price.toFixed(<span class="number">2</span>).substr(<span class="number">-3</span>)&#125;&#125;</div><div class="line"></div><div class="line">    .name &#123;&#123;product.name&#125;&#125;</div><div class="line">    .intro &#123;&#123;product.intro&#125;&#125;</div><div class="line">    .info</div><div class="line">      cell(v-<span class="keyword">for</span>=<span class="string">'(item, index) in product.parameters'</span> :key=<span class="string">'index'</span> :title=<span class="string">'item.key'</span> :content=<span class="string">'item.value'</span>)</div><div class="line">    .attentions</div><div class="line">      .title 购物提示</div><div class="line">      ol</div><div class="line">        li(v-<span class="keyword">for</span>=<span class="string">'item in attentions'</span>) &#123;&#123;item&#125;&#125;</div><div class="line">    </div><div class="line">    .footer</div><div class="line">      span(@click=<span class="string">'buyProduct'</span>) 购买</div><div class="line">&lt;<span class="regexp">/template&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="添加swiper配置"><a href="#添加swiper配置" class="headerlink" title="添加swiper配置"></a>添加swiper配置</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">.swiper(v-swiper:mySwiper=<span class="string">'swiperConfig'</span>)</div><div class="line"></div><div class="line">data() &#123;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">  <span class="attr">swiperConfig</span>: &#123;</div><div class="line">    <span class="attr">autoplay</span>: <span class="number">4000</span>,</div><div class="line">    <span class="attr">direction</span>: <span class="string">'horizontal'</span>,</div><div class="line">    <span class="attr">loop</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">pagination</span>: <span class="string">'.swiper-pagination'</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="请求数据"><a href="#请求数据" class="headerlink" title="请求数据"></a>请求数据</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">beforeCreate() &#123;</div><div class="line">  <span class="keyword">const</span> id = <span class="keyword">this</span>.$route.query.id</div><div class="line">  <span class="keyword">this</span>.$store.dispatch(<span class="string">'showProduct'</span>, id)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<h2 id="获取数据-4"><a href="#获取数据-4" class="headerlink" title="获取数据"></a>获取数据</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">  ...mapState(&#123;</div><div class="line">  	<span class="string">'product'</span>: <span class="string">'currentProduct'</span></div><div class="line">  &#125;)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p><strong>store/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">currentProduct: [],</div></pre></td></tr></table></figure>
+<p><strong>store/actions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> showProduct(&#123; state &#125;, _id) &#123;</div><div class="line">    <span class="keyword">if</span> (_id === state.currentProduct._id) <span class="keyword">return</span></div><div class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> Services.fetchProduct(_id)</div><div class="line">    state.currentProduct = res.data.data</div><div class="line"></div><div class="line">    <span class="keyword">return</span> res</div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<p><strong>store/service.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fetchProduct(id) &#123;</div><div class="line">  <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;apiUrl&#125;</span>/wiki/products/<span class="subst">$&#123;id&#125;</span>`</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="个人中心"><a href="#个人中心" class="headerlink" title="个人中心"></a>个人中心</h1><p><strong>pages/user/index.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&lt;template lang=<span class="string">"pug"</span>&gt;</div><div class="line">.container</div><div class="line">  .user(v-<span class="keyword">if</span>=<span class="string">'user'</span>)</div><div class="line">    .user-header</div><div class="line">      .text &#123;&#123;user.nickname&#125;&#125;</div><div class="line">      img(:src=<span class="string">'user.avatar'</span>)</div><div class="line">    .user-address</div><div class="line">      cell(title=<span class="string">'收获地址'</span>)</div><div class="line">      .user-content &#123;&#123;user.address&#125;&#125;   </div><div class="line">    .user-phone</div><div class="line">      cell(title=<span class="string">'电话'</span>)</div><div class="line">      .user-content &#123;&#123;user.phoneNumber&#125;&#125;</div><div class="line">    .user-name</div><div class="line">      cell(title=<span class="string">'姓名'</span>)</div><div class="line">      .user-content &#123;&#123;user.name&#125;&#125;</div><div class="line">    .user-order(v-<span class="keyword">if</span>=<span class="string">'user.orders'</span>)</div><div class="line">      cell(title=<span class="string">'我的订单'</span>)</div><div class="line">      .user-order-items(v-<span class="keyword">for</span>=<span class="string">'item in user.orders'</span>)</div><div class="line">        img(:src=<span class="string">'item.image'</span>)</div><div class="line">        .user-order-intro</div><div class="line">          .title &#123;&#123;item.title&#125;&#125;</div><div class="line">          .content &#123;&#123;item.intro&#125;&#125;</div><div class="line">        .user-order-price</div><div class="line">          span ￥&#123;&#123;item.price&#125;&#125;</div><div class="line">&lt;<span class="regexp">/template&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="请求数据-1"><a href="#请求数据-1" class="headerlink" title="请求数据"></a>请求数据</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">beforeCreate() &#123;</div><div class="line">	<span class="keyword">this</span>.$store.dispatch(<span class="string">'fetchUserAndOrders'</span>)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<h2 id="获取数据-5"><a href="#获取数据-5" class="headerlink" title="获取数据"></a>获取数据</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">  ...mapState([</div><div class="line">  	<span class="string">'user'</span></div><div class="line">  ])</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p><strong>store/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">user: <span class="literal">null</span></div></pre></td></tr></table></figure>
+<p><strong>store/action.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> fetchUserAndOrders(&#123; state &#125;) &#123;</div><div class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> Services.fetchUserAndOrders()</div><div class="line">    state.user = res.data.data</div><div class="line"></div><div class="line">    <span class="keyword">return</span> res</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p><strong>store/serivce.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fetchUserAndOrders() &#123;</div><div class="line">    <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;apiUrl&#125;</span>/api/user`</span>)</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>页面展示：</p>
+<p> <img src="/2018/08/08/微信公众号开发(五)：页面开发/C:/Users\user\Desktop\微信\wx42.png" alt="wx42"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/微信公众号开发(四)：用户管理和自定义菜单以及微信网页开发/" rel="next" title="微信公众号开发(四)：用户管理和自定义菜单以及微信网页开发">
+                <i class="fa fa-chevron-left"></i> 微信公众号开发(四)：用户管理和自定义菜单以及微信网页开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义测试接口"><span class="nav-number">1.</span> <span class="nav-text">定义测试接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pug模板"><span class="nav-number">2.</span> <span class="nav-text">pug模板</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装pug"><span class="nav-number">2.1.</span> <span class="nav-text">安装pug</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#首页"><span class="nav-number">3.</span> <span class="nav-text">首页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#首页名称"><span class="nav-number">3.1.</span> <span class="nav-text">首页名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取数据"><span class="nav-number">3.2.</span> <span class="nav-text">获取数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#样式"><span class="nav-number">4.</span> <span class="nav-text">样式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装sass"><span class="nav-number">4.1.</span> <span class="nav-text">安装sass</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#团队主页"><span class="nav-number">5.</span> <span class="nav-text">团队主页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主页名称"><span class="nav-number">5.1.</span> <span class="nav-text">主页名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取数据-1"><span class="nav-number">5.2.</span> <span class="nav-text">获取数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#团队角色主页"><span class="nav-number">6.</span> <span class="nav-text">团队角色主页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主页名称-1"><span class="nav-number">6.1.</span> <span class="nav-text">主页名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取数据-2"><span class="nav-number">6.2.</span> <span class="nav-text">获取数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#导航"><span class="nav-number">7.</span> <span class="nav-text">导航</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#周边手办商城页"><span class="nav-number">8.</span> <span class="nav-text">周边手办商城页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主页名称-2"><span class="nav-number">8.1.</span> <span class="nav-text">主页名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取数据-3"><span class="nav-number">8.2.</span> <span class="nav-text">获取数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#商品详情页"><span class="nav-number">9.</span> <span class="nav-text">商品详情页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#添加swiper配置"><span class="nav-number">9.1.</span> <span class="nav-text">添加swiper配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求数据"><span class="nav-number">9.2.</span> <span class="nav-text">请求数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取数据-4"><span class="nav-number">9.3.</span> <span class="nav-text">获取数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#个人中心"><span class="nav-number">10.</span> <span class="nav-text">个人中心</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#请求数据-1"><span class="nav-number">10.1.</span> <span class="nav-text">请求数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取数据-5"><span class="nav-number">10.2.</span> <span class="nav-text">获取数据</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
