@@ -1,0 +1,828 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="爬取IMDB页面数据这里我以冰火之歌电影为例子，也就要拿到冰火之歌的数据。数据分为两大数据，一是家族数据，一是角色数据。首先要先得到角色数据，通过数据做清理对比后去爬家族数据，然后根据家族数据进行合并生成两份数据，一份是每个家族里的人物，另一个是每个人物自己的数据，也就是个人介绍数据。
+首先拿到数据url，对抓取的页面进行解析。这就要用到爬虫相关的工具，我使用cheerio，它是nodejs的抓取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信公众号开发(六)：爬取数据和上传图片到七牛云">
+<meta property="og:url" content="http://kakajing.github.io/2018/08/09/微信公众号开发(六)：爬取数据和上传图片到七牛云/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="爬取IMDB页面数据这里我以冰火之歌电影为例子，也就要拿到冰火之歌的数据。数据分为两大数据，一是家族数据，一是角色数据。首先要先得到角色数据，通过数据做清理对比后去爬家族数据，然后根据家族数据进行合并生成两份数据，一份是每个家族里的人物，另一个是每个人物自己的数据，也就是个人介绍数据。
+首先拿到数据url，对抓取的页面进行解析。这就要用到爬虫相关的工具，我使用cheerio，它是nodejs的抓取">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx43.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/%E7%88%AC%E5%8F%96API%E6%95%B0%E6%8D%AE.gif">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx44.png">
+<meta property="og:updated_time" content="2018-08-09T15:39:59.996Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微信公众号开发(六)：爬取数据和上传图片到七牛云">
+<meta name="twitter:description" content="爬取IMDB页面数据这里我以冰火之歌电影为例子，也就要拿到冰火之歌的数据。数据分为两大数据，一是家族数据，一是角色数据。首先要先得到角色数据，通过数据做清理对比后去爬家族数据，然后根据家族数据进行合并生成两份数据，一份是每个家族里的人物，另一个是每个人物自己的数据，也就是个人介绍数据。
+首先拿到数据url，对抓取的页面进行解析。这就要用到爬虫相关的工具，我使用cheerio，它是nodejs的抓取">
+<meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx43.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2018/08/09/微信公众号开发(六)：爬取数据和上传图片到七牛云/"/>
+
+
+
+
+
+  <title> 微信公众号开发(六)：爬取数据和上传图片到七牛云 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/08/09/微信公众号开发(六)：爬取数据和上传图片到七牛云/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                微信公众号开发(六)：爬取数据和上传图片到七牛云
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-09T18:39:35+08:00">
+                2018-08-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="爬取IMDB页面数据"><a href="#爬取IMDB页面数据" class="headerlink" title="爬取IMDB页面数据"></a>爬取IMDB页面数据</h1><p>这里我以冰火之歌电影为例子，也就要拿到冰火之歌的数据。数据分为两大数据，一是家族数据，一是角色数据。首先要先得到角色数据，通过数据做清理对比后去爬家族数据，然后根据家族数据进行合并生成两份数据，一份是每个家族里的人物，另一个是每个人物自己的数据，也就是个人介绍数据。</p>
+<p>首先拿到数据url，对抓取的页面进行解析。这就要用到爬虫相关的工具，我使用cheerio，它是nodejs的抓取页面模块，为服务器特别定制的，快速、灵活、实施的jQuery核心实现，可以将HTML告诉你的服务器。</p>
+<a id="more"></a>
+<p><strong>server/crawler/imdb.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> cheerio <span class="keyword">from</span> <span class="string">'cheerio'</span></div><div class="line"><span class="keyword">const</span> options = &#123;</div><div class="line">    <span class="attr">uri</span>: <span class="string">'https://www.imdb.com/title/tt0944947/fullcredits?ref_=tt_cl_sm#cast'</span>,</div><div class="line">    <span class="attr">transform</span>: <span class="function"><span class="params">body</span> =&gt;</span> cheerio.load(body)</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>使用request-promise发送请求，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> rp <span class="keyword">from</span> <span class="string">'request-promise'</span></div><div class="line"><span class="keyword">const</span> $ = <span class="keyword">await</span> rp(options)</div></pre></td></tr></table></figure>
+<p>通过选择器获取数据，遍历table中的每一条数据，然后对数据进行解析</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">$(<span class="string">'table.cast_list tr.odd, tr.even'</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">let</span>  nmIdDom = $(<span class="string">'td.itemprop'</span>,<span class="keyword">this</span>).find(<span class="string">'a'</span>)</div><div class="line">    <span class="keyword">let</span> nmId = nmIdDom.attr(<span class="string">'href'</span>)</div><div class="line">    <span class="keyword">let</span> characterDom =$(<span class="string">'td.character'</span>,<span class="keyword">this</span>).find(<span class="string">'a'</span>).eq(<span class="number">0</span>)</div><div class="line">    <span class="keyword">let</span> chId = characterDom.attr(<span class="string">'href'</span>)</div><div class="line">    <span class="keyword">let</span> name = characterDom.text()</div><div class="line">    <span class="keyword">let</span> playedByDom = $(<span class="string">'td.itemprop'</span>,<span class="keyword">this</span>).find(<span class="string">'a'</span>).find(<span class="string">'span'</span>)</div><div class="line">    <span class="keyword">let</span> playedBy = playedByDom.text()</div><div class="line"></div><div class="line">    photos.push(&#123;</div><div class="line">      nmId,</div><div class="line">      chId,</div><div class="line">      name,</div><div class="line">      playedBy</div><div class="line">    &#125;)</div><div class="line">  &#125;)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'共拿到 '</span> + photos.length + <span class="string">' 条数据'</span>)</div></pre></td></tr></table></figure>
+<p>获取到原始数据后，通过ramda对数据进行处理，对nmId和chId进行正则比配，最后将数据写入imdb.json内。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fn = R.compose(</div><div class="line">    RR.map(<span class="function"><span class="params">photo</span> =&gt;</span> &#123;</div><div class="line">      <span class="keyword">let</span> reg1 = <span class="regexp">/\/name\/(.*?)\/\?ref/</span></div><div class="line">      <span class="keyword">let</span> match1 = photo.nmId.match(reg1)</div><div class="line">      <span class="keyword">let</span> str = photo.chId.split(<span class="string">'/'</span>)[<span class="number">4</span>] </div><div class="line">      <span class="keyword">if</span>(str)&#123;</div><div class="line">        str = str.split(<span class="string">'?'</span>)[<span class="number">0</span>]</div><div class="line">      &#125;</div><div class="line">      photo.nmId = match1[<span class="number">1</span>]</div><div class="line">      photo.chId = str</div><div class="line">      </div><div class="line">      <span class="keyword">return</span> photo</div><div class="line">    &#125;),</div><div class="line">    R.filter(<span class="function"><span class="params">photo</span> =&gt;</span> photo.playedBy &amp;&amp; photo.name &amp;&amp; photo.nmId &amp;&amp; photo.chId)</div><div class="line">  )</div><div class="line"> photos = fn(photos)</div><div class="line"> <span class="built_in">console</span>.log(<span class="string">'清洗后，剩余 '</span> + photos.length + <span class="string">' 条数据'</span>)</div><div class="line"> fs.writeFileSync(<span class="string">'./imdb.json'</span>, <span class="built_in">JSON</span>.stringify(photos, <span class="literal">null</span>, <span class="number">2</span>), <span class="string">'utf8'</span>)</div></pre></td></tr></table></figure>
+<p>修改start.js文件，将启动文件修改成imdb.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'./server/crawler/imdb'</span>)</div></pre></td></tr></table></figure>
+<p>数据爬取完成，成功写入imdb.json，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx43.png" alt="wx43"></p>
+<h1 id="爬取API数据"><a href="#爬取API数据" class="headerlink" title="爬取API数据"></a>爬取API数据</h1><p>设置爬取url，同步发送请求，将url作为参数传入</p>
+<p><strong>server/crawler/api.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> rp <span class="keyword">from</span> <span class="string">'request-promise'</span></div><div class="line"><span class="keyword">import</span> _ <span class="keyword">from</span> <span class="string">'lodash'</span></div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> characters = []</div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> getAPICharacters = <span class="keyword">async</span> (page = <span class="number">1</span>) =&gt; &#123;</div><div class="line">  <span class="keyword">const</span> url = <span class="string">`https://www.anapioficeandfire.com/api/characters?page=<span class="subst">$&#123;page&#125;</span>&amp;pageSize=50`</span></div><div class="line">  <span class="keyword">let</span> body = <span class="keyword">await</span> rp(url)</div><div class="line">&#125;</div><div class="line">getAPICharacters()</div></pre></td></tr></table></figure>
+<p>从第一页开始爬取数据，对爬取到的数据进行解析拼接</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">body = <span class="built_in">JSON</span>.parse(body)</div><div class="line">characters = _.union(characters, body)</div></pre></td></tr></table></figure>
+<p>判断拿到的数据长度是否小于50，如果是，执行<code>console.log(&#39;爬完了&#39;)</code>；反之，将数据写入character.json文件中，每隔1秒执行一次，page++，继续调用<code>getAPICharacters(page)</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (body.length &lt; <span class="number">50</span>) &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'爬完了'</span>)</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    fs.writeFileSync(<span class="string">'./character.json'</span>, <span class="built_in">JSON</span>.stringify(characters, <span class="literal">null</span>, <span class="number">2</span>), <span class="string">'utf8'</span>)</div><div class="line">    <span class="keyword">await</span> sleep(<span class="number">1000</span>)</div><div class="line">    page++</div><div class="line">    getAPICharacters(page)</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>修改start.js文件，将启动文件修改成api.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'./server/crawler/api'</span>)</div></pre></td></tr></table></figure>
+<p>爬取成功，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/%E7%88%AC%E5%8F%96API%E6%95%B0%E6%8D%AE.gif" alt="爬取API数据"></p>
+<h1 id="校对数据"><a href="#校对数据" class="headerlink" title="校对数据"></a>校对数据</h1><p> 在imdb上爬到的数据与在API上爬到的数据有所不同，以API里的数据为基准来校对从imdb上爬到的数据，如果某个数据不符合条件就过滤掉，通过imdb数据对比API数据最后筛选出正确的数据。新建校对文件。</p>
+<p><strong>server/crawler/check.js</strong></p>
+<p>拿到角色数据和imdb数据</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> characters = <span class="built_in">require</span>(resolve(__dirname, <span class="string">'../../characters.json'</span>))</div><div class="line"><span class="keyword">const</span> IMDbData = <span class="built_in">require</span>(resolve(__dirname, <span class="string">'../../imdb.json'</span>))</div></pre></td></tr></table></figure>
+<p>通过name和playedBy对传入的每条数据进行对比</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> validData = R.filter(</div><div class="line">  <span class="function"><span class="params">i</span> =&gt;</span> findNameInAPI(i) &amp;&amp; findPlayedByInAPI(i)</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>查找name和playedBy这两个参数是否存在</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> findNameInAPI = <span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> find(characters, &#123;</div><div class="line">    <span class="attr">name</span>: item.name</div><div class="line">  &#125;)</div><div class="line">&#125;</div><div class="line"><span class="keyword">const</span> finPlayedByInAPI = <span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> find(characters, i =&gt; &#123;</div><div class="line">    <span class="keyword">return</span> i.playedBy.includes(item.playedBy)</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>验证IMDbData获取新的数据，将新数据写入wikiCharacters.json文件里。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> IMDb = validData(IMDbData)</div><div class="line">fs.writeFileSync(<span class="string">'./wikiCharacters.json'</span>, <span class="built_in">JSON</span>.stringify(IMDb, <span class="literal">null</span>, <span class="number">2</span>), <span class="string">'utf8'</span>)</div></pre></td></tr></table></figure>
+<p>修改start.js文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'./server/crawler/check'</span>)</div></pre></td></tr></table></figure>
+<p>校对后的正确数据写入wikiCharacters.json，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx44.png" alt="wx44"></p>
+<h1 id="爬取人物头像"><a href="#爬取人物头像" class="headerlink" title="爬取人物头像"></a>爬取人物头像</h1><p>获取到characters的数据，然后遍历，判断characters是否存在profile字段，构建请求地址，执行爬取IMDbProfile函数获取profile，将最后的数据写入imdbCharacters.json文件里。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetchIMDbProfile = <span class="keyword">async</span> (url) =&gt; &#123;</div><div class="line">  <span class="keyword">const</span> options = &#123;</div><div class="line">    <span class="attr">uri</span>: url,</div><div class="line">    <span class="attr">transform</span>: <span class="function"><span class="params">body</span> =&gt;</span> cheerio.load(body)</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">const</span> $ = <span class="keyword">await</span> rp(options)</div><div class="line">  <span class="keyword">const</span> img = $(<span class="string">'a.poster img'</span>)</div><div class="line">  <span class="keyword">let</span> src = img.attr(<span class="string">'src'</span>)</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (src) &#123;</div><div class="line">    src = src.split(<span class="string">'_V1'</span>).shift()</div><div class="line">    src += <span class="string">'_V1.jpg'</span></div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> getIMDbProfile = <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">  <span class="keyword">const</span> characters = <span class="built_in">require</span>(__dirname, <span class="string">'./wikiCharacters.json'</span>)</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; characters.length; i++) &#123;</div><div class="line">    <span class="keyword">if</span>(!characters[i].profile) &#123;</div><div class="line">      <span class="keyword">const</span> url = <span class="string">`https://www.imdb.com/title/tt0944947/characters/<span class="subst">$&#123;characters[i].chId&#125;</span>`</span></div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'正在爬取 '</span> + characters[i].name)</div><div class="line"></div><div class="line">      <span class="keyword">const</span> src = <span class="keyword">await</span> fetchIMDbProfile(url)</div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'已经爬到 '</span> + src)</div><div class="line">      characters[i].profile = src</div><div class="line"></div><div class="line">      fs.writeFileSync(<span class="string">'./imdbCharacters.json'</span>, <span class="built_in">JSON</span>.stringify(characters, <span class="literal">null</span>, <span class="number">2</span>), <span class="string">'utf8'</span>)</div><div class="line">      <span class="keyword">await</span> sleep(<span class="number">500</span>)</div><div class="line">    &#125;  </div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">getIMDbProfile()</div></pre></td></tr></table></figure>
+<p>头像数据爬取完成，成功写入imdbCharacters.json，不再截图了。</p>
+<h1 id="检查数据是否包含头像"><a href="#检查数据是否包含头像" class="headerlink" title="检查数据是否包含头像"></a>检查数据是否包含头像</h1><p>拿到characters的数据然后遍历，如果数据包含profile字段就放进chaaracters里，将新数据写入validCharacters.json。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> checkIMDbProfile = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> characters = <span class="built_in">require</span>(__dirname, <span class="string">'./imdbCharacters.json'</span>)</div><div class="line">  <span class="keyword">const</span> newCharacters = []</div><div class="line"></div><div class="line">  characters.forEach(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (item.profile) &#123;</div><div class="line">      newCharacters.push(item)</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  fs.writeFileSync(<span class="string">'./validCharacters.json'</span>, <span class="built_in">JSON</span>.stringify(newCharacters, <span class="literal">null</span>, <span class="number">2</span>), <span class="string">'utf8'</span>)</div><div class="line">&#125;</div><div class="line">checkIMDbProfile()</div></pre></td></tr></table></figure>
+<h1 id="爬取角色剧照"><a href="#爬取角色剧照" class="headerlink" title="爬取角色剧照"></a>爬取角色剧照</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fetchIMDbImage = <span class="keyword">async</span> (url) =&gt; &#123;</div><div class="line">  <span class="keyword">const</span> options = &#123;</div><div class="line">    <span class="attr">uri</span>: url,</div><div class="line">    <span class="attr">transform</span>: <span class="function"><span class="params">body</span> =&gt;</span> cheerio.load(body)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> $ = <span class="keyword">await</span> rp(options)</div><div class="line">  <span class="keyword">let</span> images = []</div><div class="line"></div><div class="line">  $(<span class="string">'div.titlecharacters-image-grid a img'</span>).each(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">let</span> src = $(<span class="keyword">this</span>).attr(<span class="string">'src'</span>)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (src) &#123;</div><div class="line">      src = src.split(<span class="string">'_V1'</span>).shift()</div><div class="line">      srt += <span class="string">'_V1.jpg'</span></div><div class="line">      images.push(src)</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">  <span class="keyword">return</span> images</div><div class="line">&#125;</div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> getIMDbImages = <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">  <span class="keyword">const</span> characters = <span class="built_in">require</span>(__dirname, <span class="string">'./wikiCharacters.json'</span>)</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; characters.length; i++) &#123;</div><div class="line">    <span class="keyword">if</span> (!characters[i].images) &#123;</div><div class="line">      <span class="keyword">const</span> url = <span class="string">`https://www.imdb.com/title/tt0944947/characters/<span class="subst">$&#123;characters[i].chId&#125;</span>?ref_=ttfc_fc_cl_t1#quotes`</span></div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'正在爬取 '</span> + characters[i].name)</div><div class="line">      <span class="keyword">const</span> images = <span class="keyword">await</span> fetchIMDbImage(url)</div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'已经爬到 '</span> + images.length)</div><div class="line"></div><div class="line">      characters[i].images = images</div><div class="line">      fs.writeFileSync(<span class="string">'./fullCharacters.json'</span>, <span class="built_in">JSON</span>.stringify(characters, <span class="literal">null</span>, <span class="number">2</span>), <span class="string">'utf8'</span>)</div><div class="line"></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">getIMDbImages()</div></pre></td></tr></table></figure>
+<h1 id="爬取中文人物数据"><a href="#爬取中文人物数据" class="headerlink" title="爬取中文人物数据"></a>爬取中文人物数据</h1><p>遍历本地imdb的人物数据拿到id，根据id查询详细数据，将详细数据存入本地后进行筛选。</p>
+<h2 id="获取id"><a href="#获取id" class="headerlink" title="获取id"></a>获取id</h2><p>定义查询的字段和url，通过request-promise发出请求获取数据，将获取到的数据进行转换合并处理。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> getWikiId = <span class="keyword">async</span> data =&gt; &#123;</div><div class="line">  <span class="keyword">const</span> query = data.cname || data.name</div><div class="line">  <span class="keyword">const</span> url = <span class="string">`http://zh.asoiaf.wikia.com/api/v1/Search/List?query=<span class="subst">$&#123;<span class="built_in">encodeURI</span>(query)&#125;</span>`</span></div><div class="line"></div><div class="line">  <span class="keyword">let</span> res</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">    res = <span class="keyword">await</span> rp(url)</div><div class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">    <span class="built_in">console</span>.log(e)</div><div class="line">  &#125;</div><div class="line">  res = <span class="built_in">JSON</span>.parse(res)</div><div class="line">  res = res.items[<span class="number">0</span>]</div><div class="line">  <span class="built_in">console</span>.log(res.id)</div><div class="line">  <span class="keyword">return</span> R.merge(data, res)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="获取详情"><a href="#获取详情" class="headerlink" title="获取详情"></a>获取详情</h2><p>声明id及url，发出请求获取数据。通过ramda对数据进行整合。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> getWikiDetail = <span class="keyword">async</span> data =&gt; &#123;</div><div class="line">  <span class="keyword">const</span> &#123; id &#125; = data</div><div class="line">  <span class="keyword">const</span> url = <span class="string">`http://zh.asoiaf.wikia.com/api/v1/Articles/AsSimpleJson?id=<span class="subst">$&#123;id&#125;</span>`</span></div><div class="line">  <span class="keyword">let</span> res</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">    res = <span class="keyword">await</span> rp(url)</div><div class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">    <span class="built_in">console</span>.log(e)</div><div class="line">  &#125;</div><div class="line">  res = <span class="built_in">JSON</span>.parse(res)  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="获取cname和intro"><a href="#获取cname和intro" class="headerlink" title="获取cname和intro"></a>获取cname和intro</h3><p>先拿到sections，接着筛选出level为1的数据，将筛选后的第一条数据拿出来，挑选出title和content参数，然后遍历拿出的参数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> getCNameAndIntro = R.compose(</div><div class="line">    <span class="function"><span class="params">i</span> =&gt;</span> (&#123;</div><div class="line">      <span class="attr">cname</span>: i.title,</div><div class="line">      <span class="attr">intro</span>: R.map(R.prop([<span class="string">'text'</span>]))(i.content)</div><div class="line">    &#125;),</div><div class="line">    R.pick([<span class="string">'title'</span>, <span class="string">'content'</span>]),</div><div class="line">    R.nth(<span class="number">0</span>),</div><div class="line">    R.filter(R.propEq(<span class="string">'level'</span>, <span class="number">1</span>)),</div><div class="line">    R.prop(<span class="string">'sections'</span>)</div><div class="line">  )</div></pre></td></tr></table></figure>
+<h3 id="获取level"><a href="#获取level" class="headerlink" title="获取level"></a>获取level</h3><p>拿到sections筛选出所有内容不为空的数据，将title为扩展阅读和引用与注释的数据去除，然后将剩下的数据组织起来。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> getLevel = R.compose(</div><div class="line">  R.project([<span class="string">'title'</span>, <span class="string">'content'</span>, <span class="string">'level'</span>]),</div><div class="line">  R.reject(R.propEq(<span class="string">'title'</span>, <span class="string">'扩展阅读'</span>)),</div><div class="line">  R.reject(R.propEq(<span class="string">'title'</span>, <span class="string">'引用与注释'</span>)),</div><div class="line">  R.filter(<span class="function"><span class="params">i</span> =&gt;</span> i.content.lenght),</div><div class="line">  R.prop(<span class="string">'sections'</span>)</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>拿到所有数据后返回</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> cnameIntro = getCNameAndIntro(res)</div><div class="line"><span class="keyword">let</span> sections = getLevel(res)</div><div class="line"><span class="keyword">let</span> body = R.merge(data, getCNameAndIntro(res))</div><div class="line">sections = normalizedSections(sections)</div><div class="line">body.sections = sections</div><div class="line">body.wikiId = id</div><div class="line"></div><div class="line"><span class="keyword">return</span> R.pick([<span class="string">'name'</span>, <span class="string">'cname'</span>, <span class="string">'playedBy'</span>, <span class="string">'profile'</span>, <span class="string">'images'</span>, <span class="string">'nmId'</span>, <span class="string">'chId'</span>, <span class="string">'sections'</span>, <span class="string">'intro'</span>, <span class="string">'wikiId'</span>, <span class="string">'words'</span>], body)</div></pre></td></tr></table></figure>
+<h2 id="获取WikiCharacters"><a href="#获取WikiCharacters" class="headerlink" title="获取WikiCharacters"></a>获取WikiCharacters</h2><p>引入清理后的数据data，通过data遍历每条数据的id，通过<code>Promise.all(data)</code>发出所有的异步请求，获取wiki id和wiki 详情数据，将这些数据写入finalCharacters.json。最后调用<code>getWikiCharacters()</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> getWikiCharacters = <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">  <span class="keyword">let</span> data = <span class="built_in">require</span>(resolve(__dirname, <span class="string">'../../fullCharacters.json'</span>))</div><div class="line"></div><div class="line">  <span class="built_in">console</span>.log(data.lenght)</div><div class="line">  data = R.map(getWikiId, data)</div><div class="line">  data = <span class="keyword">await</span> <span class="built_in">Promise</span>.all(data)</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'获取 wiki Id'</span>)</div><div class="line">  <span class="built_in">console</span>.log(data[<span class="number">0</span>])</div><div class="line"></div><div class="line">  data = R.map(getWikiDetail, data)</div><div class="line">  data = <span class="keyword">await</span> <span class="built_in">Promise</span>.all(data)</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'获取 wiki 详细资料'</span>)</div><div class="line">  <span class="built_in">console</span>.log(data[<span class="number">0</span>])</div><div class="line"></div><div class="line">  fs.writeFileSync(<span class="string">'./finalCharacters.json'</span>, <span class="built_in">JSON</span>.stringify(data, <span class="literal">null</span>, <span class="number">2</span>), <span class="string">'utf8'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>修改入口文件start.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">require(&apos;./server/crawler/wiki&apos;)</div></pre></td></tr></table></figure>
+<h1 id="将头像和封面图上传到七牛云"><a href="#将头像和封面图上传到七牛云" class="headerlink" title="将头像和封面图上传到七牛云"></a>将头像和封面图上传到七牛云</h1><p>在七牛云上新建个存储空间，会默认分配一个测试域名，使用这个域名就可以。接下来就可以上传图片了。上传图片之前需要把你的七牛云的AK和SK配置到本地。</p>
+<p>修改<strong>server/config/index.js</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">qiniu: &#123;</div><div class="line">    AK: &apos;你的七牛云AK&apos;,</div><div class="line">    SK: &apos;你的七牛云SK&apos;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="上传图片工具函数"><a href="#上传图片工具函数" class="headerlink" title="上传图片工具函数"></a>上传图片工具函数</h2><p>上传七牛云是需要ak和sk，可能其他地方也需要用到上传图片，就单独封装七牛云函数</p>
+<p><strong>server/lib/qiniu.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> bucket = <span class="string">'kaka'</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetchImage = <span class="keyword">async</span> (url, key) =&gt; &#123;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> bash = <span class="string">`qshell fetch <span class="subst">$&#123;url&#125;</span> <span class="subst">$&#123;bucket&#125;</span> '<span class="subst">$&#123;key&#125;</span>'`</span></div><div class="line">    <span class="keyword">const</span> child = exec(bash, &#123;<span class="attr">async</span>: <span class="literal">true</span>&#125;)</div><div class="line">    child.stdout.on(<span class="string">'data'</span>, data =&gt; &#123;</div><div class="line">      <span class="built_in">console</span>.log(data)</div><div class="line">      resolve(data)</div><div class="line">    &#125;)</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>拼接shell脚本<code>qshell fetch ${url} ${bucket} &#39;${key}&#39;</code>，设置异步执行脚本<code>exec(bash, {async: true})</code>，最后标准输出数据data。</p>
+<h2 id="从IMDb上获取图片"><a href="#从IMDb上获取图片" class="headerlink" title="从IMDb上获取图片"></a>从IMDb上获取图片</h2><p>引入IMDbCharacters数据遍历它。</p>
+<p><strong>server/crawler/wiki.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetchImageFromIMDb = <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">  <span class="keyword">let</span> IMDbCharacters = <span class="built_in">require</span>(resolve(__dirname, <span class="string">'../../finalCharacters.json'</span>))</div><div class="line">  IMDbCharacters = R.map(<span class="keyword">async</span> item =&gt; &#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">if</span> (item.profile.indexOf(<span class="string">'http'</span>) === <span class="number">-1</span>) &#123;</div><div class="line">        <span class="keyword">let</span> key = <span class="string">`<span class="subst">$&#123;item.nmId&#125;</span>/<span class="subst">$&#123;randomToken(<span class="number">32</span>)&#125;</span>`</span> </div><div class="line">        <span class="keyword">await</span> fetchImage(item.profile, key)</div><div class="line">        <span class="built_in">console</span>.log(key)</div><div class="line">        <span class="built_in">console</span>.log(item.profile)</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'upload done!'</span>)</div><div class="line">        item.profile = key</div><div class="line">      &#125;</div><div class="line">    </div><div class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; item.images.length; i++) &#123;</div><div class="line">        <span class="keyword">let</span> _key = <span class="string">`<span class="subst">$&#123;item.nmId&#125;</span>/<span class="subst">$&#123;randomToken(<span class="number">32</span>)&#125;</span>`</span></div><div class="line">        <span class="keyword">await</span> fetchImage(item.images[i], _key)</div><div class="line"></div><div class="line">        <span class="built_in">console</span>.log(_key)</div><div class="line">        <span class="built_in">console</span>.log(item.images[i])</div><div class="line">        <span class="keyword">await</span>(<span class="number">100</span>)</div><div class="line">        item.images[i] = _key</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">      <span class="built_in">console</span>.log(e)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> item</div><div class="line">  &#125;)(IMDbCharacters)</div><div class="line">  IMDbCharacters = <span class="keyword">await</span> <span class="built_in">Promise</span>.all(IMDbCharacters)</div><div class="line">  fs.writeFileSync(<span class="string">'./completeCharacters.json'</span>, <span class="built_in">JSON</span>.stringify(IMDbCharacters, <span class="literal">null</span>, <span class="number">2</span>), <span class="string">'utf8'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="上传图片"><a href="#上传图片" class="headerlink" title="上传图片"></a>上传图片</h2><p>声明文件名key，上传图片出入参数profile和key <code>fetchImage(item.profile, key)</code>，把item.profile的值设置为key。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (item.profile.indexOf(<span class="string">'http'</span>) === <span class="number">-1</span>) &#123;</div><div class="line">  <span class="keyword">let</span> key = <span class="string">`<span class="subst">$&#123;item.nmId&#125;</span>/<span class="subst">$&#123;randomToken(<span class="number">32</span>)&#125;</span>`</span> </div><div class="line">  <span class="keyword">await</span> fetchImage(item.profile, key)</div><div class="line">  <span class="built_in">console</span>.log(key)</div><div class="line">  <span class="built_in">console</span>.log(item.profile)</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'upload done!'</span>)</div><div class="line">  item.profile = key</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="上传剧照"><a href="#上传剧照" class="headerlink" title="上传剧照"></a>上传剧照</h2><p>和上传图片的步骤一样，最后将<code>item.images[i]</code>的值设置为_key</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; item.images.length; i++) &#123;</div><div class="line">  <span class="keyword">let</span> _key = <span class="string">`<span class="subst">$&#123;item.nmId&#125;</span>/<span class="subst">$&#123;randomToken(<span class="number">32</span>)&#125;</span>`</span></div><div class="line">  <span class="keyword">await</span> fetchImage(item.images[i], _key)</div><div class="line"></div><div class="line">  <span class="built_in">console</span>.log(_key)</div><div class="line">  <span class="built_in">console</span>.log(item.images[i])</div><div class="line">  <span class="keyword">await</span>(<span class="number">100</span>)</div><div class="line">  item.images[i] = _key</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>将最后的数据写入completeCharacters.json文件中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">IMDbCharacters = <span class="keyword">await</span> <span class="built_in">Promise</span>.all(IMDbCharacters)</div><div class="line">  fs.writeFileSync(<span class="string">'./completeCharacters.json'</span>, <span class="built_in">JSON</span>.stringify(IMDbCharacters, <span class="literal">null</span>, <span class="number">2</span>), <span class="string">'utf8'</span>)</div></pre></td></tr></table></figure>
+<h2 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h2><p>运行项目之前记得安装所需要的插件</p>
+<p>全局安装qshell</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install qshell -g</div></pre></td></tr></table></figure>
+<p>安装qiniu、shelljs、random-token</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">yarn add qiniu</div><div class="line">yarn add shelljs</div><div class="line">yarn add random-token</div></pre></td></tr></table></figure>
+<p>安装完qshell就可以执行qshell配置命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">qshell account 你的七牛云AK 你的七牛云SK</div></pre></td></tr></table></figure>
+<h2 id="运行项目"><a href="#运行项目" class="headerlink" title="运行项目"></a>运行项目</h2><p>修改start.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'./server/crawler/wiki'</span>)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/08/微信公众号开发(五)：页面开发/" rel="next" title="微信公众号开发(五)：页面开发">
+                <i class="fa fa-chevron-left"></i> 微信公众号开发(五)：页面开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#爬取IMDB页面数据"><span class="nav-number">1.</span> <span class="nav-text">爬取IMDB页面数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#爬取API数据"><span class="nav-number">2.</span> <span class="nav-text">爬取API数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#校对数据"><span class="nav-number">3.</span> <span class="nav-text">校对数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#爬取人物头像"><span class="nav-number">4.</span> <span class="nav-text">爬取人物头像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#检查数据是否包含头像"><span class="nav-number">5.</span> <span class="nav-text">检查数据是否包含头像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#爬取角色剧照"><span class="nav-number">6.</span> <span class="nav-text">爬取角色剧照</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#爬取中文人物数据"><span class="nav-number">7.</span> <span class="nav-text">爬取中文人物数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#获取id"><span class="nav-number">7.1.</span> <span class="nav-text">获取id</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取详情"><span class="nav-number">7.2.</span> <span class="nav-text">获取详情</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取cname和intro"><span class="nav-number">7.2.1.</span> <span class="nav-text">获取cname和intro</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取level"><span class="nav-number">7.2.2.</span> <span class="nav-text">获取level</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取WikiCharacters"><span class="nav-number">7.3.</span> <span class="nav-text">获取WikiCharacters</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将头像和封面图上传到七牛云"><span class="nav-number">8.</span> <span class="nav-text">将头像和封面图上传到七牛云</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上传图片工具函数"><span class="nav-number">8.1.</span> <span class="nav-text">上传图片工具函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从IMDb上获取图片"><span class="nav-number">8.2.</span> <span class="nav-text">从IMDb上获取图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上传图片"><span class="nav-number">8.3.</span> <span class="nav-text">上传图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上传剧照"><span class="nav-number">8.4.</span> <span class="nav-text">上传剧照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装插件"><span class="nav-number">8.5.</span> <span class="nav-text">安装插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行项目"><span class="nav-number">8.6.</span> <span class="nav-text">运行项目</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
