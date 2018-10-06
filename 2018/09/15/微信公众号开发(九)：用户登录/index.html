@@ -1,0 +1,827 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="用户建模添加登陆入口，通过这个入口让管理员登录进去做商品系列操作，比如添加商品，修改商品等等，这就需要管理员权限，把管理员权限放到用户的操作文件中去。首先给用户建模，将数据存入数据库中。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信公众号开发(九)：用户登录">
+<meta property="og:url" content="http://kakajing.github.io/2018/09/15/微信公众号开发(九)：用户登录/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="用户建模添加登陆入口，通过这个入口让管理员登录进去做商品系列操作，比如添加商品，修改商品等等，这就需要管理员权限，把管理员权限放到用户的操作文件中去。首先给用户建模，将数据存入数据库中。">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx48.png">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx49.png">
+<meta property="og:updated_time" content="2018-10-06T15:40:58.809Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微信公众号开发(九)：用户登录">
+<meta name="twitter:description" content="用户建模添加登陆入口，通过这个入口让管理员登录进去做商品系列操作，比如添加商品，修改商品等等，这就需要管理员权限，把管理员权限放到用户的操作文件中去。首先给用户建模，将数据存入数据库中。">
+<meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx48.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2018/09/15/微信公众号开发(九)：用户登录/"/>
+
+
+
+
+
+  <title> 微信公众号开发(九)：用户登录 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/09/15/微信公众号开发(九)：用户登录/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                微信公众号开发(九)：用户登录
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-15T20:43:05+08:00">
+                2018-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="用户建模"><a href="#用户建模" class="headerlink" title="用户建模"></a>用户建模</h1><p>添加登陆入口，通过这个入口让管理员登录进去做商品系列操作，比如添加商品，修改商品等等，这就需要管理员权限，把管理员权限放到用户的操作文件中去。首先给用户建模，将数据存入数据库中。</p>
+<a id="more"></a>
+<p><strong>server/database/schema/user.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> UserSchema = <span class="keyword">new</span> UserSchema(&#123;</div><div class="line">  <span class="attr">role</span>: &#123;</div><div class="line">    <span class="attr">type</span>: <span class="built_in">String</span>,</div><div class="line">    <span class="attr">default</span>: <span class="string">'user'</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">openid</span>: [<span class="built_in">String</span>],</div><div class="line">  <span class="attr">unionid</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">nickname</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">address</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">province</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">country</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">city</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">sex</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">email</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">password</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">hashed_password</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">loginAttempts</span>: &#123;</div><div class="line">    <span class="attr">type</span>: <span class="built_in">Number</span>,</div><div class="line">    <span class="attr">require</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">default</span>: <span class="number">0</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">lockUntil</span>: <span class="built_in">Number</span>,</div><div class="line">  <span class="attr">meta</span>: &#123;</div><div class="line">    <span class="attr">createdAt</span>: &#123;</div><div class="line">      <span class="attr">type</span>: <span class="built_in">Date</span>,</div><div class="line">      <span class="attr">default</span>: <span class="built_in">Date</span>.now()</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">updatedAt</span>: &#123;</div><div class="line">      <span class="attr">type</span>: <span class="built_in">Date</span>,</div><div class="line">      <span class="attr">default</span>: <span class="built_in">Date</span>.now()</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p><code>role</code>：角色，例如：管理员<br><code>openid</code>：用户openid。微信小程序或者公众号对应的网站，保存用户信息，获取到openid。我们开发的应用如果只针对公众号或者小程序的话，只需要一个openid就可以了，如果项目跨多种产品线时，比如同时包含小程序、公众号、网站，这种情况下openid就不是唯一不变的，在不同的平台下openid是不同的，所以这里暂时把openid设置成数组。<br><code>unionId</code>：把小程序或网站绑定到开放平台就能拿到用户另一个id，就是unionId。<br><code>nickname</code>：用户名称<br><code>address</code>：用户地址<br><code>province</code>：省份<br><code>country</code>：国家<br><code>city</code>：用户所在城市</p>
+<p><code>sex</code>：性别</p>
+<p><code>hashed_password</code>：加盐后的密码值</p>
+<p><code>loginAttempts</code>：登录次数<br><code>lockUntil</code>：用户登录超过限定次数，锁定账户</p>
+<h2 id="虚拟字段"><a href="#虚拟字段" class="headerlink" title="虚拟字段"></a>虚拟字段</h2><p>增加虚拟字段，这个字段不会真正的存入数据库，只是在每次解除数据时通过virtual拿到虚拟的字段。虚拟是指可以获取和设置但不会持久保存到MongoDB的文档属性。</p>
+<p>通过两次取反，判断<code>lockUntil</code>为true同时锁定的时间大于当前时间，说明当前账户还在锁定期内。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">UserSchema.virtual(<span class="string">'isLocked'</span>).get(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> !!(<span class="keyword">this</span>.lockUntil &amp;&amp; <span class="keyword">this</span>.lockUntil &gt; <span class="built_in">Date</span>.now())</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h2 id="生成创建时间和更新时间"><a href="#生成创建时间和更新时间" class="headerlink" title="生成创建时间和更新时间"></a>生成创建时间和更新时间</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">UserSchema.pre(<span class="string">'save'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">next</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.isNew) &#123;</div><div class="line">    <span class="keyword">this</span>.meta.createdAt = <span class="keyword">this</span>.meta.updatedAt = <span class="built_in">Date</span>.now()</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">this</span>.meta.updatedAt = <span class="built_in">Date</span>.now()</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h2 id="用户密码是否更改"><a href="#用户密码是否更改" class="headerlink" title="用户密码是否更改"></a>用户密码是否更改</h2><p>判断用户的密码是否更改，如果更改了对密码进行加密，加密的同时通过<code>bcrypt.gensalt()</code>加盐，可以增加密码的强度</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">UserSchema.pre(<span class="string">'save'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">next</span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> user = <span class="keyword">this</span></div><div class="line">  <span class="keyword">if</span> (!user.isModified(<span class="string">'password'</span>)) <span class="keyword">return</span> next()</div><div class="line"></div><div class="line">  bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) =&gt; &#123;</div><div class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> next(err)</div><div class="line">    bcrypt.hash(user.password, salt, (error, hash) =&gt; &#123;</div><div class="line">      <span class="keyword">if</span> (error) <span class="keyword">return</span> next(error)</div><div class="line">      user.password = hash</div><div class="line">    &#125;)</div><div class="line">  &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h2 id="比较密码"><a href="#比较密码" class="headerlink" title="比较密码"></a>比较密码</h2><p>_password代表用户传过来的密码，password代表存入数据库加盐后的密码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">comparePassword: <span class="function"><span class="keyword">function</span> (<span class="params">_password, password</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</div><div class="line">      bcrypt.compare(_password, password, <span class="function"><span class="keyword">function</span> (<span class="params">err, isMatch</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (!err) resolve(isMatch)</div><div class="line">        <span class="keyword">else</span> reject(err)</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="登录次数"><a href="#登录次数" class="headerlink" title="登录次数"></a>登录次数</h2><p>用户在登录时账号或密码匹配不成功，将登录次数+1</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">incLoginAttempts: <span class="function"><span class="keyword">function</span> (<span class="params">user</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> that = <span class="keyword">this</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</div><div class="line">      <span class="keyword">if</span> (that.lockUntil &amp;&amp; that.lockUntil &lt; <span class="built_in">Date</span>.now()) &#123;</div><div class="line">        that.update(&#123;</div><div class="line">          <span class="attr">$set</span>: &#123;</div><div class="line">            <span class="attr">loginAttempts</span>: <span class="number">1</span></div><div class="line">          &#125;,</div><div class="line">          <span class="attr">$unset</span>: &#123;</div><div class="line">            <span class="attr">lockUntil</span>: <span class="number">1</span></div><div class="line">          &#125;</div><div class="line">        &#125;, <span class="function"><span class="keyword">function</span> (<span class="params">err</span>) </span>&#123;</div><div class="line">          <span class="keyword">if</span> (!err) resolve(<span class="literal">true</span>)</div><div class="line">          <span class="keyword">else</span> reject(err)</div><div class="line">        &#125;)</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">let</span> updates = &#123;</div><div class="line">          <span class="attr">$inc</span>: &#123;</div><div class="line">            <span class="attr">loginAttempts</span>: <span class="number">1</span></div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (that.loginAttempts + <span class="number">1</span> &gt;= MAX_LOGIN_ATTEMPTS &amp;&amp; !that.isLocked) &#123;</div><div class="line">          updates.$set = &#123;</div><div class="line">            <span class="attr">lockUntil</span>: <span class="built_in">Date</span>.now() + LOCK_TIME</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        that.update(updates, err =&gt; &#123;</div><div class="line">          <span class="keyword">if</span> (!err) resolve(<span class="literal">true</span>)</div><div class="line">          <span class="keyword">else</span> reject(err)</div><div class="line">        &#125;)</div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h1 id="登录页面"><a href="#登录页面" class="headerlink" title="登录页面"></a>登录页面</h1><p><strong>pages/login.vue</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&lt;template lang=&quot;pug&quot;&gt;</div><div class="line">  .container</div><div class="line">    .card</div><div class="line">      .card-header</div><div class="line">        .card-inner 登录</div><div class="line">      .card-body</div><div class="line">        svg.login-icon(width=&apos;80px&apos;, height=&apos;80px&apos;, viewbox=&apos;0 0 80 80&apos;, version=&apos;1.1&apos;, xmlns=&apos;http://www.w3.org/2000/svg&apos;, xmlns:xlink=&apos;http://www.w3.org/1999/xlink&apos;)</div><div class="line">        defs</div><div class="line">          rect#path-1(x=&apos;0&apos;, y=&apos;0&apos;, width=&apos;80&apos;, height=&apos;80&apos;)</div><div class="line">        g#Page-1(stroke=&apos;none&apos;, stroke-width=&apos;1&apos;, fill=&apos;none&apos;, fill-rule=&apos;evenodd&apos;)</div><div class="line">          g#Group-2</div><div class="line">            mask#mask-2(fill=&apos;white&apos;)</div><div class="line">              use(xlink:href=&apos;#path-1&apos;)</div><div class="line">            g#Rectangle</div><div class="line">            g(id=&apos;student-(1)&apos;, mask=&apos;url(#mask-2)&apos;, fill-rule=&apos;nonzero&apos;)</div><div class="line">              path#Shape(d=&apos;...&apos;)</div><div class="line">      .form</div><div class="line">        input.form-control(v-model=&apos;user.email&apos;)</div><div class="line">        input.form-control(type=&apos;password&apos;, v-model=&apos;user.password&apos;)</div><div class="line">        button.btn.login-btn(@click=&apos;login&apos;) 登录</div><div class="line">    </div><div class="line">    v-snacbar(:open.sync=&apos;openSnackbar&apos;)</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><p>实现登录事件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">methods: &#123;</div><div class="line">  <span class="keyword">async</span> login() &#123;</div><div class="line">    <span class="keyword">let</span> &#123; email, password &#125; = <span class="keyword">this</span>.user</div><div class="line">    <span class="keyword">if</span> (!email || !password) &#123;</div><div class="line">      <span class="keyword">this</span>.openSnackbar = <span class="literal">true</span></div><div class="line">      <span class="keyword">return</span> <span class="string">''</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">let</span> res = <span class="keyword">await</span> <span class="keyword">this</span>.$store.dispatch(<span class="string">'login'</span>, <span class="keyword">this</span>.user)</div><div class="line">    <span class="keyword">if</span> (res.success) <span class="keyword">this</span>.$router.push(<span class="string">'/admin'</span>)</div><div class="line">  &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>设置请求路径和传入的参数，如果数据返回正确，更新数据<code>commit(&#39;SET_USER&#39;, data.data)</code></p>
+<p><strong>store/action.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> login(&#123; commit &#125;, &#123; email, password &#125;) &#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">let</span> res = <span class="keyword">await</span> axios.post(<span class="string">'/admin/login'</span>, &#123;</div><div class="line">        email,</div><div class="line">        password</div><div class="line">      &#125;)</div><div class="line"></div><div class="line">      <span class="keyword">const</span> &#123; data &#125; = res</div><div class="line"></div><div class="line">      <span class="keyword">if</span> (data.success) commit(<span class="string">'SET_USER'</span>, data.data)</div><div class="line">      <span class="keyword">return</span> data</div><div class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">      <span class="keyword">if</span> (e.response.status === <span class="number">401</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'来错地方了'</span>)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="登录路由"><a href="#登录路由" class="headerlink" title="登录路由"></a>登录路由</h2><h3 id="session中间件"><a href="#session中间件" class="headerlink" title="session中间件"></a>session中间件</h3><p>有用户登录就会涉及到session机制，在common增加session中间件</p>
+<p><strong>server/middlewares/common.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> session <span class="keyword">from</span> <span class="string">'koa-session'</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> addSession = <span class="function"><span class="params">app</span> =&gt;</span> &#123;</div><div class="line">  app.keys = [<span class="string">'nuxtssr'</span>]</div><div class="line"></div><div class="line">  <span class="keyword">const</span> CONFIG = &#123;</div><div class="line">    <span class="attr">key</span>: <span class="string">'koa:sess'</span>,</div><div class="line">    <span class="attr">maxAge</span>: <span class="number">86400000</span>,</div><div class="line">    <span class="attr">overwrite</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">signed</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">rolling</span>: <span class="literal">false</span></div><div class="line">  &#125;</div><div class="line">  app.use(session(CONFIG, app))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过</p>
+<p>客户端传过来的email和password，执行login方法获取数据，如果match为true表示匹配成功也就是当前密码正确，将user同步到当前user</p>
+<p><strong>server/routers/admin.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">@controller(<span class="string">'/admin'</span>)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">adminController</span> </span>&#123;</div><div class="line">  @post(<span class="string">'login'</span>)</div><div class="line">  @required(&#123;<span class="attr">body</span>: [<span class="string">'email'</span>, <span class="string">'password'</span>]&#125;)</div><div class="line">  <span class="keyword">async</span> login (ctx, next) &#123;</div><div class="line">    <span class="keyword">const</span> &#123; email, password &#125; = ctx.request.body</div><div class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> api.admin.login(email, password)</div><div class="line">    <span class="keyword">const</span> &#123; user, match &#125; = data</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (match) &#123;</div><div class="line">      <span class="keyword">if</span> (user.role !== <span class="string">'admin'</span>) &#123;</div><div class="line">        <span class="keyword">return</span> (ctx.body = &#123;</div><div class="line">          <span class="attr">success</span>: <span class="literal">false</span>,</div><div class="line">          <span class="attr">err</span>: <span class="string">'来错地方了'</span></div><div class="line">        &#125;)</div><div class="line">      &#125;</div><div class="line">      ctx.session.user = &#123;</div><div class="line">        <span class="attr">_id</span>: user._id,</div><div class="line">        <span class="attr">email</span>: user.email,</div><div class="line">        <span class="attr">role</span>: user.role,</div><div class="line">        <span class="attr">nickname</span>: user.nickname,</div><div class="line">        <span class="attr">avatarUrl</span>: user.avatarUrl</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> (ctx.body = &#123;</div><div class="line">        <span class="attr">success</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">data</span>: &#123;</div><div class="line">          <span class="attr">email</span>: user.email,</div><div class="line">          <span class="attr">nickname</span>: user.nickname,</div><div class="line">          <span class="attr">avatarUrl</span>: user.avatarUrl</div><div class="line">        &#125;</div><div class="line">      &#125;)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> (ctx.body = &#123;</div><div class="line">      <span class="attr">success</span>: <span class="literal">false</span>,</div><div class="line">      <span class="attr">err</span>: <span class="string">'密码错误'</span></div><div class="line">    &#125;)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>@required({body: [&#39;email&#39;, &#39;password&#39;]})</code>，添加中间件，表示必须有email和passowrd字段</p>
+<p>通过<code>findOne()</code>查找数据库里的用户，将客户端传过来的password和数据库里的password做比较，如果匹配成功返回user数据</p>
+<p><strong>server/api/admin.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> mongoose <span class="keyword">from</span> <span class="string">'mongoose'</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> User = mongoose.model(<span class="string">'User'</span>)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span>(<span class="params">login</span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> match = <span class="literal">false</span></div><div class="line"></div><div class="line">  <span class="keyword">const</span> user = <span class="keyword">await</span> User.findOne(&#123; <span class="attr">email</span>: email &#125;).exec()</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (user) &#123;</div><div class="line">    match = <span class="keyword">await</span> user.comparePassword(password, user.password)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    match,</div><div class="line">    user</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="实现required中间件"><a href="#实现required中间件" class="headerlink" title="实现required中间件"></a>实现required中间件</h3><p>接收参数rules，制定参数规则，声明errors来存放错误信息，声明passRules遍历制定的参数规则，如果有错误，给出报错信息，反之执行next()函数</p>
+<p>convert：传入中间件middleware做转换工作，转换时将所有的参数<code>(...args)</code>通过<code>decorate()</code>方法将数据做进一步的处理</p>
+<p><strong>server/decorator/router.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> decorate = <span class="function">(<span class="params">args, middleware</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">let</span> [ target, key, descriptor ] = args</div><div class="line">  target[key] = isArray(target[key])</div><div class="line">  target[key].unshift(middleware)</div><div class="line"></div><div class="line">  <span class="keyword">return</span> descriptor</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> convert = <span class="function"><span class="params">middleware</span> =&gt;</span> (...args) =&gt; decorate(args, middleware)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> required = <span class="function"><span class="params">rules</span> =&gt;</span> convert(<span class="keyword">async</span> (ctx, next) =&gt; &#123;</div><div class="line">  <span class="keyword">let</span> errors = []</div><div class="line">  <span class="keyword">const</span> passRules = R.forEachObjIndexed(</div><div class="line">    <span class="function">(<span class="params">value, key</span>) =&gt;</span> &#123;</div><div class="line">      errors = R.filter(<span class="function"><span class="params">i</span> =&gt;</span> !R.has(i, ctx.request[key]))(value)</div><div class="line">    &#125;</div><div class="line">  )</div><div class="line">  passRules(rules)</div><div class="line">  <span class="keyword">if</span> (errors.length) ctx.throw(<span class="number">412</span>, <span class="string">`<span class="subst">$&#123;errors.join(<span class="string">', '</span>)&#125;</span> 参数缺失`</span>)</div><div class="line">  <span class="keyword">await</span> next()</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>在浏览器中输入<a href="http://localhost:8080/login进入登录页面" target="_blank" rel="external">http://localhost:8080/login进入登录页面</a></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>将管理员账号和密码通过脚本的方式写入数据库里，就可以测试登录功能</p>
+<p><strong>server/middlewares/database.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">mongoose.connection.on(<span class="string">'open'</span>, <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'数据库连接成功 '</span>, config.db)</div><div class="line">	...</div><div class="line">    const User = mongoose.model(<span class="string">'User'</span>)</div><div class="line">	...</div><div class="line"></div><div class="line">    let user = <span class="keyword">await</span> User.findOne(&#123;</div><div class="line">      <span class="attr">email</span>: <span class="string">'nuxtssr@112.com'</span></div><div class="line">    &#125;).exec()</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!user) &#123;</div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'写入管理员数据'</span>)</div><div class="line">      user = <span class="keyword">new</span> User(&#123;</div><div class="line">        <span class="attr">email</span>: <span class="string">'nuxtssr@112.com'</span>,</div><div class="line">        <span class="attr">password</span>: <span class="string">'nuxtssr'</span>,</div><div class="line">        <span class="attr">role</span>: <span class="string">'admin'</span></div><div class="line">      &#125;)</div><div class="line"></div><div class="line">      <span class="keyword">await</span> user.save()</div><div class="line">    &#125;</div><div class="line">  &#125;)</div></pre></td></tr></table></figure>
+<p>user成功写入数据库，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx48.png" alt="wx48"></p>
+<p> 登录成功后，让后台页面跳转到某个页面，新建页面作为登录后的后台首页</p>
+<p><strong>pages/admin/index.vue</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;template lang=&quot;pug&quot;&gt;</div><div class="line">  .content</div><div class="line">    h3 登录成功 &#123;&#123;user.email&#125;&#125;</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<h2 id="前端中间件"><a href="#前端中间件" class="headerlink" title="前端中间件"></a>前端中间件</h2><p>登录表单提交之后只是在后台做个密码比对返回登录状态，但是这个状态需要被保持，在后台页面上我们可能是点击前端页面刷新，也可能是直接进入另一个页面，这就需要会话方式同步现在的登录状态。新建middleware文件夹用来存放前端中间件</p>
+<p>每次打开后台页面都需要经过这个中间件的过滤，如果当前用户没有登录，重定向到登录页面，如果有登录状态就直接进入目标页面</p>
+<p><strong>middleware/auth.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> (<span class="params">&#123; store, redirect &#125;</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!store.state.user || !store.state.user.email) &#123;</div><div class="line">    <span class="keyword">return</span> redirect(<span class="string">'/login'</span>)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>与服务器同步渲染，会从服务器端将session带过来，判断session是否有用户信息，有的话设置用户信息</p>
+<p><strong>store/actions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">nuxtServerInit(&#123; commit &#125;, &#123; req &#125;) &#123;</div><div class="line">    <span class="keyword">if</span> (req.session &amp;&amp; req.session.user) &#123;</div><div class="line">      <span class="keyword">const</span> &#123; email, nickname, avatarUrl &#125; = req.session.user</div><div class="line">      <span class="keyword">const</span> user = &#123;</div><div class="line">        email,</div><div class="line">        nickname,</div><div class="line">        avatarUrl</div><div class="line">      &#125;</div><div class="line">      commit(<span class="string">'SET_USER'</span>, user)</div><div class="line">    &#125;</div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<h2 id="设置session"><a href="#设置session" class="headerlink" title="设置session"></a>设置session</h2><p>在入口文件设置session，nuxt版本在传递session时可能会拿不到，所以在这里手动设置</p>
+<p><strong>server/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.app.use(<span class="keyword">async</span> (ctx, next) =&gt; &#123;</div><div class="line">      <span class="keyword">await</span> next()</div><div class="line">      ctx.status = <span class="number">200</span> <span class="comment">// koa defaults to 404 when it sees that status is unset</span></div><div class="line">      ctx.req.session = ctx.session</div><div class="line"></div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</div><div class="line">        ...</div><div class="line">        &#125;)</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div></pre></td></tr></table></figure>
+<p>每次在页面渲染之前都可以将session同步到request中</p>
+<p>测试成功，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx49.png" alt="wx49"></p>
+<h1 id="前端微信二跳中间件"><a href="#前端微信二跳中间件" class="headerlink" title="前端微信二跳中间件"></a>前端微信二跳中间件</h1><p>之前实现了在微信里授权，也实现了管理员从后台登录，对于管理员或者用户都可以用一套用户模型。我们在微信里打开网页时可以通过微信中间件的处理，让用户和管理员都能存到数据库里。在网页中打开项目首页可以访问，但是放到微信里做些活动页面或者购买行为时要有个中间跳转页面，让我们拿到微信用户资料存到数据库里，为session做持久化。实现从微信跳转时通过换取code过程识别来访用户的功能</p>
+<h2 id="微信中间件"><a href="#微信中间件" class="headerlink" title="微信中间件"></a>微信中间件</h2><p>每次打开首页时，判断authUser没有的话直接跳转到获取authUser的地址</p>
+<p><strong>middleware/wechat-auth.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> (<span class="params">&#123; store, route, redirect &#125;</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!sotre.state.authUser) &#123;</div><div class="line">    <span class="keyword">let</span> &#123; fullPath &#125; = route</div><div class="line">    fullPath = <span class="built_in">encodeURIComponent</span>(fullPath.substr(<span class="number">1</span>))</div><div class="line">    <span class="keyword">return</span> redirect(<span class="string">`/wx-redirect?visit=#&#123;fullPath&#125;`</span>)</div><div class="line">  &#125;   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>route为当前的路由，也就是当前要访问的全路径</p>
+<h2 id="在首页中增加微信中间件"><a href="#在首页中增加微信中间件" class="headerlink" title="在首页中增加微信中间件"></a>在首页中增加微信中间件</h2><p><strong>pages/index.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</div><div class="line">  <span class="attr">middleware</span>: <span class="string">'wechat-auth'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="设置authUser"><a href="#设置authUser" class="headerlink" title="设置authUser"></a>设置authUser</h2><p><strong>store/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">authUser: <span class="literal">null</span></div></pre></td></tr></table></figure>
+<p>设置微信用户</p>
+<p><strong>store/actions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">setAuthUser(&#123; commit &#125;, authUser) &#123;</div><div class="line">	commit(<span class="string">'SET_AUTHUSER'</span>, authUser)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p><strong>store/mutations.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SET_AUTHUSER: <span class="function">(<span class="params">state, authUser</span>) =&gt;</span> &#123;</div><div class="line">    state.authUser = authUser</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="跳转路由"><a href="#跳转路由" class="headerlink" title="跳转路由"></a>跳转路由</h2><p>通过wechat路由的<code>wxRedirect()</code>跳转到目标地址，跳转之后拿到code，再用code获取用户的openid，通过API的接口拿到url，跳转到目标地址后通过ctx.session更新用户信息</p>
+<p><strong>server/controllers/wechat.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">redirect</span> (<span class="params">ctx, next</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> target = config.SITE_ROOT_URL + <span class="string">'/oauth'</span></div><div class="line">  <span class="keyword">const</span> scope = <span class="string">'snsapi_userinfo'</span></div><div class="line">  <span class="comment">// 参数</span></div><div class="line">  <span class="keyword">const</span> &#123; visit, id &#125; = ctx.query</div><div class="line">  <span class="keyword">const</span> params = id ? <span class="string">`<span class="subst">$&#123;visit&#125;</span>_<span class="subst">$&#123;id&#125;</span>`</span> : visit</div><div class="line">  <span class="keyword">const</span> url = api.wechat.getAuthorizeURL(scope, target, params)</div><div class="line"></div><div class="line">  ctx.redirect(url)</div><div class="line">&#125;</div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">oauth</span> (<span class="params">ctx, next</span>) </span>&#123;</div><div class="line"> ...</div><div class="line"> const user = <span class="keyword">await</span> api.wechat.getUserByCode(code)</div><div class="line">  ctx.session.user = user</div><div class="line">  ctx.body = &#123;</div><div class="line">    <span class="attr">success</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">user</span>: user</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同步session之前存入用户</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getUserByCode</span> (<span class="params">code</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> oauth = getOAuth()</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> oauth.fetchAccessToken(code)</div><div class="line">  <span class="keyword">const</span> user = <span class="keyword">await</span> oauth.getUserInfo(data.access_token, data.openid)</div><div class="line"></div><div class="line">  <span class="keyword">const</span> existUser = <span class="keyword">await</span> User.findOne(&#123;<span class="attr">openid</span>: data.openid&#125;).exec()</div><div class="line">  <span class="keyword">if</span> (!existUser) &#123;</div><div class="line">    <span class="keyword">let</span> newUser = <span class="keyword">new</span> User(&#123;</div><div class="line">      <span class="attr">openid</span>: [data.openid],</div><div class="line">      <span class="attr">unionid</span>: data.unionid,</div><div class="line">      <span class="attr">unionid</span>: data.unionid,</div><div class="line">      <span class="attr">nickname</span>: user.nickname,</div><div class="line">      <span class="attr">province</span>: user.province,</div><div class="line">      <span class="attr">country</span>: user.country,</div><div class="line">      <span class="attr">city</span>: user.city,</div><div class="line">      <span class="attr">headimgurl</span>: user.headimgurl,</div><div class="line">      <span class="attr">sex</span>: user.sex</div><div class="line">    &#125;)</div><div class="line">    <span class="keyword">await</span> newUser.save()</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> user</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>注意：</strong>如果只是面向一种应用，比如只开发公众号或者小程序，只需要通过openid拿到用户资料，如果通过开放平台绑定了小程序、公众号，那么用户id就可以通过unionid来拿到用户资料</p>
+<h2 id="修改页面"><a href="#修改页面" class="headerlink" title="修改页面"></a>修改页面</h2><p>将auth.vue作为跳板页面进行目标跳转，解析当前的url，解析后跳转到目标地址，这时session中已经有用户信息。在页面加载之前通过beforeMount获取到location里的url拿到数据，如果success为true，将数据设置到当前用户更新用户信息，通过getUrlParam()解析state，并以<code>_</code>拼接参数</p>
+<p><strong>pages/oauth.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</div><div class="line">  head() &#123;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">      <span class="attr">title</span>: <span class="string">`loading`</span></div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  <span class="comment">// 组件安装之前拿到wx</span></div><div class="line">  <span class="keyword">async</span> beforeMount() &#123;</div><div class="line">    <span class="keyword">const</span> url = <span class="built_in">window</span>.location.href</div><div class="line">    <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> <span class="keyword">this</span>.$store.dispatch(<span class="string">'getWechatOAuth'</span>, url)</div><div class="line">    <span class="built_in">console</span>.log(data)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (data.success) &#123;</div><div class="line">      <span class="keyword">await</span> <span class="keyword">this</span>.$store.dispatch(<span class="string">'setAuthUser'</span>, data.data)</div><div class="line">      <span class="keyword">const</span> paramsArr = getUrlParam(<span class="string">'state'</span>).split(<span class="string">'_'</span>)</div><div class="line">      <span class="keyword">const</span> visit = paramsArr.length === <span class="number">1</span> ? <span class="string">`/<span class="subst">$&#123;paramsArr[<span class="number">0</span>]&#125;</span>`</span> : <span class="string">`/<span class="subst">$&#123;paramsArr[<span class="number">0</span>]&#125;</span>?id=<span class="subst">$&#123;paramsArr[<span class="number">1</span>]&#125;</span>`</span></div><div class="line">      <span class="keyword">this</span>.$router.replace(visit)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'用户信息获取失败'</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>store/actions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">getUserOAuth(&#123; commit &#125;, url) &#123;</div><div class="line">    <span class="keyword">return</span> Services.getWechOAuth(url)</div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<p><strong>store/services.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">getWechOAuth(url) &#123;</div><div class="line">    <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;baseUrl&#125;</span>/wx-oauth?url=<span class="subst">$&#123;<span class="built_in">encodeURIComponent</span>(url)&#125;</span>`</span>)</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/14/微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传/" rel="next" title="微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传">
+                <i class="fa fa-chevron-left"></i> 微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#用户建模"><span class="nav-number">1.</span> <span class="nav-text">用户建模</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟字段"><span class="nav-number">1.1.</span> <span class="nav-text">虚拟字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成创建时间和更新时间"><span class="nav-number">1.2.</span> <span class="nav-text">生成创建时间和更新时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户密码是否更改"><span class="nav-number">1.3.</span> <span class="nav-text">用户密码是否更改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#比较密码"><span class="nav-number">1.4.</span> <span class="nav-text">比较密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录次数"><span class="nav-number">1.5.</span> <span class="nav-text">登录次数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登录页面"><span class="nav-number">2.</span> <span class="nav-text">登录页面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#登录"><span class="nav-number">2.1.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录路由"><span class="nav-number">2.2.</span> <span class="nav-text">登录路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#session中间件"><span class="nav-number">2.2.1.</span> <span class="nav-text">session中间件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现required中间件"><span class="nav-number">2.2.2.</span> <span class="nav-text">实现required中间件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前端中间件"><span class="nav-number">3.1.</span> <span class="nav-text">前端中间件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置session"><span class="nav-number">3.2.</span> <span class="nav-text">设置session</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#前端微信二跳中间件"><span class="nav-number">4.</span> <span class="nav-text">前端微信二跳中间件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#微信中间件"><span class="nav-number">4.1.</span> <span class="nav-text">微信中间件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在首页中增加微信中间件"><span class="nav-number">4.2.</span> <span class="nav-text">在首页中增加微信中间件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置authUser"><span class="nav-number">4.3.</span> <span class="nav-text">设置authUser</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跳转路由"><span class="nav-number">4.4.</span> <span class="nav-text">跳转路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改页面"><span class="nav-number">4.5.</span> <span class="nav-text">修改页面</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
