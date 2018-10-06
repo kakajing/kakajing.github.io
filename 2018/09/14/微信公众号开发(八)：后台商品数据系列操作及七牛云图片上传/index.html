@@ -1,0 +1,819 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="前端," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="余鸢" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="封装API通过mongoose拼接查询语句获取数据，将它们统一封装在一个API文件中，需要哪些数据调用想用的方法即可。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传">
+<meta property="og:url" content="http://kakajing.github.io/2018/09/14/微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传/index.html">
+<meta property="og:site_name" content="余鸢">
+<meta property="og:description" content="封装API通过mongoose拼接查询语句获取数据，将它们统一封装在一个API文件中，需要哪些数据调用想用的方法即可。">
+<meta property="og:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx47.png">
+<meta property="og:updated_time" content="2018-10-06T15:07:26.757Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传">
+<meta name="twitter:description" content="封装API通过mongoose拼接查询语句获取数据，将它们统一封装在一个API文件中，需要哪些数据调用想用的方法即可。">
+<meta name="twitter:image" content="http://oxkc6g4t4.bkt.clouddn.com/wx47.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kakajing.github.io/2018/09/14/微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传/"/>
+
+
+
+
+
+  <title> 微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传 | 余鸢 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?66daf35770118999428423836e567c4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/kakajing"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">余鸢</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">每天学习一点点</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kakajing.github.io/2018/09/14/微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="余鸢">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="余鸢">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="余鸢" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                微信公众号开发(八)：后台商品数据系列操作及七牛云图片上传
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-14T23:13:42+08:00">
+                2018-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="封装API"><a href="#封装API" class="headerlink" title="封装API"></a>封装API</h1><p>通过mongoose拼接查询语句获取数据，将它们统一封装在一个API文件中，需要哪些数据调用想用的方法即可。</p>
+<a id="more"></a>
+<p><strong>server/api/wiki.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> mongoose <span class="keyword">from</span> <span class="string">'mongoose'</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> WikiHouse = mongoose.model(<span class="string">'WikiHouse'</span>)</div><div class="line"><span class="keyword">const</span> WikiCharacter = mongoose.model(<span class="string">'WikiCharacter'</span>)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getHouses</span> (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> WikiHouse</div><div class="line">      .find(&#123;&#125;)</div><div class="line">      .populate(&#123;</div><div class="line">        <span class="attr">path</span>: <span class="string">'swornMembers.character'</span>,</div><div class="line">        <span class="attr">select</span>: <span class="string">'_id name cname profile'</span></div><div class="line">      &#125;)</div><div class="line">      .exec()   </div><div class="line">  <span class="keyword">return</span> data</div><div class="line">&#125;</div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getHouse</span> (<span class="params">_id</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> WikiHouse</div><div class="line">      .findOne(&#123;<span class="attr">_id</span>: _id&#125;)</div><div class="line">      .populate(&#123;</div><div class="line">        <span class="attr">path</span>: <span class="string">'swornMembers.character'</span>,</div><div class="line">        <span class="attr">select</span>: <span class="string">'_id name profile cname nmId'</span></div><div class="line">      &#125;)</div><div class="line">      .exec()   </div><div class="line">  <span class="keyword">return</span> data</div><div class="line">&#125;</div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getCharacters</span> (<span class="params">limit = <span class="number">20</span></span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> WikiCharacter</div><div class="line">      .find(&#123;&#125;)</div><div class="line">      .limit(<span class="built_in">Number</span>(limit))</div><div class="line">      .exec()    </div><div class="line">  <span class="keyword">return</span> data</div><div class="line">&#125;</div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getCharacter</span> (<span class="params">_id</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> WikiCharacter</div><div class="line">      .findOne(&#123;<span class="attr">_id</span>: _id&#125;)</div><div class="line">      .exec()    </div><div class="line">  <span class="keyword">return</span> data</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="获取家族数据"><a href="#获取家族数据" class="headerlink" title="获取家族数据"></a>获取家族数据</h2><p><strong>server/routers/wiki.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">@controller(<span class="string">'/wiki'</span>)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">WechatController</span> </span>&#123;</div><div class="line">  <span class="comment">// 获取家族数据</span></div><div class="line">  @get(<span class="string">'/houses'</span>)</div><div class="line">  <span class="keyword">async</span> getHouses (ctx, next) &#123;</div><div class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> api.wiki.getHouses()</div><div class="line">      </div><div class="line">    ctx.body = &#123;</div><div class="line">      <span class="attr">data</span>: data,</div><div class="line">      <span class="attr">sucess</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="获取家族详细资料"><a href="#获取家族详细资料" class="headerlink" title="获取家族详细资料"></a>获取家族详细资料</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@get(<span class="string">'/houses/:_id'</span>)</div><div class="line">  <span class="keyword">async</span> getHouse (ctx, next) &#123;</div><div class="line">    <span class="keyword">const</span> &#123; params &#125; = ctx</div><div class="line">    <span class="keyword">const</span> &#123; _id &#125; = params</div><div class="line">    <span class="keyword">if</span> (!_id) <span class="keyword">return</span> (ctx.body = &#123;<span class="attr">sucess</span>: <span class="literal">false</span>, <span class="attr">err</span>: <span class="string">'_id is required'</span>&#125;)</div><div class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> api.wiki.getHouse(_id)      </div><div class="line">    ctx.body = &#123;</div><div class="line">      <span class="attr">data</span>: data,</div><div class="line">      <span class="attr">sucess</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="获取主要成员数据"><a href="#获取主要成员数据" class="headerlink" title="获取主要成员数据"></a>获取主要成员数据</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@get(<span class="string">'/characters'</span>)</div><div class="line">  <span class="keyword">async</span> getCharacters (ctx, next) &#123;</div><div class="line">    <span class="keyword">let</span> &#123; limit = <span class="number">20</span> &#125; = ctx.query</div><div class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> api.wiki.getCharacters(limit)     </div><div class="line">    ctx.body = &#123;</div><div class="line">      <span class="attr">data</span>: data,</div><div class="line">      <span class="attr">sucess</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="获取成员的个人详情"><a href="#获取成员的个人详情" class="headerlink" title="获取成员的个人详情"></a>获取成员的个人详情</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@get(<span class="string">'/characters/:_id'</span>)</div><div class="line">  <span class="keyword">async</span> getCharacter (ctx, next) &#123;</div><div class="line">    <span class="keyword">const</span> &#123; params &#125; = ctx</div><div class="line">    <span class="keyword">const</span> &#123; _id &#125; = params</div><div class="line">    <span class="keyword">if</span> (!_id) <span class="keyword">return</span> (ctx.body = &#123;<span class="attr">sucess</span>: <span class="literal">false</span>, <span class="attr">err</span>: <span class="string">'_id is required'</span>&#125;)</div><div class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> getCharacter(_id)     </div><div class="line">    ctx.body = &#123;</div><div class="line">      <span class="attr">data</span>: data,</div><div class="line">      <span class="attr">sucess</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h1 id="修改数据请求地址"><a href="#修改数据请求地址" class="headerlink" title="修改数据请求地址"></a>修改数据请求地址</h1><p><strong>store/serice.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fetchCharacters() &#123;</div><div class="line">    <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;baseUrl&#125;</span>/wiki/characters`</span>)</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h1 id="修改页面"><a href="#修改页面" class="headerlink" title="修改页面"></a>修改页面</h1><p>在页面中添加img，用拼接的方式获取七牛云上的图片地址。</p>
+<p><strong>pages/index.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">.house-flag</div><div class="line">        img(:src=<span class="string">'imageCDN + item.name + ".jpg"'</span>)</div></pre></td></tr></table></figure>
+<p>state中定义<code>imageCDN</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">imageCDN: <span class="string">'http://omux103p0.bkt.clouddn.com/'</span>,</div></pre></td></tr></table></figure>
+<p>记得修改入口文件的执行文件路径</p>
+<p><strong>start.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'./server'</span>)</div></pre></td></tr></table></figure>
+<h2 id="家族详情页"><a href="#家族详情页" class="headerlink" title="家族详情页"></a>家族详情页</h2><p>点击家族名称跳转到家族详情页，数据houses已经存在，只需要再完善展示效果，添加img</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> .house-media</div><div class="line">    img(v-<span class="keyword">if</span>=<span class="string">'house.name'</span> :src=<span class="string">'imageCDN + house.name + ".jpg"'</span>)</div><div class="line">    </div><div class="line">    </div><div class="line">.title 主要角色</div><div class="line">    .body(v-<span class="keyword">for</span>=<span class="string">'(item, index) in house.swornMembers'</span> :key=<span class="string">"index"</span>)</div><div class="line">      .members(v-<span class="keyword">if</span>=<span class="string">'item.character'</span>)</div><div class="line">        img(:src=<span class="string">'item.character.profile'</span> @click=<span class="string">'showCharacter(item)'</span>)</div></pre></td></tr></table></figure>
+<p>个人详情页和家族页一样，只需要修改img图片地址即可，这里就不贴代码了。</p>
+<h1 id="商城路由"><a href="#商城路由" class="headerlink" title="商城路由"></a>商城路由</h1><h2 id="商品建模"><a href="#商品建模" class="headerlink" title="商品建模"></a>商品建模</h2><p>使用mongoose</p>
+<p><strong>server/database/schema/product.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> mongoose = <span class="built_in">require</span>(<span class="string">'mongoose'</span>)</div><div class="line"><span class="keyword">const</span> &#123; Schema &#125; = mongoose</div><div class="line"><span class="keyword">const</span> Mixed = Schema.Types.Mixed</div><div class="line"></div><div class="line"><span class="keyword">const</span> ProductSchema = <span class="keyword">new</span> mongoose.Schema(&#123;</div><div class="line">  <span class="attr">price</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">title</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">intro</span>: <span class="built_in">String</span>,</div><div class="line">  <span class="attr">images</span>: [<span class="built_in">String</span>],</div><div class="line">  <span class="attr">parameters</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">key</span>: <span class="built_in">String</span>,</div><div class="line">      <span class="attr">value</span>: <span class="built_in">String</span></div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;)</div><div class="line">mongoose.model(<span class="string">'Product'</span>, ProductSchema)</div></pre></td></tr></table></figure>
+<h2 id="商品操作的API"><a href="#商品操作的API" class="headerlink" title="商品操作的API"></a>商品操作的API</h2><p><strong>server/api/product.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> mongoose <span class="keyword">from</span> <span class="string">'mongoose'</span></div><div class="line"><span class="keyword">const</span> Product = mongoose.model(<span class="string">'Product'</span>)</div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">findProduct</span>(<span class="params">_id</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> Product</div><div class="line">      .find(&#123;<span class="attr">_id</span>: _id&#125;)</div><div class="line">      .exec()</div><div class="line">  <span class="keyword">return</span> data</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getProducts</span>(<span class="params">limit = <span class="number">50</span></span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> Product</div><div class="line">      .find(&#123;&#125;)</div><div class="line">      .limit(<span class="built_in">Number</span>(limit))</div><div class="line">      .exec()</div><div class="line">  <span class="keyword">return</span> data</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">getProduct</span>(<span class="params">_id</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> Product</div><div class="line">      .findOne(&#123;<span class="attr">_id</span>: _id&#125;)</div><div class="line">      .exec()</div><div class="line">  <span class="keyword">return</span> data</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">save</span>(<span class="params">product</span>) </span>&#123;</div><div class="line">  product = <span class="keyword">new</span> Product(product)</div><div class="line">  product = <span class="keyword">await</span> product.save()</div><div class="line">  <span class="keyword">return</span> product</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span>(<span class="params">product</span>) </span>&#123;</div><div class="line">  product = <span class="keyword">await</span> product.save()</div><div class="line">  <span class="keyword">return</span> product</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">del</span>(<span class="params">product</span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(product)</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">    <span class="keyword">await</span> product.remove()</div><div class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">    e</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="商品路由"><a href="#商品路由" class="headerlink" title="商品路由"></a>商品路由</h2><p>增加商品路由，包括增删改查系列商品操作</p>
+<p><strong>server/routers/product.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> api <span class="keyword">from</span> <span class="string">'../api'</span></div><div class="line"><span class="keyword">import</span> &#123; controller, get, post &#125; <span class="keyword">from</span> <span class="string">'../decorator/router'</span></div><div class="line"><span class="keyword">import</span> xxs <span class="keyword">from</span> <span class="string">'xxs'</span></div><div class="line"><span class="keyword">import</span> R <span class="keyword">from</span> <span class="string">'ramda'</span></div><div class="line"></div><div class="line">@controller(<span class="string">'/api'</span>)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductController</span> </span>&#123;</div><div class="line">  @get(<span class="string">'/products'</span>)</div><div class="line">  <span class="keyword">async</span> getProducts (ctx, next) &#123;</div><div class="line">    <span class="keyword">let</span> &#123; limit = <span class="number">50</span> &#125; = ctx.query</div><div class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> api.product.getProducts(limit)    </div><div class="line">    ctx.body = &#123;</div><div class="line">      <span class="attr">data</span>: data,</div><div class="line">      <span class="attr">sucess</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  @get(<span class="string">'/products/:_id'</span>)</div><div class="line">  <span class="keyword">async</span> getProduct (ctx, next) &#123;</div><div class="line">    <span class="keyword">const</span> &#123; params &#125; = ctx</div><div class="line">    <span class="keyword">const</span> &#123; _id &#125; = params</div><div class="line">    <span class="keyword">if</span> (!_id) <span class="keyword">return</span> (ctx.body = &#123;<span class="attr">sucess</span>: <span class="literal">false</span>, <span class="attr">err</span>: <span class="string">'_id is required'</span>&#125;)</div><div class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> api.product.getProduct(_id)    </div><div class="line">    ctx.body = &#123;</div><div class="line">      <span class="attr">data</span>: data,</div><div class="line">      <span class="attr">sucess</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  @post(<span class="string">'/products'</span>)</div><div class="line">  <span class="keyword">async</span> postProducts (ctx, next) &#123;</div><div class="line">    <span class="keyword">let</span> product = ctx.request.body</div><div class="line">    <span class="built_in">console</span>.log(ctx.request)</div><div class="line">    product = &#123;</div><div class="line">      <span class="attr">title</span>: xxs(product.title),</div><div class="line">      <span class="attr">price</span>: xxs(product.price),</div><div class="line">      <span class="attr">intro</span>: xxs(product.intro),</div><div class="line">      <span class="attr">images</span>: R.map(xxs)(product.images),</div><div class="line">      <span class="attr">parameters</span>: R.map(</div><div class="line">        <span class="function"><span class="params">item</span> =&gt;</span> (&#123;</div><div class="line">          <span class="attr">key</span>: xxs(item.key),</div><div class="line">          <span class="attr">value</span>: xxs(item.value)</div><div class="line">        &#125;)</div><div class="line">      )(product.parameters)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      product = <span class="keyword">await</span> api.product.save(product)</div><div class="line">      ctx.body = &#123;</div><div class="line">        <span class="attr">success</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">data</span>: product</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">      ctx.body = &#123;</div><div class="line">        <span class="attr">success</span>: <span class="literal">false</span>,</div><div class="line">        <span class="attr">err</span>: e</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  @put(<span class="string">'/products'</span>)</div><div class="line">  <span class="keyword">async</span> getCharacter (ctx, next) &#123;</div><div class="line">    <span class="keyword">let</span> body = ctx.request.body</div><div class="line">    <span class="keyword">const</span> &#123; _id &#125; = body</div><div class="line">    <span class="keyword">if</span> (!_id) &#123;</div><div class="line">      <span class="keyword">return</span> (ctx.body = &#123;<span class="attr">success</span>: <span class="literal">false</span>, <span class="attr">err</span>: <span class="string">'_id is required'</span>&#125;)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">let</span> product = <span class="keyword">await</span> api.product.getProduct(_id)</div><div class="line">    <span class="keyword">if</span>(!product) &#123;</div><div class="line">      <span class="keyword">return</span> (ctx.body = &#123;</div><div class="line">        <span class="attr">success</span>: <span class="literal">false</span>,</div><div class="line">        <span class="attr">err</span>: <span class="string">'product not exist'</span></div><div class="line">      &#125;)</div><div class="line">    &#125;</div><div class="line">    product.title = xxs(body.title)</div><div class="line">    product.price = xxs(body.price)</div><div class="line">    product.intro = xxs(body.intro)</div><div class="line">    product.images = R.map(xxs)(body.images)</div><div class="line">    product.parameters = R.map(</div><div class="line">      <span class="function"><span class="params">item</span> =&gt;</span> (&#123;</div><div class="line">        <span class="attr">key</span>: xxs(item.key),</div><div class="line">        <span class="attr">value</span>: xxs(item.value)</div><div class="line">      &#125;)</div><div class="line">    )(product.parameters)</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      product = <span class="keyword">await</span> api.product.update(product)</div><div class="line">      ctx.body = &#123;</div><div class="line">        <span class="attr">success</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">data</span>: product</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">      ctx.body = &#123;</div><div class="line">        <span class="attr">success</span>: <span class="literal">false</span>,</div><div class="line">        <span class="attr">err</span>: e</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  @del(<span class="string">'products/:id'</span>)</div><div class="line">  <span class="keyword">async</span> delProducts (ctx, next) &#123;</div><div class="line">    <span class="keyword">const</span> params = ctx.params</div><div class="line">    <span class="keyword">const</span> &#123;_id&#125; = params</div><div class="line">    <span class="keyword">if</span> (!_id) <span class="keyword">return</span> (ctx.body = &#123;<span class="attr">success</span>: <span class="literal">false</span>, <span class="attr">err</span>: <span class="string">'_id is required'</span>&#125;)</div><div class="line">    <span class="keyword">let</span> product = <span class="keyword">await</span> api.product.getProduct(_id)</div><div class="line">    <span class="keyword">if</span> (!product) <span class="keyword">return</span> (ctx.body = &#123;<span class="attr">success</span>: <span class="literal">false</span>, <span class="attr">err</span>: <span class="string">'product is required'</span>&#125;)</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      product = <span class="keyword">await</span> api.product.del(product)</div><div class="line">      ctx.body = &#123;</div><div class="line">        <span class="attr">success</span>: <span class="literal">true</span></div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">      ctx.body = &#123;</div><div class="line">        <span class="attr">success</span>: <span class="literal">false</span>,</div><div class="line">        <span class="attr">err</span>: e</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>设置暴露路由，修改文件</p>
+<p><strong>server/api/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</div><div class="line">    <span class="attr">wechat</span>: wechat,</div><div class="line">    <span class="attr">wiki</span>: wiki,</div><div class="line">    <span class="attr">product</span>: product</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="后台商品页"><a href="#后台商品页" class="headerlink" title="后台商品页"></a>后台商品页</h2><p><strong>pages/admin/products.vue</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;template lang=<span class="string">"pug"</span>&gt;</div><div class="line">  .content</div><div class="line">    .related-products</div><div class="line">     ...</div><div class="line">    .edit-product(:<span class="class"><span class="keyword">class</span></span>=<span class="string">'&#123;active: editing&#125;'</span>)</div><div class="line">      ...</div><div class="line">    .edit-footer</div><div class="line">      button.btn.save(@click=<span class="string">'saveEdited'</span>, v-<span class="keyword">if</span>=<span class="string">'!isProduct'</span>) 创建宝贝</div><div class="line">      button.btn.save(@click=<span class="string">'saveEdited'</span>, v-<span class="keyword">if</span>=<span class="string">'isProduct'</span>) 保存修改</div><div class="line"></div><div class="line">      .btn.add-parameter(@click=<span class="string">'addParameter'</span>)</div><div class="line">        .material-icon add</div><div class="line">        | 添加参数</div><div class="line">    .float-btn(@click=<span class="string">'createdProduct'</span>)</div><div class="line">      .material-icon add</div><div class="line">    v-snackbar(:open.sync=<span class="string">'openSnackbar'</span>)</div><div class="line">      span(slot=<span class="string">'body'</span>) 保存成功        </div><div class="line">&lt;<span class="regexp">/template&gt;</span></div></pre></td></tr></table></figure>
+<p>页面具体代码不细贴了</p>
+<h3 id="定义数据"><a href="#定义数据" class="headerlink" title="定义数据"></a>定义数据</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">data() &#123;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">      <span class="attr">isProduct</span>: <span class="literal">false</span>,</div><div class="line">      <span class="attr">openSnackbar</span>: <span class="literal">false</span>,</div><div class="line">      <span class="attr">edited</span>: &#123;</div><div class="line">        <span class="attr">images</span>: [],</div><div class="line">        <span class="attr">parameters</span>: []</div><div class="line">      &#125;,</div><div class="line">      <span class="attr">editing</span>: <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<p><code>isProduct</code>：是否有product数据</p>
+<p><code>openSnackbar</code>：打开openSnackbar</p>
+<p><code>edited</code>：编辑数据</p>
+<p><code>editing</code>：编辑状态</p>
+<h2 id="引入products"><a href="#引入products" class="headerlink" title="引入products"></a>引入products</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">computed: &#123;</div><div class="line">    ...mapState([</div><div class="line">      <span class="string">'imageCDN'</span>,</div><div class="line">      <span class="string">'products'</span></div><div class="line">    ])</div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<h2 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> created() &#123;</div><div class="line">    <span class="keyword">this</span>.$store.dispatch(<span class="string">'fetchProducts'</span>)</div><div class="line"> &#125;,</div></pre></td></tr></table></figure>
+<h2 id="编辑intro"><a href="#编辑intro" class="headerlink" title="编辑intro"></a>编辑intro</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">editedIntro(e) &#123;</div><div class="line">      <span class="keyword">let</span> html = e.target.value</div><div class="line">      html = html.replace(<span class="regexp">/\n/g</span>, <span class="string">'&lt;br /&gt;'</span>)</div><div class="line">      <span class="keyword">this</span>.edited.intro = html</div><div class="line">    &#125;,</div></pre></td></tr></table></figure>
+<h2 id="编辑product"><a href="#编辑product" class="headerlink" title="编辑product"></a>编辑product</h2><p>点击编辑按钮，触发<code>editProduct(item)</code>方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">editProduct(item) &#123;</div><div class="line">      <span class="keyword">this</span>.edited = item</div><div class="line">      <span class="keyword">this</span>.isProduct = <span class="literal">true</span></div><div class="line">      <span class="keyword">this</span>.editing = <span class="literal">true</span></div><div class="line">    &#125;,</div></pre></td></tr></table></figure>
+<h2 id="创建product"><a href="#创建product" class="headerlink" title="创建product"></a>创建product</h2><p>点击添加按钮，弹出创建数据窗户，写入edited参数，设置状态</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">createProduct() &#123;</div><div class="line">  <span class="keyword">this</span>.edited = &#123;</div><div class="line">    <span class="attr">images</span>: [],</div><div class="line">    <span class="attr">parameters</span>: []</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">this</span>.isProduct = <span class="literal">false</span></div><div class="line">  <span class="keyword">this</span>.editing = <span class="literal">true</span></div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<h2 id="保存product"><a href="#保存product" class="headerlink" title="保存product"></a>保存product</h2><p>点击创建宝贝或者点击保存修改触发<code>saveEdited()</code>事件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> saveEdited() &#123;</div><div class="line">  <span class="keyword">this</span>.isProduct</div><div class="line">    ? <span class="keyword">await</span> <span class="keyword">this</span>.$store.dispatch(<span class="string">'putProduct'</span>, <span class="keyword">this</span>.edited)</div><div class="line">    : <span class="keyword">await</span> <span class="keyword">this</span>.$store.dispatch(<span class="string">'saveProduct'</span>, <span class="keyword">this</span>.edited)</div><div class="line">  <span class="keyword">this</span>.openSnackbar = <span class="literal">true</span></div><div class="line">  <span class="keyword">this</span>.isProduct = <span class="literal">false</span></div><div class="line">  <span class="keyword">this</span>.edited = &#123;</div><div class="line">    <span class="attr">images</span>: [],</div><div class="line">    <span class="attr">parameters</span>: []</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">this</span>.editing = !<span class="keyword">this</span>.editing</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<h2 id="删除product"><a href="#删除product" class="headerlink" title="删除product"></a>删除product</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> deleteProduct(item) &#123;</div><div class="line">	<span class="keyword">await</span> <span class="keyword">this</span>.$store.dispatch(<span class="string">'deleteProduct'</span>, item)</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<h2 id="添加参数"><a href="#添加参数" class="headerlink" title="添加参数"></a>添加参数</h2><p>创建product时，添加参数项，或者删除某个参数项</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">addParameter() &#123;</div><div class="line">  <span class="keyword">this</span>.edited.parameters.push(&#123;</div><div class="line">    <span class="attr">key</span>: <span class="string">''</span>,</div><div class="line">    <span class="attr">value</span>: <span class="string">''</span></div><div class="line">  &#125;)</div><div class="line">&#125;,</div><div class="line">removeParameter(index) &#123;</div><div class="line">  <span class="keyword">this</span>.edited.parameters.splice(index, <span class="number">1</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="数据增删改查"><a href="#数据增删改查" class="headerlink" title="数据增删改查"></a>数据增删改查</h2><p><strong>store/actions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> saveProduct(&#123; state, dispatch &#125;, product) &#123;</div><div class="line">    <span class="keyword">await</span> axios.post(<span class="string">'/api/products'</span>, product)</div><div class="line">    <span class="keyword">let</span> res = <span class="keyword">await</span> dispatch(<span class="string">'fetchProducts'</span>)</div><div class="line">    <span class="keyword">return</span> res.data.data</div><div class="line">  &#125;,</div><div class="line">  <span class="keyword">async</span> putProduct(&#123; state, dispatch &#125;, product) &#123;</div><div class="line">    <span class="keyword">await</span> axios.put(<span class="string">'/api/products'</span>, product)</div><div class="line">    <span class="keyword">let</span> res = <span class="keyword">await</span> dispatch(<span class="string">'fetchProducts'</span>)</div><div class="line">    <span class="keyword">return</span> res.data.data</div><div class="line">  &#125;,</div><div class="line">  <span class="keyword">async</span> deleteProduct(&#123; state, dispatch &#125;, product) &#123;</div><div class="line">    <span class="keyword">await</span> axios.delete(<span class="string">`/api/products/<span class="subst">$&#123;product._id&#125;</span>`</span>)</div><div class="line">    <span class="keyword">let</span> res = <span class="keyword">await</span> dispatch(<span class="string">'fetchProducts'</span>)</div><div class="line">    <span class="keyword">return</span> res.data.data</div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<p>修改请求地址</p>
+<p><strong>store/service.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">fetchProducts() &#123;</div><div class="line">  <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;baseUrl&#125;</span>/api/products`</span>)</div><div class="line">&#125;</div><div class="line">fetchProduct(id) &#123;</div><div class="line">  <span class="keyword">return</span> axios.get(<span class="string">`<span class="subst">$&#123;baseUrl&#125;</span>/api/products/<span class="subst">$&#123;id&#125;</span>`</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="解析body数据"><a href="#解析body数据" class="headerlink" title="解析body数据"></a>解析body数据</h2><p>存储商品时是post请求，body需要解析。通过MIDDLEWARES引入中间件，添加common中间件，</p>
+<p><strong>server/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> MIDDLEWARES = [<span class="string">'database'</span>, <span class="string">'common'</span>, <span class="string">'router'</span>]</div></pre></td></tr></table></figure>
+<p>使用koa-bodyparse解析数据</p>
+<p><strong>server/middlewares/common.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> koaBody <span class="keyword">from</span> <span class="string">'koa-bodyparser'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> addBody = <span class="function"><span class="params">app</span> =&gt;</span> &#123;</div><div class="line">  app.use(koaBody())</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="上传图片到七牛云"><a href="#上传图片到七牛云" class="headerlink" title="上传图片到七牛云"></a>上传图片到七牛云</h2><p>这次是从浏览器端上传图片，先从服务器上拿到授权token，结合token去完成在客户端生成的图片（如果没有token的话，任何人都可以往你的服务器传图片，不安全）。然后再调用js-sdk完成上传图片功能。这里需要引入两个组件：</p>
+<p>random-token：随机生成key</p>
+<p>qiniu-web-uploader：上传图片组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> randomToken <span class="keyword">from</span> <span class="string">'random-token'</span></div><div class="line"><span class="keyword">import</span> Uploader <span class="keyword">from</span> <span class="string">'qiniu-web-uploader'</span></div></pre></td></tr></table></figure>
+<p>页面中添加上传图片</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">.input-group</div><div class="line">          label 图片</div><div class="line">          .upload-images</div><div class="line">            .img(v-for='item, index in edited.images')</div><div class="line">              img(:src='imageCDN + item + "?imageView2/1/format/jpg/q/75/imageslim"')</div><div class="line">              .tools</div><div class="line">                .material-icon(@click='deleteImg(index)') delete</div><div class="line">            .upload-btn</div><div class="line">              g#Page-1(stroke='none', stroke-width='1', fill='none', fill-rule='evenodd')</div><div class="line">                g#ic_backup_black_24px(transform='translate(-1.000000, -6.000000)')</div><div class="line">                  polygon#Shape(points='0 0 55 0 55 55 0 55')</div><div class="line">                  path#outline(d='...')</div><div class="line">                  path#Shape(d='...', fill='#CFD8DC', fill-rule='nonzero')</div><div class="line">              br</div><div class="line">              .text 上传图片</div><div class="line">              input(type='file', @change='uploadImg($event)')</div></pre></td></tr></table></figure>
+<p>创建点击上传图片事件<code>@change=&#39;uploadImg($event)&#39;</code>。传入事件e，声明点击事件元素file，随机生成的文件名key，调用<code>getUptoken(key)</code>获取token值，创建Uploader实例，传入file和token值，监听上传进度，调用上传图片函数<code>uploader.upload()</code>，最后将获取到的可以放入edited.images</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">async</span> getUptoken(key) &#123;</div><div class="line">  <span class="keyword">let</span> res = <span class="keyword">await</span> axios.get(<span class="string">'/qiniu/token'</span>, &#123;</div><div class="line">    <span class="attr">params</span>: &#123;</div><div class="line">      <span class="attr">key</span>: key</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">  <span class="keyword">return</span> res.data.data.token</div><div class="line">&#125;,</div><div class="line">  <span class="keyword">async</span> uploadImg(e) &#123;</div><div class="line">    <span class="keyword">let</span> file = e.target.file[<span class="number">0</span>]</div><div class="line">    <span class="keyword">let</span> key = randomToken(<span class="number">32</span>)</div><div class="line">    key = <span class="string">`products/<span class="subst">$&#123;key&#125;</span>`</span></div><div class="line">    <span class="keyword">let</span> token = <span class="keyword">await</span> <span class="keyword">this</span>.getUptoken(key)</div><div class="line">    <span class="keyword">let</span> uptoken = &#123;</div><div class="line">      <span class="attr">uptoken</span>: token,</div><div class="line">      <span class="attr">key</span>: Buffer.from(key).toString(<span class="string">'base64'</span>)</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// Uploader.QINIU_UPLOAD_URL = '//up-z2.qiniu.com'</span></div><div class="line">    <span class="keyword">let</span> uploader = <span class="keyword">new</span> Uploader(file, uptoken)</div><div class="line">    uploader.on(<span class="string">'progress'</span>, () =&gt; &#123;</div><div class="line">      <span class="built_in">console</span>.log(uploader.percent)</div><div class="line">      <span class="comment">// let dashoffset = this.upload.dasharray * (1 - uploader.percent)</span></div><div class="line">      <span class="comment">// this.upload.dashoffset = dashoffset</span></div><div class="line">    &#125;)</div><div class="line">    <span class="keyword">let</span> res = <span class="keyword">await</span> uploader.upload()</div><div class="line">    uploader.cancel()</div><div class="line">    <span class="built_in">console</span>.log(res)</div><div class="line">    <span class="keyword">this</span>.edited.images.push(res.key)</div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<h3 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h3><p>这里会报<code>error: incorrect region, please use up-z2.qiniu.com</code>的错误</p>
+<p>解决：</p>
+<p>是因为空间是华南的，这里我直接换用华东空间就可以正常使用了。</p>
+<p>修改<strong>server/lib/qiniu.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> bucket2 = <span class="string">'vueapp'</span></div><div class="line"><span class="keyword">const</span> ak = config.qiniu.AK</div><div class="line"><span class="keyword">const</span> sk = config.qiniu.SK</div><div class="line"><span class="keyword">const</span> mac = <span class="keyword">new</span> qiniu.auth.digest.Mac(ak, sk)</div><div class="line"><span class="keyword">let</span> options = &#123;</div><div class="line">  <span class="attr">scope</span>: bucket2</div><div class="line">&#125;</div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> uptoken = <span class="function">(<span class="params">key</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">let</span> putPolicy = <span class="keyword">new</span> qiniu.rs.PutPolicy(options)</div><div class="line">  <span class="keyword">let</span> uploadToken = putPolicy.uploadToken(mac)</div><div class="line">  <span class="keyword">return</span> uploadToken</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="添加七牛路由"><a href="#添加七牛路由" class="headerlink" title="添加七牛路由"></a>添加七牛路由</h3><p><strong>server/routes/qiniu.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; controller, get, post, put &#125; <span class="keyword">from</span> <span class="string">'../decorator/router'</span></div><div class="line"><span class="keyword">import</span> &#123; uptoken &#125; <span class="keyword">from</span> <span class="string">'../lib/qiniu'</span></div><div class="line"></div><div class="line">@controller(<span class="string">'/qiniu'</span>)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">QIniuController</span> </span>&#123;</div><div class="line">  @get(<span class="string">'token'</span>)</div><div class="line">  <span class="keyword">async</span> qiniuToken (ctx, next) &#123;</div><div class="line">    <span class="keyword">let</span> key = ctx.query.key</div><div class="line">    <span class="keyword">let</span> token = uptoken(key)</div><div class="line">    ctx.body = &#123;</div><div class="line">      <span class="attr">success</span>: <span class="literal">true</span>,</div><div class="line">      <span class="attr">data</span>: &#123;</div><div class="line">        <span class="attr">key</span>: key,</div><div class="line">        <span class="attr">token</span>: token</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上传图片测试成功，如图：</p>
+<p> <img src="http://oxkc6g4t4.bkt.clouddn.com/wx47.png" alt="wx47"></p>
+<h1 id="前台页面展示"><a href="#前台页面展示" class="headerlink" title="前台页面展示"></a>前台页面展示</h1><p>和之前一样，只需要修改图片img地址即可，需要修改的页面分别是<strong>pages/shopping.vue</strong>和<strong>pages/deal.vue</strong>两个页面，代码很简单这里就不做展示了，具体看源码即可。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/13/微信公众号开发(七)：利用装饰器增强路由/" rel="next" title="微信公众号开发(七)：利用装饰器增强路由">
+                <i class="fa fa-chevron-left"></i> 微信公众号开发(七)：利用装饰器增强路由
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="余鸢" />
+          <p class="site-author-name" itemprop="name">余鸢</p>
+          <p class="site-description motion-element" itemprop="description">整理学习文档</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#封装API"><span class="nav-number">1.</span> <span class="nav-text">封装API</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#获取家族数据"><span class="nav-number">1.1.</span> <span class="nav-text">获取家族数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取家族详细资料"><span class="nav-number">1.2.</span> <span class="nav-text">获取家族详细资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取主要成员数据"><span class="nav-number">1.3.</span> <span class="nav-text">获取主要成员数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取成员的个人详情"><span class="nav-number">1.4.</span> <span class="nav-text">获取成员的个人详情</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改数据请求地址"><span class="nav-number">2.</span> <span class="nav-text">修改数据请求地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改页面"><span class="nav-number">3.</span> <span class="nav-text">修改页面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#家族详情页"><span class="nav-number">3.1.</span> <span class="nav-text">家族详情页</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#商城路由"><span class="nav-number">4.</span> <span class="nav-text">商城路由</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#商品建模"><span class="nav-number">4.1.</span> <span class="nav-text">商品建模</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#商品操作的API"><span class="nav-number">4.2.</span> <span class="nav-text">商品操作的API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#商品路由"><span class="nav-number">4.3.</span> <span class="nav-text">商品路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后台商品页"><span class="nav-number">4.4.</span> <span class="nav-text">后台商品页</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义数据"><span class="nav-number">4.4.1.</span> <span class="nav-text">定义数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入products"><span class="nav-number">4.5.</span> <span class="nav-text">引入products</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取数据"><span class="nav-number">4.6.</span> <span class="nav-text">获取数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑intro"><span class="nav-number">4.7.</span> <span class="nav-text">编辑intro</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑product"><span class="nav-number">4.8.</span> <span class="nav-text">编辑product</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建product"><span class="nav-number">4.9.</span> <span class="nav-text">创建product</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保存product"><span class="nav-number">4.10.</span> <span class="nav-text">保存product</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除product"><span class="nav-number">4.11.</span> <span class="nav-text">删除product</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加参数"><span class="nav-number">4.12.</span> <span class="nav-text">添加参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据增删改查"><span class="nav-number">4.13.</span> <span class="nav-text">数据增删改查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析body数据"><span class="nav-number">4.14.</span> <span class="nav-text">解析body数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上传图片到七牛云"><span class="nav-number">4.15.</span> <span class="nav-text">上传图片到七牛云</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题："><span class="nav-number">4.15.1.</span> <span class="nav-text">问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加七牛路由"><span class="nav-number">4.15.2.</span> <span class="nav-text">添加七牛路由</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#前台页面展示"><span class="nav-number">5.</span> <span class="nav-text">前台页面展示</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">余鸢</span>
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
